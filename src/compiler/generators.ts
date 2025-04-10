@@ -673,7 +673,10 @@ export function generateStructFieldMethods(
 
   // _disownFoo(): capnp.Orphan<Foo> { return $.utils.disown(this.foo); }
   if (disown) {
-    const getter = f.createPropertyAccessExpression(THIS, name);
+    const getter = f.createPropertyAccessExpression(
+      THIS,
+      name === "constructor" ? `$${name}` : name,
+    );
     const expressions = [
       f.createCallExpression(
         f.createPropertyAccessExpression(UTILS, "disown"),
