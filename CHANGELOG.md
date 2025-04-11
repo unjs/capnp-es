@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.0.9
+
+[compare changes](https://github.com/unjs/capnp-es/compare/v0.0.7...v0.0.9)
+
+### 📦 Build
+
+- Inline self-imports ([754a910](https://github.com/unjs/capnp-es/commit/754a910))
+
+### 🏡 Chore
+
+- **release:** V0.0.7 ([a8a4070](https://github.com/unjs/capnp-es/commit/a8a4070))
+- Update deps ([ee50be7](https://github.com/unjs/capnp-es/commit/ee50be7))
+- **release:** V0.0.8 ([52b88bb](https://github.com/unjs/capnp-es/commit/52b88bb))
+
+### ✅ Tests
+
+- Increase timeout ([cd876d7](https://github.com/unjs/capnp-es/commit/cd876d7))
+
+### ❤️ Contributors
+
+- Samuel Macleod <smacleod@cloudflare.com>
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+
 ## v0.0.8
 
 [compare changes](https://github.com/unjs/capnp-es/compare/v0.0.7...v0.0.8)
