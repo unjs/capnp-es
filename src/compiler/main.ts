@@ -37,7 +37,7 @@ Options:
 const sources: string[] = [];
 const options: string[] = [];
 
-let outFormats: string[] = ["js"];
+let outFormats: string[] = ["ts"];
 let outDir: string | undefined;
 
 for (const arg of process.argv.slice(2)) {
