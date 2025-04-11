@@ -39,7 +39,8 @@ export class Message extends $.Struct {
   static readonly _capnp = {
     displayName: "Message",
     id: "91b79f1f808db032",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
+    fields: ["unimplemented", "abort", "bootstrap", "call", "return", "finish", "resolve", "release", "disembargo", "obsoleteSave", "obsoleteDelete", "provide", "accept", "join"]
   };
   _adoptUnimplemented(value: $.Orphan<Message>): void {
     $.utils.setUint16(0, 0, this);
@@ -447,9 +448,6 @@ export class Message extends $.Struct {
     $.utils.setUint16(0, 12, this);
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Message_" + super.toString();
-  }
   which(): Message_Which {
     return $.utils.getUint16(0, this) as Message_Which;
   }
@@ -489,7 +487,8 @@ export class Bootstrap extends $.Struct {
   static readonly _capnp = {
     displayName: "Bootstrap",
     id: "e94ccf8031176ec4",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
+    fields: ["questionId", "deprecatedObjectId"]
   };
   /**
   * A new question ID identifying this request, which will eventually receive a Return message
@@ -591,9 +590,6 @@ export class Bootstrap extends $.Struct {
   set deprecatedObjectId(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Bootstrap_" + super.toString();
-  }
 }
 export const Call_SendResultsTo_Which = {
   CALLER: 0,
@@ -611,7 +607,8 @@ export class Call_SendResultsTo extends $.Struct {
   static readonly _capnp = {
     displayName: "sendResultsTo",
     id: "dae8b0f61aab5f99",
-    size: new $.ObjectSize(24, 3)
+    size: new $.ObjectSize(24, 3),
+    fields: ["caller", "yourself", "thirdParty"]
   };
   get _isCaller(): boolean {
     return $.utils.getUint16(6, this) === 0;
@@ -659,9 +656,6 @@ export class Call_SendResultsTo extends $.Struct {
     $.utils.setUint16(6, 2, this);
     $.utils.copyFrom(value, $.utils.getPointer(2, this));
   }
-  toString(): string {
-    return "Call_SendResultsTo_" + super.toString();
-  }
   which(): Call_SendResultsTo_Which {
     return $.utils.getUint16(6, this) as Call_SendResultsTo_Which;
   }
@@ -676,6 +670,7 @@ export class Call extends $.Struct {
     displayName: "Call",
     id: "836a53ce789d4cd4",
     size: new $.ObjectSize(24, 3),
+    fields: ["questionId", "target", "interfaceId", "methodId", "allowThirdPartyTailCall", "noPromisePipelining", "onlyPromisePipeline", "params", "sendResultsTo"],
     defaultAllowThirdPartyTailCall: $.getBitMask(false, 0),
     defaultNoPromisePipelining: $.getBitMask(false, 1),
     defaultOnlyPromisePipeline: $.getBitMask(false, 2)
@@ -813,9 +808,6 @@ export class Call extends $.Struct {
   _initSendResultsTo(): Call_SendResultsTo {
     return $.utils.getAs(Call_SendResultsTo, this);
   }
-  toString(): string {
-    return "Call_" + super.toString();
-  }
 }
 export const Return_Which = {
   RESULTS: 0,
@@ -842,6 +834,7 @@ export class Return extends $.Struct {
     displayName: "Return",
     id: "9e19b28d3db3573a",
     size: new $.ObjectSize(16, 1),
+    fields: ["answerId", "releaseParamCaps", "noFinishNeeded", "results", "exception", "canceled", "resultsSentElsewhere", "takeFromOtherQuestion", "acceptFromThirdParty"],
     defaultReleaseParamCaps: $.getBitMask(true, 0),
     defaultNoFinishNeeded: $.getBitMask(false, 1)
   };
@@ -1000,9 +993,6 @@ export class Return extends $.Struct {
     $.utils.setUint16(6, 5, this);
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Return_" + super.toString();
-  }
   which(): Return_Which {
     return $.utils.getUint16(6, this) as Return_Which;
   }
@@ -1032,6 +1022,7 @@ export class Finish extends $.Struct {
     displayName: "Finish",
     id: "d37d2eb2c2f80e63",
     size: new $.ObjectSize(8, 0),
+    fields: ["questionId", "releaseResultCaps", "requireEarlyCancellationWorkaround"],
     defaultReleaseResultCaps: $.getBitMask(true, 0),
     defaultRequireEarlyCancellationWorkaround: $.getBitMask(true, 1)
   };
@@ -1077,9 +1068,6 @@ export class Finish extends $.Struct {
   set requireEarlyCancellationWorkaround(value: boolean) {
     $.utils.setBit(33, value, this, Finish._capnp.defaultRequireEarlyCancellationWorkaround);
   }
-  toString(): string {
-    return "Finish_" + super.toString();
-  }
 }
 export const Resolve_Which = {
   CAP: 0,
@@ -1110,7 +1098,8 @@ export class Resolve extends $.Struct {
   static readonly _capnp = {
     displayName: "Resolve",
     id: "bbc29655fa89086e",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
+    fields: ["promiseId", "cap", "exception"]
   };
   /**
   * The ID of the promise to be resolved.
@@ -1205,9 +1194,6 @@ export class Resolve extends $.Struct {
     $.utils.setUint16(4, 1, this);
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Resolve_" + super.toString();
-  }
   which(): Resolve_Which {
     return $.utils.getUint16(4, this) as Resolve_Which;
   }
@@ -1222,7 +1208,8 @@ export class Release extends $.Struct {
   static readonly _capnp = {
     displayName: "Release",
     id: "ad1a6c0d7dd07497",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
+    fields: ["id", "referenceCount"]
   };
   /**
   * What to release.
@@ -1243,9 +1230,6 @@ export class Release extends $.Struct {
   set referenceCount(value: number) {
     $.utils.setUint32(4, value, this);
   }
-  toString(): string {
-    return "Release_" + super.toString();
-  }
 }
 export const Disembargo_Context_Which = {
   SENDER_LOOPBACK: 0,
@@ -1262,7 +1246,8 @@ export class Disembargo_Context extends $.Struct {
   static readonly _capnp = {
     displayName: "context",
     id: "d562b4df655bdd4d",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
+    fields: ["senderLoopback", "receiverLoopback", "accept", "provide"]
   };
   /**
   * The sender is requesting a disembargo on a promise that is known to resolve back to a
@@ -1326,9 +1311,6 @@ export class Disembargo_Context extends $.Struct {
   set provide(value: number) {
     $.utils.setUint16(4, 3, this);
     $.utils.setUint32(0, value, this);
-  }
-  toString(): string {
-    return "Disembargo_Context_" + super.toString();
   }
   which(): Disembargo_Context_Which {
     return $.utils.getUint16(4, this) as Disembargo_Context_Which;
@@ -1410,7 +1392,8 @@ export class Disembargo extends $.Struct {
   static readonly _capnp = {
     displayName: "Disembargo",
     id: "f964368b0fbd3711",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
+    fields: ["target", "context"]
   };
   _adoptTarget(value: $.Orphan<MessageTarget>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -1439,9 +1422,6 @@ export class Disembargo extends $.Struct {
   _initContext(): Disembargo_Context {
     return $.utils.getAs(Disembargo_Context, this);
   }
-  toString(): string {
-    return "Disembargo_" + super.toString();
-  }
 }
 /**
 * **(level 3)**
@@ -1457,7 +1437,8 @@ export class Provide extends $.Struct {
   static readonly _capnp = {
     displayName: "Provide",
     id: "9c6a046bfbc1ac5a",
-    size: new $.ObjectSize(8, 2)
+    size: new $.ObjectSize(8, 2),
+    fields: ["questionId", "target", "recipient"]
   };
   /**
   * Question ID to be held open until the recipient has received the capability.  A result will be
@@ -1510,9 +1491,6 @@ export class Provide extends $.Struct {
   set recipient(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "Provide_" + super.toString();
-  }
 }
 /**
 * **(level 3)**
@@ -1526,7 +1504,8 @@ export class Accept extends $.Struct {
   static readonly _capnp = {
     displayName: "Accept",
     id: "d4c9b56290554016",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
+    fields: ["questionId", "provision", "embargo"]
   };
   /**
   * A new question ID identifying this accept message, which will eventually receive a Return
@@ -1597,9 +1576,6 @@ export class Accept extends $.Struct {
   set embargo(value: boolean) {
     $.utils.setBit(32, value, this);
   }
-  toString(): string {
-    return "Accept_" + super.toString();
-  }
 }
 /**
 * **(level 4)**
@@ -1644,7 +1620,8 @@ export class Join extends $.Struct {
   static readonly _capnp = {
     displayName: "Join",
     id: "fbe1980490e001af",
-    size: new $.ObjectSize(8, 2)
+    size: new $.ObjectSize(8, 2),
+    fields: ["questionId", "target", "keyPart"]
   };
   /**
   * Question ID used to respond to this Join.  (Note that this ID only identifies one part of the
@@ -1709,9 +1686,6 @@ export class Join extends $.Struct {
   set keyPart(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "Join_" + super.toString();
-  }
 }
 export const MessageTarget_Which = {
   IMPORTED_CAP: 0,
@@ -1727,7 +1701,8 @@ export class MessageTarget extends $.Struct {
   static readonly _capnp = {
     displayName: "MessageTarget",
     id: "95bc14545813fbc1",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
+    fields: ["importedCap", "promisedAnswer"]
   };
   /**
   * This message is to a capability or promise previously imported by the caller (exported by
@@ -1776,9 +1751,6 @@ export class MessageTarget extends $.Struct {
     $.utils.setUint16(4, 1, this);
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "MessageTarget_" + super.toString();
-  }
   which(): MessageTarget_Which {
     return $.utils.getUint16(4, this) as MessageTarget_Which;
   }
@@ -1790,7 +1762,8 @@ export class Payload extends $.Struct {
   static readonly _capnp = {
     displayName: "Payload",
     id: "9a0e61223d96743b",
-    size: new $.ObjectSize(0, 2)
+    size: new $.ObjectSize(0, 2),
+    fields: ["content", "capTable"]
   };
   static _CapTable: $.ListCtor<CapDescriptor>;
   _adoptContent(value: $.Orphan<$.Pointer>): void {
@@ -1833,9 +1806,6 @@ export class Payload extends $.Struct {
   set capTable(value: $.List<CapDescriptor>) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "Payload_" + super.toString();
-  }
 }
 export const CapDescriptor_Which = {
   NONE: 0,
@@ -1874,6 +1844,7 @@ export class CapDescriptor extends $.Struct {
     displayName: "CapDescriptor",
     id: "8523ddc40b86b8b0",
     size: new $.ObjectSize(8, 1),
+    fields: ["none", "senderHosted", "senderPromise", "receiverHosted", "receiverAnswer", "thirdPartyHosted", "attachedFd"],
     defaultAttachedFd: $.getUint8Mask(255)
   };
   get _isNone(): boolean {
@@ -2055,9 +2026,6 @@ export class CapDescriptor extends $.Struct {
   set attachedFd(value: number) {
     $.utils.setUint8(2, value, this, CapDescriptor._capnp.defaultAttachedFd);
   }
-  toString(): string {
-    return "CapDescriptor_" + super.toString();
-  }
   which(): CapDescriptor_Which {
     return $.utils.getUint16(0, this) as CapDescriptor_Which;
   }
@@ -2073,7 +2041,8 @@ export class PromisedAnswer_Op extends $.Struct {
   static readonly _capnp = {
     displayName: "Op",
     id: "f316944415569081",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
+    fields: ["noop", "getPointerField"]
   };
   get _isNoop(): boolean {
     return $.utils.getUint16(0, this) === 0;
@@ -2096,9 +2065,6 @@ export class PromisedAnswer_Op extends $.Struct {
     $.utils.setUint16(0, 1, this);
     $.utils.setUint16(2, value, this);
   }
-  toString(): string {
-    return "PromisedAnswer_Op_" + super.toString();
-  }
   which(): PromisedAnswer_Op_Which {
     return $.utils.getUint16(0, this) as PromisedAnswer_Op_Which;
   }
@@ -2120,7 +2086,8 @@ export class PromisedAnswer extends $.Struct {
   static readonly _capnp = {
     displayName: "PromisedAnswer",
     id: "d800b1d6cd6f1ca0",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
+    fields: ["questionId", "transform"]
   };
   static _Transform: $.ListCtor<PromisedAnswer_Op>;
   /**
@@ -2156,9 +2123,6 @@ export class PromisedAnswer extends $.Struct {
   set transform(value: $.List<PromisedAnswer_Op>) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "PromisedAnswer_" + super.toString();
-  }
 }
 /**
 * **(level 3)**
@@ -2169,7 +2133,8 @@ export class ThirdPartyCapDescriptor extends $.Struct {
   static readonly _capnp = {
     displayName: "ThirdPartyCapDescriptor",
     id: "d37007fde1f0027d",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
+    fields: ["id", "vineId"]
   };
   _adoptId(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -2211,9 +2176,6 @@ export class ThirdPartyCapDescriptor extends $.Struct {
   set vineId(value: number) {
     $.utils.setUint32(0, value, this);
   }
-  toString(): string {
-    return "ThirdPartyCapDescriptor_" + super.toString();
-  }
 }
 export const Exception_Type = {
   FAILED: 0,
@@ -2249,7 +2211,8 @@ export class Exception extends $.Struct {
   static readonly _capnp = {
     displayName: "Exception",
     id: "d625b7063acf691a",
-    size: new $.ObjectSize(8, 2)
+    size: new $.ObjectSize(8, 2),
+    fields: ["reason", "type", "obsoleteIsCallersFault", "obsoleteDurability", "trace"]
   };
   /**
   * Human-readable failure description.
@@ -2298,9 +2261,6 @@ export class Exception extends $.Struct {
   }
   set trace(value: string) {
     $.utils.setText(1, value, this);
-  }
-  toString(): string {
-    return "Exception_" + super.toString();
   }
 }
 Payload._CapTable = $.CompositeList(CapDescriptor);

@@ -87,11 +87,26 @@ export class Pointer<T extends _Pointer = _Pointer> {
     }
   }
 
-  [Symbol.toStringTag](): string {
-    return format("Pointer_%d", this.segment.id);
+  toJSON() {
+    return {
+      _capnp: {
+        type: this[Symbol.toStringTag](),
+        segmentId: this.segment.id,
+        byteOffset: this.byteOffset,
+        data: dump(this),
+      },
+    } as any;
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")]() {
+    return this.toJSON();
   }
 
   toString(): string {
-    return format("->%d@%a%s", this.segment.id, this.byteOffset, dump(this));
+    return `${this[Symbol.toStringTag]()}@${this.segment.id}:${this.byteOffset}`;
+  }
+
+  [Symbol.toStringTag](): string {
+    return (this.constructor as typeof Pointer)._capnp.displayName;
   }
 }

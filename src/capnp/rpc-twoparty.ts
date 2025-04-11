@@ -10,16 +10,14 @@ export class VatId extends $.Struct {
   static readonly _capnp = {
     displayName: "VatId",
     id: "d20b909fee733a8e",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
+    fields: ["side"]
   };
   get side(): Side {
     return $.utils.getUint16(0, this) as Side;
   }
   set side(value: Side) {
     $.utils.setUint16(0, value, this);
-  }
-  toString(): string {
-    return "VatId_" + super.toString();
   }
 }
 /**
@@ -29,7 +27,8 @@ export class ProvisionId extends $.Struct {
   static readonly _capnp = {
     displayName: "ProvisionId",
     id: "b88d09a9c5f39817",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
+    fields: ["joinId"]
   };
   /**
   * The ID from `JoinKeyPart`.
@@ -40,9 +39,6 @@ export class ProvisionId extends $.Struct {
   set joinId(value: number) {
     $.utils.setUint32(0, value, this);
   }
-  toString(): string {
-    return "ProvisionId_" + super.toString();
-  }
 }
 /**
 * Never used, because there are only two parties.
@@ -51,11 +47,9 @@ export class RecipientId extends $.Struct {
   static readonly _capnp = {
     displayName: "RecipientId",
     id: "89f389b6fd4082c1",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
+    fields: []
   };
-  toString(): string {
-    return "RecipientId_" + super.toString();
-  }
 }
 /**
 * Never used, because there is no third party.
@@ -64,11 +58,9 @@ export class ThirdPartyCapId extends $.Struct {
   static readonly _capnp = {
     displayName: "ThirdPartyCapId",
     id: "b47f4979672cb59d",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
+    fields: []
   };
-  toString(): string {
-    return "ThirdPartyCapId_" + super.toString();
-  }
 }
 /**
 * Joins in the two-party case are simplified by a few observations.
@@ -106,7 +98,8 @@ export class JoinKeyPart extends $.Struct {
   static readonly _capnp = {
     displayName: "JoinKeyPart",
     id: "95b29059097fca83",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
+    fields: ["joinId", "partCount", "partNum"]
   };
   /**
   * A number identifying this join, chosen by the sender.  May be reused once `Finish` messages are
@@ -136,15 +129,13 @@ export class JoinKeyPart extends $.Struct {
   set partNum(value: number) {
     $.utils.setUint16(6, value, this);
   }
-  toString(): string {
-    return "JoinKeyPart_" + super.toString();
-  }
 }
 export class JoinResult extends $.Struct {
   static readonly _capnp = {
     displayName: "JoinResult",
     id: "9d263a3630b7ebee",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
+    fields: ["joinId", "succeeded", "cap"]
   };
   /**
   * Matches `JoinKeyPart`.
@@ -183,8 +174,5 @@ export class JoinResult extends $.Struct {
   }
   set cap(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
-  }
-  toString(): string {
-    return "JoinResult_" + super.toString();
   }
 }

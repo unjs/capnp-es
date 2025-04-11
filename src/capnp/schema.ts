@@ -8,7 +8,8 @@ export class Node_Parameter extends $.Struct {
   static readonly _capnp = {
     displayName: "Parameter",
     id: "b9521bccf10fa3b1",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
+    fields: ["name"]
   };
   get name(): string {
     return $.utils.getText(0, this);
@@ -16,15 +17,13 @@ export class Node_Parameter extends $.Struct {
   set name(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "Node_Parameter_" + super.toString();
-  }
 }
 export class Node_NestedNode extends $.Struct {
   static readonly _capnp = {
     displayName: "NestedNode",
     id: "debf55bbfa0fc242",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
+    fields: ["name", "id"]
   };
   /**
   * Unqualified symbol name.  Unlike Node.displayName, this *can* be used programmatically.
@@ -47,15 +46,13 @@ export class Node_NestedNode extends $.Struct {
   set id(value: bigint) {
     $.utils.setUint64(0, value, this);
   }
-  toString(): string {
-    return "Node_NestedNode_" + super.toString();
-  }
 }
 export class Node_SourceInfo_Member extends $.Struct {
   static readonly _capnp = {
     displayName: "Member",
     id: "c2ba9038898e1fa2",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
+    fields: ["docComment"]
   };
   /**
   * Doc comment on the member.
@@ -65,9 +62,6 @@ export class Node_SourceInfo_Member extends $.Struct {
   }
   set docComment(value: string) {
     $.utils.setText(0, value, this);
-  }
-  toString(): string {
-    return "Node_SourceInfo_Member_" + super.toString();
   }
 }
 /**
@@ -81,7 +75,8 @@ export class Node_SourceInfo extends $.Struct {
   static readonly _capnp = {
     displayName: "SourceInfo",
     id: "f38e1de3041357ae",
-    size: new $.ObjectSize(8, 2)
+    size: new $.ObjectSize(8, 2),
+    fields: ["id", "docComment", "members"]
   };
   static _Members: $.ListCtor<Node_SourceInfo_Member>;
   /**
@@ -127,15 +122,13 @@ export class Node_SourceInfo extends $.Struct {
   set members(value: $.List<Node_SourceInfo_Member>) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "Node_SourceInfo_" + super.toString();
-  }
 }
 export class Node_Struct extends $.Struct {
   static readonly _capnp = {
     displayName: "struct",
     id: "9ea0b19b37fb4435",
-    size: new $.ObjectSize(40, 6)
+    size: new $.ObjectSize(40, 6),
+    fields: ["dataWordCount", "pointerCount", "preferredListEncoding", "isGroup", "discriminantCount", "discriminantOffset", "fields"]
   };
   static _Fields: $.ListCtor<Field>;
   /**
@@ -242,15 +235,13 @@ export class Node_Struct extends $.Struct {
   set fields(value: $.List<Field>) {
     $.utils.copyFrom(value, $.utils.getPointer(3, this));
   }
-  toString(): string {
-    return "Node_Struct_" + super.toString();
-  }
 }
 export class Node_Enum extends $.Struct {
   static readonly _capnp = {
     displayName: "enum",
     id: "b54ab3364333f598",
-    size: new $.ObjectSize(40, 6)
+    size: new $.ObjectSize(40, 6),
+    fields: ["enumerants"]
   };
   static _Enumerants: $.ListCtor<Enumerant>;
   _adoptEnumerants(value: $.Orphan<$.List<Enumerant>>): void {
@@ -274,15 +265,13 @@ export class Node_Enum extends $.Struct {
   set enumerants(value: $.List<Enumerant>) {
     $.utils.copyFrom(value, $.utils.getPointer(3, this));
   }
-  toString(): string {
-    return "Node_Enum_" + super.toString();
-  }
 }
 export class Node_Interface extends $.Struct {
   static readonly _capnp = {
     displayName: "interface",
     id: "e82753cff0c2218f",
-    size: new $.ObjectSize(40, 6)
+    size: new $.ObjectSize(40, 6),
+    fields: ["methods", "superclasses"]
   };
   static _Methods: $.ListCtor<Method>;
   static _Superclasses: $.ListCtor<Superclass>;
@@ -328,15 +317,13 @@ export class Node_Interface extends $.Struct {
   set superclasses(value: $.List<Superclass>) {
     $.utils.copyFrom(value, $.utils.getPointer(4, this));
   }
-  toString(): string {
-    return "Node_Interface_" + super.toString();
-  }
 }
 export class Node_Const extends $.Struct {
   static readonly _capnp = {
     displayName: "const",
     id: "b18aa5ac7a0d9420",
-    size: new $.ObjectSize(40, 6)
+    size: new $.ObjectSize(40, 6),
+    fields: ["type", "value"]
   };
   _adoptType(value: $.Orphan<Type>): void {
     $.utils.adopt(value, $.utils.getPointer(3, this));
@@ -374,15 +361,13 @@ export class Node_Const extends $.Struct {
   set value(value: Value) {
     $.utils.copyFrom(value, $.utils.getPointer(4, this));
   }
-  toString(): string {
-    return "Node_Const_" + super.toString();
-  }
 }
 export class Node_Annotation extends $.Struct {
   static readonly _capnp = {
     displayName: "annotation",
     id: "ec1619d4400a0290",
-    size: new $.ObjectSize(40, 6)
+    size: new $.ObjectSize(40, 6),
+    fields: ["type", "targetsFile", "targetsConst", "targetsEnum", "targetsEnumerant", "targetsStruct", "targetsField", "targetsUnion", "targetsGroup", "targetsInterface", "targetsMethod", "targetsParam", "targetsAnnotation"]
   };
   _adoptType(value: $.Orphan<Type>): void {
     $.utils.adopt(value, $.utils.getPointer(3, this));
@@ -474,9 +459,6 @@ export class Node_Annotation extends $.Struct {
   set targetsAnnotation(value: boolean) {
     $.utils.setBit(123, value, this);
   }
-  toString(): string {
-    return "Node_Annotation_" + super.toString();
-  }
 }
 export const Node_Which = {
   FILE: 0,
@@ -500,7 +482,8 @@ export class Node extends $.Struct {
   static readonly _capnp = {
     displayName: "Node",
     id: "e682ab4cf923a417",
-    size: new $.ObjectSize(40, 6)
+    size: new $.ObjectSize(40, 6),
+    fields: ["id", "displayName", "displayNamePrefixLength", "scopeId", "parameters", "isGeneric", "nestedNodes", "annotations", "file", "struct", "enum", "interface", "const", "annotation"]
   };
   static _Parameters: $.ListCtor<Node_Parameter>;
   static _NestedNodes: $.ListCtor<Node_NestedNode>;
@@ -695,9 +678,6 @@ export class Node extends $.Struct {
   set annotation(_: true) {
     $.utils.setUint16(12, 5, this);
   }
-  toString(): string {
-    return "Node_" + super.toString();
-  }
   which(): Node_Which {
     return $.utils.getUint16(12, this) as Node_Which;
   }
@@ -709,7 +689,8 @@ export class Field_Slot extends $.Struct {
   static readonly _capnp = {
     displayName: "slot",
     id: "c42305476bb4746f",
-    size: new $.ObjectSize(24, 4)
+    size: new $.ObjectSize(24, 4),
+    fields: ["offset", "type", "defaultValue", "hadExplicitDefault"]
   };
   /**
   * Offset, in units of the field's size, from the beginning of the section in which the field
@@ -770,9 +751,6 @@ export class Field_Slot extends $.Struct {
   set hadExplicitDefault(value: boolean) {
     $.utils.setBit(128, value, this);
   }
-  toString(): string {
-    return "Field_Slot_" + super.toString();
-  }
 }
 /**
 * A group.
@@ -781,7 +759,8 @@ export class Field_Group extends $.Struct {
   static readonly _capnp = {
     displayName: "group",
     id: "cafccddb68db1d11",
-    size: new $.ObjectSize(24, 4)
+    size: new $.ObjectSize(24, 4),
+    fields: ["typeId"]
   };
   /**
   * The ID of the group's node.
@@ -791,9 +770,6 @@ export class Field_Group extends $.Struct {
   }
   set typeId(value: bigint) {
     $.utils.setUint64(16, value, this);
-  }
-  toString(): string {
-    return "Field_Group_" + super.toString();
   }
 }
 export const Field_Ordinal_Which = {
@@ -807,7 +783,8 @@ export class Field_Ordinal extends $.Struct {
   static readonly _capnp = {
     displayName: "ordinal",
     id: "bb90d5c287870be6",
-    size: new $.ObjectSize(24, 4)
+    size: new $.ObjectSize(24, 4),
+    fields: ["implicit", "explicit"]
   };
   get _isImplicit(): boolean {
     return $.utils.getUint16(10, this) === 0;
@@ -832,9 +809,6 @@ export class Field_Ordinal extends $.Struct {
     $.utils.setUint16(10, 1, this);
     $.utils.setUint16(12, value, this);
   }
-  toString(): string {
-    return "Field_Ordinal_" + super.toString();
-  }
   which(): Field_Ordinal_Which {
     return $.utils.getUint16(10, this) as Field_Ordinal_Which;
   }
@@ -855,6 +829,7 @@ export class Field extends $.Struct {
     displayName: "Field",
     id: "9aad50a41f4af45f",
     size: new $.ObjectSize(24, 4),
+    fields: ["name", "codeOrder", "annotations", "discriminantValue", "slot", "group", "ordinal"],
     defaultDiscriminantValue: $.getUint16Mask(65535)
   };
   static _Annotations: $.ListCtor<Annotation>;
@@ -946,9 +921,6 @@ export class Field extends $.Struct {
   _initOrdinal(): Field_Ordinal {
     return $.utils.getAs(Field_Ordinal, this);
   }
-  toString(): string {
-    return "Field_" + super.toString();
-  }
   which(): Field_Which {
     return $.utils.getUint16(8, this) as Field_Which;
   }
@@ -960,7 +932,8 @@ export class Enumerant extends $.Struct {
   static readonly _capnp = {
     displayName: "Enumerant",
     id: "978a7cebdc549a4d",
-    size: new $.ObjectSize(8, 2)
+    size: new $.ObjectSize(8, 2),
+    fields: ["name", "codeOrder", "annotations"]
   };
   static _Annotations: $.ListCtor<Annotation>;
   get name(): string {
@@ -997,15 +970,13 @@ export class Enumerant extends $.Struct {
   set annotations(value: $.List<Annotation>) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "Enumerant_" + super.toString();
-  }
 }
 export class Superclass extends $.Struct {
   static readonly _capnp = {
     displayName: "Superclass",
     id: "a9962a9ed0a4d7f8",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
+    fields: ["id", "brand"]
   };
   get id(): bigint {
     return $.utils.getUint64(0, this);
@@ -1031,9 +1002,6 @@ export class Superclass extends $.Struct {
   set brand(value: Brand) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Superclass_" + super.toString();
-  }
 }
 /**
 * Schema for method of an interface.
@@ -1042,7 +1010,8 @@ export class Method extends $.Struct {
   static readonly _capnp = {
     displayName: "Method",
     id: "9500cce23b334d80",
-    size: new $.ObjectSize(24, 5)
+    size: new $.ObjectSize(24, 5),
+    fields: ["name", "codeOrder", "implicitParameters", "paramStructType", "paramBrand", "resultStructType", "resultBrand", "annotations"]
   };
   static _ImplicitParameters: $.ListCtor<Node_Parameter>;
   static _Annotations: $.ListCtor<Annotation>;
@@ -1168,15 +1137,13 @@ export class Method extends $.Struct {
   set annotations(value: $.List<Annotation>) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "Method_" + super.toString();
-  }
 }
 export class Type_List extends $.Struct {
   static readonly _capnp = {
     displayName: "list",
     id: "87e739250a60ea97",
-    size: new $.ObjectSize(24, 1)
+    size: new $.ObjectSize(24, 1),
+    fields: ["elementType"]
   };
   _adoptElementType(value: $.Orphan<Type>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -1196,15 +1163,13 @@ export class Type_List extends $.Struct {
   set elementType(value: Type) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Type_List_" + super.toString();
-  }
 }
 export class Type_Enum extends $.Struct {
   static readonly _capnp = {
     displayName: "enum",
     id: "9e0e78711a7f87a9",
-    size: new $.ObjectSize(24, 1)
+    size: new $.ObjectSize(24, 1),
+    fields: ["typeId", "brand"]
   };
   get typeId(): bigint {
     return $.utils.getUint64(8, this);
@@ -1229,16 +1194,14 @@ export class Type_Enum extends $.Struct {
   }
   set brand(value: Brand) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
-  }
-  toString(): string {
-    return "Type_Enum_" + super.toString();
   }
 }
 export class Type_Struct extends $.Struct {
   static readonly _capnp = {
     displayName: "struct",
     id: "ac3a6f60ef4cc6d3",
-    size: new $.ObjectSize(24, 1)
+    size: new $.ObjectSize(24, 1),
+    fields: ["typeId", "brand"]
   };
   get typeId(): bigint {
     return $.utils.getUint64(8, this);
@@ -1263,16 +1226,14 @@ export class Type_Struct extends $.Struct {
   }
   set brand(value: Brand) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
-  }
-  toString(): string {
-    return "Type_Struct_" + super.toString();
   }
 }
 export class Type_Interface extends $.Struct {
   static readonly _capnp = {
     displayName: "interface",
     id: "ed8bca69f7fb0cbf",
-    size: new $.ObjectSize(24, 1)
+    size: new $.ObjectSize(24, 1),
+    fields: ["typeId", "brand"]
   };
   get typeId(): bigint {
     return $.utils.getUint64(8, this);
@@ -1297,9 +1258,6 @@ export class Type_Interface extends $.Struct {
   }
   set brand(value: Brand) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
-  }
-  toString(): string {
-    return "Type_Interface_" + super.toString();
   }
 }
 export const Type_AnyPointer_Unconstrained_Which = {
@@ -1324,7 +1282,8 @@ export class Type_AnyPointer_Unconstrained extends $.Struct {
   static readonly _capnp = {
     displayName: "unconstrained",
     id: "8e3b5f79fe593656",
-    size: new $.ObjectSize(24, 1)
+    size: new $.ObjectSize(24, 1),
+    fields: ["anyKind", "struct", "list", "capability"]
   };
   get _isAnyKind(): boolean {
     return $.utils.getUint16(10, this) === 0;
@@ -1350,9 +1309,6 @@ export class Type_AnyPointer_Unconstrained extends $.Struct {
   set capability(_: true) {
     $.utils.setUint16(10, 3, this);
   }
-  toString(): string {
-    return "Type_AnyPointer_Unconstrained_" + super.toString();
-  }
   which(): Type_AnyPointer_Unconstrained_Which {
     return $.utils.getUint16(10, this) as Type_AnyPointer_Unconstrained_Which;
   }
@@ -1364,7 +1320,8 @@ export class Type_AnyPointer_Parameter extends $.Struct {
   static readonly _capnp = {
     displayName: "parameter",
     id: "9dd1f724f4614a85",
-    size: new $.ObjectSize(24, 1)
+    size: new $.ObjectSize(24, 1),
+    fields: ["scopeId", "parameterIndex"]
   };
   /**
   * ID of the generic type whose parameter we're referencing. This should be a parent of the
@@ -1385,9 +1342,6 @@ export class Type_AnyPointer_Parameter extends $.Struct {
   set parameterIndex(value: number) {
     $.utils.setUint16(10, value, this);
   }
-  toString(): string {
-    return "Type_AnyPointer_Parameter_" + super.toString();
-  }
 }
 /**
 * This is actually a reference to an implicit (generic) parameter of a method. The only
@@ -1397,16 +1351,14 @@ export class Type_AnyPointer_ImplicitMethodParameter extends $.Struct {
   static readonly _capnp = {
     displayName: "implicitMethodParameter",
     id: "baefc9120c56e274",
-    size: new $.ObjectSize(24, 1)
+    size: new $.ObjectSize(24, 1),
+    fields: ["parameterIndex"]
   };
   get parameterIndex(): number {
     return $.utils.getUint16(10, this);
   }
   set parameterIndex(value: number) {
     $.utils.setUint16(10, value, this);
-  }
-  toString(): string {
-    return "Type_AnyPointer_ImplicitMethodParameter_" + super.toString();
   }
 }
 export const Type_AnyPointer_Which = {
@@ -1422,7 +1374,8 @@ export class Type_AnyPointer extends $.Struct {
   static readonly _capnp = {
     displayName: "anyPointer",
     id: "c2573fe8a23e49f1",
-    size: new $.ObjectSize(24, 1)
+    size: new $.ObjectSize(24, 1),
+    fields: ["unconstrained", "parameter", "implicitMethodParameter"]
   };
   /**
   * A regular AnyPointer.
@@ -1480,9 +1433,6 @@ export class Type_AnyPointer extends $.Struct {
   set implicitMethodParameter(_: true) {
     $.utils.setUint16(8, 2, this);
   }
-  toString(): string {
-    return "Type_AnyPointer_" + super.toString();
-  }
   which(): Type_AnyPointer_Which {
     return $.utils.getUint16(8, this) as Type_AnyPointer_Which;
   }
@@ -1535,7 +1485,8 @@ export class Type extends $.Struct {
   static readonly _capnp = {
     displayName: "Type",
     id: "d07378ede1f9cc60",
-    size: new $.ObjectSize(24, 1)
+    size: new $.ObjectSize(24, 1),
+    fields: ["void", "bool", "int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "uint64", "float32", "float64", "text", "data", "list", "enum", "struct", "interface", "anyPointer"]
   };
   get _isVoid(): boolean {
     return $.utils.getUint16(0, this) === 0;
@@ -1691,9 +1642,6 @@ export class Type extends $.Struct {
   set anyPointer(_: true) {
     $.utils.setUint16(0, 18, this);
   }
-  toString(): string {
-    return "Type_" + super.toString();
-  }
   which(): Type_Which {
     return $.utils.getUint16(0, this) as Type_Which;
   }
@@ -1709,7 +1657,8 @@ export class Brand_Scope extends $.Struct {
   static readonly _capnp = {
     displayName: "Scope",
     id: "abd73485a9636bc9",
-    size: new $.ObjectSize(16, 1)
+    size: new $.ObjectSize(16, 1),
+    fields: ["scopeId", "bind", "inherit"]
   };
   static _Bind: $.ListCtor<Brand_Binding>;
   /**
@@ -1755,9 +1704,6 @@ export class Brand_Scope extends $.Struct {
   set inherit(_: true) {
     $.utils.setUint16(8, 1, this);
   }
-  toString(): string {
-    return "Brand_Scope_" + super.toString();
-  }
   which(): Brand_Scope_Which {
     return $.utils.getUint16(8, this) as Brand_Scope_Which;
   }
@@ -1773,7 +1719,8 @@ export class Brand_Binding extends $.Struct {
   static readonly _capnp = {
     displayName: "Binding",
     id: "c863cd16969ee7fc",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
+    fields: ["unbound", "type"]
   };
   get _isUnbound(): boolean {
     return $.utils.getUint16(0, this) === 0;
@@ -1806,9 +1753,6 @@ export class Brand_Binding extends $.Struct {
     $.utils.setUint16(0, 1, this);
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Brand_Binding_" + super.toString();
-  }
   which(): Brand_Binding_Which {
     return $.utils.getUint16(0, this) as Brand_Binding_Which;
   }
@@ -1823,7 +1767,8 @@ export class Brand extends $.Struct {
   static readonly _capnp = {
     displayName: "Brand",
     id: "903455f06065422b",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
+    fields: ["scopes"]
   };
   static _Scopes: $.ListCtor<Brand_Scope>;
   _adoptScopes(value: $.Orphan<$.List<Brand_Scope>>): void {
@@ -1848,9 +1793,6 @@ export class Brand extends $.Struct {
   }
   set scopes(value: $.List<Brand_Scope>) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
-  }
-  toString(): string {
-    return "Brand_" + super.toString();
   }
 }
 export const Value_Which = {
@@ -1901,7 +1843,8 @@ export class Value extends $.Struct {
   static readonly _capnp = {
     displayName: "Value",
     id: "ce23dcd2d7b00c9b",
-    size: new $.ObjectSize(16, 1)
+    size: new $.ObjectSize(16, 1),
+    fields: ["void", "bool", "int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "uint64", "float32", "float64", "text", "data", "list", "enum", "struct", "interface", "anyPointer"]
   };
   get _isVoid(): boolean {
     return $.utils.getUint16(0, this) === 0;
@@ -2146,9 +2089,6 @@ export class Value extends $.Struct {
     $.utils.setUint16(0, 18, this);
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Value_" + super.toString();
-  }
   which(): Value_Which {
     return $.utils.getUint16(0, this) as Value_Which;
   }
@@ -2161,7 +2101,8 @@ export class Annotation extends $.Struct {
   static readonly _capnp = {
     displayName: "Annotation",
     id: "f1c8950dab257542",
-    size: new $.ObjectSize(8, 2)
+    size: new $.ObjectSize(8, 2),
+    fields: ["id", "brand", "value"]
   };
   /**
   * ID of the annotation node.
@@ -2213,9 +2154,6 @@ export class Annotation extends $.Struct {
   set value(value: Value) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Annotation_" + super.toString();
-  }
 }
 export const ElementSize = {
   EMPTY: 0,
@@ -2232,7 +2170,8 @@ export class CapnpVersion extends $.Struct {
   static readonly _capnp = {
     displayName: "CapnpVersion",
     id: "d85d305b7d839963",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
+    fields: ["major", "minor", "micro"]
   };
   get major(): number {
     return $.utils.getUint16(0, this);
@@ -2252,15 +2191,13 @@ export class CapnpVersion extends $.Struct {
   set micro(value: number) {
     $.utils.setUint8(3, value, this);
   }
-  toString(): string {
-    return "CapnpVersion_" + super.toString();
-  }
 }
 export class CodeGeneratorRequest_RequestedFile_Import extends $.Struct {
   static readonly _capnp = {
     displayName: "Import",
     id: "ae504193122357e5",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
+    fields: ["id", "name"]
   };
   /**
   * ID of the imported file.
@@ -2285,16 +2222,14 @@ export class CodeGeneratorRequest_RequestedFile_Import extends $.Struct {
   set name(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "CodeGeneratorRequest_RequestedFile_Import_" + super.toString();
-  }
 }
 export class CodeGeneratorRequest_RequestedFile extends $.Struct {
   static readonly Import = CodeGeneratorRequest_RequestedFile_Import;
   static readonly _capnp = {
     displayName: "RequestedFile",
     id: "cfea0eb02e810062",
-    size: new $.ObjectSize(8, 2)
+    size: new $.ObjectSize(8, 2),
+    fields: ["id", "filename", "imports"]
   };
   static _Imports: $.ListCtor<CodeGeneratorRequest_RequestedFile_Import>;
   /**
@@ -2337,16 +2272,14 @@ export class CodeGeneratorRequest_RequestedFile extends $.Struct {
   set imports(value: $.List<CodeGeneratorRequest_RequestedFile_Import>) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "CodeGeneratorRequest_RequestedFile_" + super.toString();
-  }
 }
 export class CodeGeneratorRequest extends $.Struct {
   static readonly RequestedFile = CodeGeneratorRequest_RequestedFile;
   static readonly _capnp = {
     displayName: "CodeGeneratorRequest",
     id: "bfc546f6210ad7ce",
-    size: new $.ObjectSize(0, 4)
+    size: new $.ObjectSize(0, 4),
+    fields: ["capnpVersion", "nodes", "sourceInfo", "requestedFiles"]
   };
   static _Nodes: $.ListCtor<Node>;
   static _SourceInfo: $.ListCtor<Node_SourceInfo>;
@@ -2441,9 +2374,6 @@ export class CodeGeneratorRequest extends $.Struct {
   }
   set requestedFiles(value: $.List<CodeGeneratorRequest_RequestedFile>) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
-  }
-  toString(): string {
-    return "CodeGeneratorRequest_" + super.toString();
   }
 }
 Node_SourceInfo._Members = $.CompositeList(Node_SourceInfo_Member);

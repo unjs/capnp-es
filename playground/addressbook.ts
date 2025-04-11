@@ -12,7 +12,8 @@ export class Person_PhoneNumber extends $.Struct {
   static readonly _capnp = {
     displayName: "PhoneNumber",
     id: "af663da31c027e0e",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
+    fields: ["number", "type"]
   };
   get number(): string {
     return $.utils.getText(0, this);
@@ -45,7 +46,8 @@ export class Person_Employment extends $.Struct {
   static readonly _capnp = {
     displayName: "employment",
     id: "e88780a90af3da0c",
-    size: new $.ObjectSize(8, 4)
+    size: new $.ObjectSize(8, 4),
+    fields: ["unemployed", "employer", "school", "selfEmployed"]
   };
   get _isUnemployed(): boolean {
     return $.utils.getUint16(4, this) === 0;
@@ -93,7 +95,8 @@ export class Person extends $.Struct {
   static readonly _capnp = {
     displayName: "Person",
     id: "d94307c4985be8e7",
-    size: new $.ObjectSize(8, 4)
+    size: new $.ObjectSize(8, 4),
+    fields: ["id", "name", "email", "phones", "employment"]
   };
   static _Phones: $.ListCtor<Person_PhoneNumber>;
   get id(): number {
@@ -146,7 +149,8 @@ export class AddressBook extends $.Struct {
   static readonly _capnp = {
     displayName: "AddressBook",
     id: "c06ea6d038a357bb",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
+    fields: ["people"]
   };
   static _People: $.ListCtor<Person>;
   _adoptPeople(value: $.Orphan<$.List<Person>>): void {

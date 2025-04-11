@@ -5,7 +5,8 @@ export class Persistent_SaveParams extends $.Struct {
   static readonly _capnp = {
     displayName: "SaveParams",
     id: "f76fba59183073a5",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
+    fields: ["sealFor"]
   };
   _adoptSealFor(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -30,15 +31,13 @@ export class Persistent_SaveParams extends $.Struct {
   set sealFor(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Persistent_SaveParams_" + super.toString();
-  }
 }
 export class Persistent_SaveResults extends $.Struct {
   static readonly _capnp = {
     displayName: "SaveResults",
     id: "b76848c18c40efbf",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
+    fields: ["sturdyRef"]
   };
   _adoptSturdyRef(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -54,9 +53,6 @@ export class Persistent_SaveResults extends $.Struct {
   }
   set sturdyRef(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
-  }
-  toString(): string {
-    return "Persistent_SaveResults_" + super.toString();
   }
 }
 export class Persistent_SaveResults$Promise {
@@ -186,9 +182,7 @@ export class Persistent extends $.Interface {
   static readonly _capnp = {
     displayName: "Persistent",
     id: "c8cb212fcd9f5691",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
+    fields: []
   };
-  toString(): string {
-    return "Persistent_" + super.toString();
-  }
 }
