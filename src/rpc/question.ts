@@ -91,7 +91,7 @@ export class Question<P extends Struct, R extends Struct> implements Answer<R> {
 
   pipelineCall<CallParams extends Struct, CallResults extends Struct>(
     transform: PipelineOp[],
-    ccall: Call<CallParams, CallResults>,
+    call: Call<CallParams, CallResults>,
   ): Answer<CallResults> {
     if (this.conn.findQuestion<P, R>(this.id) !== this) {
       if (this.state === QuestionState.IN_PROGRESS) {
@@ -100,21 +100,21 @@ export class Question<P extends Struct, R extends Struct> implements Answer<R> {
 
       const client = clientFromResolution(transform, this.obj, this.err);
       // TODO: check that this is fine - this was conn.lockedCall
-      return client.call(ccall);
+      return client.call(call);
     }
 
-    const pipeq = this.conn.newQuestion(ccall.method);
+    const pipeq = this.conn.newQuestion(call.method);
     const msg = newMessage();
     const msgCall = msg._initCall();
     msgCall.questionId = pipeq.id;
-    msgCall.interfaceId = ccall.method.interfaceId;
-    msgCall.methodId = ccall.method.methodId;
+    msgCall.interfaceId = call.method.interfaceId;
+    msgCall.methodId = call.method.methodId;
     const target = msgCall._initTarget();
     const a = target._initPromisedAnswer();
     a.questionId = this.id;
     transformToPromisedAnswer(a, transform);
     const payload = msgCall._initParams();
-    this.conn.fillParams(payload, ccall);
+    this.conn.fillParams(payload, call);
     this.conn.sendMessage(msg);
     this.addPromise(transform);
     return pipeq;

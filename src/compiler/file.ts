@@ -1,6 +1,6 @@
 // Based on https://github.com/jdiaz5513/capnp-ts (MIT - Julián Díaz)
 
-import * as s from "../capnp/schema";
+import * as schema from "../capnp/schema";
 import { format } from "../util";
 
 import { CodeGeneratorFileContext } from "./code-generator-file-context";
@@ -17,20 +17,23 @@ export function compareCodeOrder(
 
 export function getConcreteListType(
   ctx: CodeGeneratorFileContext,
-  type: s.Type,
+  type: schema.Type,
 ): string {
-  if (!type._isList) return getJsType(ctx, type, false);
+  if (!type._isList) {
+    return getJsType(ctx, type, false);
+  }
 
-  const elementType = type.list.elementType;
+  const { elementType } = type.list;
   const elementTypeWhich = elementType.which();
 
-  if (elementTypeWhich === s.Type.LIST) {
+  if (elementTypeWhich === schema.Type.LIST) {
     return `$.PointerList(${getConcreteListType(ctx, elementType)})`;
-  } else if (elementTypeWhich === s.Type.STRUCT) {
+  } else if (elementTypeWhich === schema.Type.STRUCT) {
     const structNode = lookupNode(ctx, elementType.struct.typeId);
 
     if (
-      structNode.struct.preferredListEncoding !== s.ElementSize.INLINE_COMPOSITE
+      structNode.struct.preferredListEncoding !==
+      schema.ElementSize.INLINE_COMPOSITE
     ) {
       throw new Error(E.GEN_FIELD_NON_INLINE_STRUCT_LIST);
     }
@@ -41,11 +44,19 @@ export function getConcreteListType(
   return ConcreteListType[elementTypeWhich];
 }
 
-export function getDisplayNamePrefix(node: s.Node): string {
+export function getDisplayNamePrefix(node: schema.Node): string {
   return node.displayName.slice(node.displayNamePrefixLength);
 }
 
-export function getFullClassName(node: s.Node): string {
+/**
+ * Converts a Cap'n Proto schema node's display name into a TypeScript class name.
+ * Transforms names like "foo:bar.baz.qux" into "Bar_Baz_Qux".
+ *
+ * @param node - Schema node containing the display name to convert
+ * @param node.displayName - Full display name including namespace (e.g. "foo:bar.baz.qux")
+ * @returns Formatted class name with capitalized parts joined by underscores
+ */
+export function getFullClassName(node: schema.Node): string {
   return node.displayName
     .split(":")[1]
     .split(".")
@@ -55,63 +66,63 @@ export function getFullClassName(node: s.Node): string {
 
 export function getJsType(
   ctx: CodeGeneratorFileContext,
-  type: s.Type,
+  type: schema.Type,
   constructor: boolean,
 ): string {
   const whichType = type.which();
 
   switch (whichType) {
-    case s.Type.ANY_POINTER: {
+    case schema.Type.ANY_POINTER: {
       return "$.Pointer";
     }
 
-    case s.Type.BOOL: {
+    case schema.Type.BOOL: {
       return "boolean";
     }
 
-    case s.Type.DATA: {
+    case schema.Type.DATA: {
       return "$.Data";
     }
 
-    case s.Type.ENUM: {
+    case schema.Type.ENUM: {
       return getFullClassName(lookupNode(ctx, type.enum.typeId));
     }
 
-    case s.Type.FLOAT32:
-    case s.Type.FLOAT64:
-    case s.Type.INT16:
-    case s.Type.INT32:
-    case s.Type.INT8:
-    case s.Type.UINT16:
-    case s.Type.UINT32:
-    case s.Type.UINT8: {
+    case schema.Type.FLOAT32:
+    case schema.Type.FLOAT64:
+    case schema.Type.INT16:
+    case schema.Type.INT32:
+    case schema.Type.INT8:
+    case schema.Type.UINT16:
+    case schema.Type.UINT32:
+    case schema.Type.UINT8: {
       return "number";
     }
 
-    case s.Type.UINT64:
-    case s.Type.INT64: {
+    case schema.Type.UINT64:
+    case schema.Type.INT64: {
       return "bigint";
     }
 
-    case s.Type.INTERFACE: {
+    case schema.Type.INTERFACE: {
       return getFullClassName(lookupNode(ctx, type.interface.typeId));
     }
 
-    case s.Type.LIST: {
+    case schema.Type.LIST: {
       return `$.List${constructor ? "Ctor" : ""}<${getJsType(ctx, type.list.elementType, false)}>`;
     }
 
-    case s.Type.STRUCT: {
+    case schema.Type.STRUCT: {
       const c = getFullClassName(lookupNode(ctx, type.struct.typeId));
 
       return constructor ? `$.StructCtor<${c}>` : c;
     }
 
-    case s.Type.TEXT: {
+    case schema.Type.TEXT: {
       return "string";
     }
 
-    case s.Type.VOID: {
+    case schema.Type.VOID: {
       return "$.Void";
     }
 
@@ -121,14 +132,30 @@ export function getJsType(
   }
 }
 
-export function getUnnamedUnionFields(node: s.Node): s.Field[] {
-  if (!node._isStruct) return [];
+/**
+ * Gets all fields that are part of an unnamed union in a struct.
+ * An unnamed union is a group of fields where only one can be set at a time.
+ *
+ * @param node - The schema node to check for unnamed union fields
+ * @returns Array of fields that belong to the unnamed union, empty if node is not a struct
+ */
+export function getUnnamedUnionFields(node: schema.Node): schema.Field[] {
+  if (!node._isStruct) {
+    return [];
+  }
 
   return node.struct.fields.filter(
-    (f) => f.discriminantValue !== s.Field.NO_DISCRIMINANT,
+    (f) => f.discriminantValue !== schema.Field.NO_DISCRIMINANT,
   );
 }
 
+/**
+ * Checks if a Node with the given ID exists in the schema context.
+ *
+ * @param ctx - The file context containing all nodes from the schema
+ * @param lookup - Either a Node ID as a bigint, or an object containing an ID field
+ * @returns whether a node with the given ID exists
+ */
 export function hasNode(
   ctx: CodeGeneratorFileContext,
   lookup: { readonly id: bigint } | bigint,
@@ -139,8 +166,8 @@ export function hasNode(
 }
 
 export function loadRequestedFile(
-  req: s.CodeGeneratorRequest,
-  file: s.CodeGeneratorRequest_RequestedFile,
+  req: schema.CodeGeneratorRequest,
+  file: schema.CodeGeneratorRequest_RequestedFile,
 ): CodeGeneratorFileContext {
   const ctx = new CodeGeneratorFileContext(req, file);
 
@@ -151,44 +178,67 @@ export function loadRequestedFile(
   return ctx;
 }
 
+/**
+ * Looks up a Node in the schema by its ID.
+ *
+ * @param ctx - The file context containing all nodes from the schema
+ * @param lookup - Either a Node ID as a bigint, or an object containing an ID field
+ * @throws {Error} When the node cannot be found in the context
+ * @returns The found Node from the schema
+ */
 export function lookupNode(
   ctx: CodeGeneratorFileContext,
   lookup: { readonly id: bigint } | bigint,
-): s.Node {
+): schema.Node {
   const id = typeof lookup === "bigint" ? lookup : lookup.id;
   const node = ctx.nodes.find((n) => n.id === id);
 
-  if (node === undefined) throw new Error(format(E.GEN_NODE_LOOKUP_FAIL, id));
+  if (node === undefined) {
+    throw new Error(format(E.GEN_NODE_LOOKUP_FAIL, id));
+  }
 
   return node;
 }
 
+/**
+ * Looks up source information for a Node in the schema by its ID.
+ *
+ * Source information includes documentation comments and other metadata
+ * that was present in the original Cap'n Proto schema file.
+ *
+ * @param ctx - The file context containing all nodes and source info from the schema
+ * @param lookup - Either a Node ID as a bigint, or an object containing an ID field
+ * @returns The source info for the node if found, undefined otherwise
+ */
 export function lookupNodeSourceInfo(
   ctx: CodeGeneratorFileContext,
   lookup: { readonly id: bigint } | bigint,
-): s.Node_SourceInfo | undefined {
+): schema.Node_SourceInfo | undefined {
   const id = typeof lookup === "bigint" ? lookup : lookup.id;
-  const sourceInfo = ctx.req.sourceInfo.find((s) => s.id === id);
-  if (!sourceInfo) throw new Error(format(E.GEN_NODE_LOOKUP_FAIL, id));
-  return sourceInfo;
+  return ctx.req.sourceInfo.find((s) => s.id === id);
 }
 
 /**
- * Determine whether the given field needs a concrete list class: this is currently the case for composite lists
+ * Determines whether the given field needs a concrete list class.
+ *
+ * This is currently the case for composite lists
  * (`$.CompositeList`) and lists of lists (`capnp.PointerList`).
  *
- * @param {s.Field} field The field to check.
+ * @param {schema.Field} field The field to check.
  * @returns {boolean} Returns `true` if the field requires a concrete list class initializer.
  */
-
-export function needsConcreteListClass(field: s.Field): boolean {
-  if (!field._isSlot) return false;
+export function needsConcreteListClass(field: schema.Field): boolean {
+  if (!field._isSlot) {
+    return false;
+  }
 
   const slotType = field.slot.type;
 
-  if (!slotType._isList) return false;
+  if (!slotType._isList) {
+    return false;
+  }
 
-  const elementType = slotType.list.elementType;
+  const { elementType } = slotType.list;
 
   return elementType._isStruct || elementType._isList;
 }

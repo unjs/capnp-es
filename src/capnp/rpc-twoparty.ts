@@ -10,65 +10,61 @@ export class VatId extends $.Struct {
   static readonly _capnp = {
     displayName: "VatId",
     id: "d20b909fee733a8e",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   get side(): Side {
-    return $.utils.getUint16(0, this) as Side;
+    return ($.utils.getUint16(0, this) as Side);
   }
   set side(value: Side) {
     $.utils.setUint16(0, value, this);
   }
-  toString(): string {
-    return "VatId_" + super.toString();
-  }
+  toString(): string { return "VatId_" + super.toString(); }
 }
 /**
 * Only used for joins, since three-way introductions never happen on a two-party network.
-* */
+*
+*/
 export class ProvisionId extends $.Struct {
   static readonly _capnp = {
     displayName: "ProvisionId",
     id: "b88d09a9c5f39817",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   /**
-  * The ID from `JoinKeyPart`.
-  * */
+* The ID from `JoinKeyPart`.
+*
+*/
   get joinId(): number {
     return $.utils.getUint32(0, this);
   }
   set joinId(value: number) {
     $.utils.setUint32(0, value, this);
   }
-  toString(): string {
-    return "ProvisionId_" + super.toString();
-  }
+  toString(): string { return "ProvisionId_" + super.toString(); }
 }
 /**
 * Never used, because there are only two parties.
-* */
+*
+*/
 export class RecipientId extends $.Struct {
   static readonly _capnp = {
     displayName: "RecipientId",
     id: "89f389b6fd4082c1",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "RecipientId_" + super.toString();
-  }
+  toString(): string { return "RecipientId_" + super.toString(); }
 }
 /**
 * Never used, because there is no third party.
-* */
+*
+*/
 export class ThirdPartyCapId extends $.Struct {
   static readonly _capnp = {
     displayName: "ThirdPartyCapId",
     id: "b47f4979672cb59d",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "ThirdPartyCapId_" + super.toString();
-  }
+  toString(): string { return "ThirdPartyCapId_" + super.toString(); }
 }
 /**
 * Joins in the two-party case are simplified by a few observations.
@@ -101,17 +97,19 @@ export class ThirdPartyCapId extends $.Struct {
 * On Bob's end, since he knows that Alice will always send all parts of a Join together, he
 * simply waits until he's received them all, then performs a join on the respective capabilities
 * as if it had been requested locally.
-* */
+*
+*/
 export class JoinKeyPart extends $.Struct {
   static readonly _capnp = {
     displayName: "JoinKeyPart",
     id: "95b29059097fca83",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   /**
-  * A number identifying this join, chosen by the sender.  May be reused once `Finish` messages are
-  * sent corresponding to all of the `Join` messages.
-  * */
+* A number identifying this join, chosen by the sender.  May be reused once `Finish` messages are
+* sent corresponding to all of the `Join` messages.
+*
+*/
   get joinId(): number {
     return $.utils.getUint32(0, this);
   }
@@ -119,8 +117,9 @@ export class JoinKeyPart extends $.Struct {
     $.utils.setUint32(0, value, this);
   }
   /**
-  * The number of capabilities to be joined.
-  * */
+* The number of capabilities to be joined.
+*
+*/
   get partCount(): number {
     return $.utils.getUint16(4, this);
   }
@@ -128,27 +127,27 @@ export class JoinKeyPart extends $.Struct {
     $.utils.setUint16(4, value, this);
   }
   /**
-  * Which part this request targets -- a number in the range [0, partCount).
-  * */
+* Which part this request targets -- a number in the range [0, partCount).
+*
+*/
   get partNum(): number {
     return $.utils.getUint16(6, this);
   }
   set partNum(value: number) {
     $.utils.setUint16(6, value, this);
   }
-  toString(): string {
-    return "JoinKeyPart_" + super.toString();
-  }
+  toString(): string { return "JoinKeyPart_" + super.toString(); }
 }
 export class JoinResult extends $.Struct {
   static readonly _capnp = {
     displayName: "JoinResult",
     id: "9d263a3630b7ebee",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   /**
-  * Matches `JoinKeyPart`.
-  * */
+* Matches `JoinKeyPart`.
+*
+*/
   get joinId(): number {
     return $.utils.getUint32(0, this);
   }
@@ -156,10 +155,11 @@ export class JoinResult extends $.Struct {
     $.utils.setUint32(0, value, this);
   }
   /**
-  * All JoinResults in the set will have the same value for `succeeded`.  The receiver actually
-  * implements the join by waiting for all the `JoinKeyParts` and then performing its own join on
-  * them, then going back and answering all the join requests afterwards.
-  * */
+* All JoinResults in the set will have the same value for `succeeded`.  The receiver actually
+* implements the join by waiting for all the `JoinKeyParts` and then performing its own join on
+* them, then going back and answering all the join requests afterwards.
+*
+*/
   get succeeded(): boolean {
     return $.utils.getBit(32, this);
   }
@@ -173,8 +173,9 @@ export class JoinResult extends $.Struct {
     return $.utils.disown(this.cap);
   }
   /**
-  * One of the JoinResults will have a non-null `cap` which is the joined capability.
-  * */
+* One of the JoinResults will have a non-null `cap` which is the joined capability.
+*
+*/
   get cap(): $.Pointer {
     return $.utils.getPointer(0, this);
   }
@@ -184,7 +185,5 @@ export class JoinResult extends $.Struct {
   set cap(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "JoinResult_" + super.toString();
-  }
+  toString(): string { return "JoinResult_" + super.toString(); }
 }

@@ -1098,7 +1098,9 @@ export function setUint16(
 
   const ds = getDataSection(s);
 
-  if (defaultMask !== undefined) value ^= defaultMask.getUint16(0, true);
+  if (defaultMask !== undefined) {
+    value ^= defaultMask.getUint16(0, true);
+  }
 
   ds.segment.setUint16(ds.byteOffset + byteOffset, value);
 }
@@ -1124,7 +1126,9 @@ export function setUint32(
 
   const ds = getDataSection(s);
 
-  if (defaultMask !== undefined) value ^= defaultMask.getUint32(0, true);
+  if (defaultMask !== undefined) {
+    value ^= defaultMask.getUint32(0, true);
+  }
 
   ds.segment.setUint32(ds.byteOffset + byteOffset, value);
 }
@@ -1188,8 +1192,9 @@ export function setUint8(
 
   const ds = getDataSection(s);
 
-  if (defaultMask !== undefined) value ^= defaultMask.getUint8(0);
-
+  if (defaultMask !== undefined) {
+    value ^= defaultMask.getUint8(0);
+  }
   ds.segment.setUint8(ds.byteOffset + byteOffset, value);
 }
 
@@ -1209,7 +1214,7 @@ export function checkDataBounds(
   byteLength: number,
   s: Struct,
 ): void {
-  const dataByteLength = getSize(s).dataByteLength;
+  const { dataByteLength } = getSize(s);
 
   if (
     byteOffset < 0 ||

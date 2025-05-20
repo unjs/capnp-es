@@ -8,7 +8,7 @@ export class TestImport2 extends $.Struct {
   static readonly _capnp = {
     displayName: "TestImport2",
     id: "f6bd77f100ecb0ff",
-    size: new $.ObjectSize(8, 7)
+    size: new $.ObjectSize(8, 7),
   };
   _adoptFoo(value: $.Orphan<TestAllTypes>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -137,12 +137,10 @@ export class TestImport2 extends $.Struct {
     $.utils.copyFrom(value, $.utils.getPointer(6, this));
   }
   get bep(): ElementSize {
-    return $.utils.getUint16(0, this) as ElementSize;
+    return ($.utils.getUint16(0, this) as ElementSize);
   }
   set bep(value: ElementSize) {
     $.utils.setUint16(0, value, this);
   }
-  toString(): string {
-    return "TestImport2_" + super.toString();
-  }
+  toString(): string { return "TestImport2_" + super.toString(); }
 }

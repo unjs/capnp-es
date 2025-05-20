@@ -5,7 +5,7 @@ export class Persistent_SaveParams extends $.Struct {
   static readonly _capnp = {
     displayName: "SaveParams",
     id: "f76fba59183073a5",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   _adoptSealFor(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -14,13 +14,14 @@ export class Persistent_SaveParams extends $.Struct {
     return $.utils.disown(this.sealFor);
   }
   /**
-  * Seal the SturdyRef so that it can only be restored by the specified Owner. This is meant
-  * to mitigate damage when a SturdyRef is leaked. See comments above.
-  *
-  * Leaving this value null may or may not be allowed; it is up to the realm to decide. If a
-  * realm does allow a null owner, this should indicate that anyone is allowed to restore the
-  * ref.
-  * */
+* Seal the SturdyRef so that it can only be restored by the specified Owner. This is meant
+* to mitigate damage when a SturdyRef is leaked. See comments above.
+*
+* Leaving this value null may or may not be allowed; it is up to the realm to decide. If a
+* realm does allow a null owner, this should indicate that anyone is allowed to restore the
+* ref.
+*
+*/
   get sealFor(): $.Pointer {
     return $.utils.getPointer(0, this);
   }
@@ -30,15 +31,13 @@ export class Persistent_SaveParams extends $.Struct {
   set sealFor(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Persistent_SaveParams_" + super.toString();
-  }
+  toString(): string { return "Persistent_SaveParams_" + super.toString(); }
 }
 export class Persistent_SaveResults extends $.Struct {
   static readonly _capnp = {
     displayName: "SaveResults",
     id: "b76848c18c40efbf",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   _adoptSturdyRef(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -55,9 +54,7 @@ export class Persistent_SaveResults extends $.Struct {
   set sturdyRef(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Persistent_SaveResults_" + super.toString();
-  }
+  toString(): string { return "Persistent_SaveResults_" + super.toString(); }
 }
 export class Persistent_SaveResults$Promise {
   pipeline: $.Pipeline<any, any, Persistent_SaveResults>;
@@ -110,7 +107,9 @@ export class Persistent$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): Persistent$Client { return new Persistent$Client(this); }
+  client(): Persistent$Client {
+    return new Persistent$Client(this);
+  }
 }
 /**
 * Interface implemented by capabilities that outlive a single connection. A client may save()
@@ -177,7 +176,8 @@ export class Persistent$Server extends $.Server {
 * As a concrete example, an `Owner` could simply contain a domain name, and restoring a SturdyRef
 * would require signing a request using the domain's private key. Authenticating this key could
 * be accomplished through certificate authorities or web-of-trust techniques.
-* */
+*
+*/
 export class Persistent extends $.Interface {
   static readonly SaveParams = Persistent_SaveParams;
   static readonly SaveResults = Persistent_SaveResults;
@@ -186,9 +186,7 @@ export class Persistent extends $.Interface {
   static readonly _capnp = {
     displayName: "Persistent",
     id: "c8cb212fcd9f5691",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "Persistent_" + super.toString();
-  }
+  toString(): string { return "Persistent_" + super.toString(); }
 }

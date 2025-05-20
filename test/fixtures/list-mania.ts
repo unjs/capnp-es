@@ -5,7 +5,7 @@ export class ListMania extends $.Struct {
   static readonly _capnp = {
     displayName: "ListMania",
     id: "d0a988493b63e78b",
-    size: new $.ObjectSize(0, 16)
+    size: new $.ObjectSize(0, 16),
   };
   static _CompositeList: $.ListCtor<ListManiaStruct>;
   _adoptBoolList(value: $.Orphan<$.List<boolean>>): void {
@@ -296,25 +296,21 @@ export class ListMania extends $.Struct {
   set voidList(value: $.List<$.Void>) {
     $.utils.copyFrom(value, $.utils.getPointer(15, this));
   }
-  toString(): string {
-    return "ListMania_" + super.toString();
-  }
+  toString(): string { return "ListMania_" + super.toString(); }
 }
 export class ListManiaInterface_GetListMania$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "getListMania$Params",
     id: "f7bf50e8ad110566",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "ListManiaInterface_GetListMania$Params_" + super.toString();
-  }
+  toString(): string { return "ListManiaInterface_GetListMania$Params_" + super.toString(); }
 }
 export class ListManiaInterface_GetListMania$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "getListMania$Results",
     id: "e89af40dc5417fee",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   _adoptResult(value: $.Orphan<$.List<ListManiaInterface>>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -334,9 +330,7 @@ export class ListManiaInterface_GetListMania$Results extends $.Struct {
   set result(value: $.List<ListManiaInterface>) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "ListManiaInterface_GetListMania$Results_" + super.toString();
-  }
+  toString(): string { return "ListManiaInterface_GetListMania$Results_" + super.toString(); }
 }
 export class ListManiaInterface_GetListMania$Results$Promise {
   pipeline: $.Pipeline<any, any, ListManiaInterface_GetListMania$Results>;
@@ -389,7 +383,9 @@ export class ListManiaInterface$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): ListManiaInterface$Client { return new ListManiaInterface$Client(this); }
+  client(): ListManiaInterface$Client {
+    return new ListManiaInterface$Client(this);
+  }
 }
 export class ListManiaInterface extends $.Interface {
   static readonly Client = ListManiaInterface$Client;
@@ -397,17 +393,15 @@ export class ListManiaInterface extends $.Interface {
   static readonly _capnp = {
     displayName: "ListManiaInterface",
     id: "8a94079c3c57204f",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "ListManiaInterface_" + super.toString();
-  }
+  toString(): string { return "ListManiaInterface_" + super.toString(); }
 }
 export class ListManiaStruct extends $.Struct {
   static readonly _capnp = {
     displayName: "ListManiaStruct",
     id: "9e1eb66286605522",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   _adoptSelf(value: $.Orphan<ListMania>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -427,8 +421,6 @@ export class ListManiaStruct extends $.Struct {
   set self(value: ListMania) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "ListManiaStruct_" + super.toString();
-  }
+  toString(): string { return "ListManiaStruct_" + super.toString(); }
 }
 ListMania._CompositeList = $.CompositeList(ListManiaStruct);

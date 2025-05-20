@@ -6,7 +6,7 @@ export class TestImport extends $.Struct {
   static readonly _capnp = {
     displayName: "TestImport",
     id: "bc55b08b672b5d97",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   _adoptField(value: $.Orphan<TestAllTypes>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -27,12 +27,10 @@ export class TestImport extends $.Struct {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
   get enumField(): TestEnum {
-    return $.utils.getUint16(0, this) as TestEnum;
+    return ($.utils.getUint16(0, this) as TestEnum);
   }
   set enumField(value: TestEnum) {
     $.utils.setUint16(0, value, this);
   }
-  toString(): string {
-    return "TestImport_" + super.toString();
-  }
+  toString(): string { return "TestImport_" + super.toString(); }
 }

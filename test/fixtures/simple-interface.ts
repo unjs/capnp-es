@@ -5,7 +5,7 @@ export class SimpleInterface_Subtract$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "subtract$Params",
     id: "888da0aceabad12a",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   get a(): number {
     return $.utils.getInt32(0, this);
@@ -19,15 +19,13 @@ export class SimpleInterface_Subtract$Params extends $.Struct {
   set b(value: number) {
     $.utils.setInt32(4, value, this);
   }
-  toString(): string {
-    return "SimpleInterface_Subtract$Params_" + super.toString();
-  }
+  toString(): string { return "SimpleInterface_Subtract$Params_" + super.toString(); }
 }
 export class SimpleInterface_Subtract$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "subtract$Results",
     id: "b0164441a304b38f",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   get result(): number {
     return $.utils.getInt32(0, this);
@@ -35,9 +33,7 @@ export class SimpleInterface_Subtract$Results extends $.Struct {
   set result(value: number) {
     $.utils.setInt32(0, value, this);
   }
-  toString(): string {
-    return "SimpleInterface_Subtract$Results_" + super.toString();
-  }
+  toString(): string { return "SimpleInterface_Subtract$Results_" + super.toString(); }
 }
 export class SimpleInterface_Subtract$Results$Promise {
   pipeline: $.Pipeline<any, any, SimpleInterface_Subtract$Results>;
@@ -90,7 +86,9 @@ export class SimpleInterface$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): SimpleInterface$Client { return new SimpleInterface$Client(this); }
+  client(): SimpleInterface$Client {
+    return new SimpleInterface$Client(this);
+  }
 }
 export class SimpleInterface extends $.Interface {
   static readonly Client = SimpleInterface$Client;
@@ -98,9 +96,7 @@ export class SimpleInterface extends $.Interface {
   static readonly _capnp = {
     displayName: "SimpleInterface",
     id: "daf73e960b8928d6",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "SimpleInterface_" + super.toString();
-  }
+  toString(): string { return "SimpleInterface_" + super.toString(); }
 }

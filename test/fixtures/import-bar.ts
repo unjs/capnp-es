@@ -3,11 +3,11 @@ import * as $ from "capnp-es";
 import { Foo } from "./import-foo.js";
 export const _capnpFileId = BigInt("0x9cbc682922e84ff9");
 export class Baz extends $.Struct {
-  static readonly FOO_CONST = $.readRawPointer(new Uint8Array([0x10, 0x02, 0x40, 0x01, 0x00, 0x00]).buffer);
+  static readonly FOO_CONST = $.readRawPointer(new Uint8Array([16, 2, 64, 1, 0, 0]).buffer);
   static readonly _capnp = {
     displayName: "Baz",
     id: "f2f28862b8e82db7",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get bar(): string {
     return $.utils.getText(0, this);
@@ -15,7 +15,5 @@ export class Baz extends $.Struct {
   set bar(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "Baz_" + super.toString();
-  }
+  toString(): string { return "Baz_" + super.toString(); }
 }

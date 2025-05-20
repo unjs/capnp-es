@@ -5,7 +5,7 @@ export class Foo extends $.Struct {
   static readonly _capnp = {
     displayName: "Foo",
     id: "ebf41ad8c4cd4576",
-    size: new $.ObjectSize(0, 2)
+    size: new $.ObjectSize(0, 2),
   };
   get bar(): string {
     return $.utils.getText(0, this);
@@ -19,7 +19,5 @@ export class Foo extends $.Struct {
   set baz(value: string) {
     $.utils.setText(1, value, this);
   }
-  toString(): string {
-    return "Foo_" + super.toString();
-  }
+  toString(): string { return "Foo_" + super.toString(); }
 }

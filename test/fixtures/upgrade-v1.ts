@@ -5,7 +5,7 @@ export class Upgrade extends $.Struct {
   static readonly _capnp = {
     displayName: "Upgrade",
     id: "b274c862a78a049c",
-    size: new $.ObjectSize(8, 3)
+    size: new $.ObjectSize(8, 3),
   };
   static _SelfReferences: $.ListCtor<Upgrade>;
   get legacyName(): string {
@@ -56,8 +56,6 @@ export class Upgrade extends $.Struct {
   set selfReferences(value: $.List<Upgrade>) {
     $.utils.copyFrom(value, $.utils.getPointer(2, this));
   }
-  toString(): string {
-    return "Upgrade_" + super.toString();
-  }
+  toString(): string { return "Upgrade_" + super.toString(); }
 }
 Upgrade._SelfReferences = $.CompositeList(Upgrade);

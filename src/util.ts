@@ -72,7 +72,9 @@ export function dumpBuffer(buffer: ArrayBuffer | ArrayBufferView): string {
 
       s += v > 31 && v < 255 ? String.fromCharCode(v) : "·";
 
-      if (k === 7) r += " ";
+      if (k === 7) {
+        r += " ";
+      }
     }
 
     r += `${repeat((17 - k) * 3, " ")}${s}`;
@@ -116,7 +118,9 @@ export function encodeUtf8(src: string): Uint8Array {
     } else {
       // Make sure the surrogate pair is complete.
       /* istanbul ignore next */
-      if (i + 1 >= l) throw new RangeError(RANGE_INVALID_UTF8);
+      if (i + 1 >= l) {
+        throw new RangeError(RANGE_INVALID_UTF8);
+      }
 
       // I cast thee back into the astral plane.
 
@@ -332,16 +336,22 @@ export function repeat(times: number, str: string): string {
   let n = times;
   let s = str;
 
-  if (n < 1 || n > Number.MAX_VALUE) return out;
+  if (n < 1 || n > Number.MAX_VALUE) {
+    return out;
+  }
 
   // https://en.wikipedia.org/wiki/Exponentiation_by_squaring
 
   do {
-    if (n % 2) out += s;
+    if (n % 2) {
+      out += s;
+    }
 
     n = Math.floor(n / 2);
 
-    if (n) s += s;
+    if (n) {
+      s += s;
+    }
   } while (n);
 
   return out;

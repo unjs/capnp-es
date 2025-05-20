@@ -20,7 +20,8 @@ export const Message_Which = {
 export type Message_Which = (typeof Message_Which)[keyof typeof Message_Which];
 /**
 * An RPC connection is a bi-directional stream of Messages.
-* */
+*
+*/
 export class Message extends $.Struct {
   static readonly UNIMPLEMENTED = Message_Which.UNIMPLEMENTED;
   static readonly ABORT = Message_Which.ABORT;
@@ -39,7 +40,7 @@ export class Message extends $.Struct {
   static readonly _capnp = {
     displayName: "Message",
     id: "91b79f1f808db032",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   _adoptUnimplemented(value: $.Orphan<Message>): void {
     $.utils.setUint16(0, 0, this);
@@ -49,23 +50,24 @@ export class Message extends $.Struct {
     return $.utils.disown(this.unimplemented);
   }
   /**
-  * The sender previously received this message from the peer but didn't understand it or doesn't
-  * yet implement the functionality that was requested.  So, the sender is echoing the message
-  * back.  In some cases, the receiver may be able to recover from this by pretending the sender
-  * had taken some appropriate "null" action.
-  *
-  * For example, say `resolve` is received by a level 0 implementation (because a previous call
-  * or return happened to contain a promise).  The level 0 implementation will echo it back as
-  * `unimplemented`.  The original sender can then simply release the cap to which the promise
-  * had resolved, thus avoiding a leak.
-  *
-  * For any message type that introduces a question, if the message comes back unimplemented,
-  * the original sender may simply treat it as if the question failed with an exception.
-  *
-  * In cases where there is no sensible way to react to an `unimplemented` message (without
-  * resource leaks or other serious problems), the connection may need to be aborted.  This is
-  * a gray area; different implementations may take different approaches.
-  * */
+* The sender previously received this message from the peer but didn't understand it or doesn't
+* yet implement the functionality that was requested.  So, the sender is echoing the message
+* back.  In some cases, the receiver may be able to recover from this by pretending the sender
+* had taken some appropriate "null" action.
+*
+* For example, say `resolve` is received by a level 0 implementation (because a previous call
+* or return happened to contain a promise).  The level 0 implementation will echo it back as
+* `unimplemented`.  The original sender can then simply release the cap to which the promise
+* had resolved, thus avoiding a leak.
+*
+* For any message type that introduces a question, if the message comes back unimplemented,
+* the original sender may simply treat it as if the question failed with an exception.
+*
+* In cases where there is no sensible way to react to an `unimplemented` message (without
+* resource leaks or other serious problems), the connection may need to be aborted.  This is
+* a gray area; different implementations may take different approaches.
+*
+*/
   get unimplemented(): Message {
     $.utils.testWhich("unimplemented", $.utils.getUint16(0, this), 0, this);
     return $.utils.getStruct(0, Message, this);
@@ -92,13 +94,14 @@ export class Message extends $.Struct {
     return $.utils.disown(this.abort);
   }
   /**
-  * Sent when a connection is being aborted due to an unrecoverable error.  This could be e.g.
-  * because the sender received an invalid or nonsensical message or because the sender had an
-  * internal error.  The sender will shut down the outgoing half of the connection after `abort`
-  * and will completely close the connection shortly thereafter (it's up to the sender how much
-  * of a time buffer they want to offer for the client to receive the `abort` before the
-  * connection is reset).
-  * */
+* Sent when a connection is being aborted due to an unrecoverable error.  This could be e.g.
+* because the sender received an invalid or nonsensical message or because the sender had an
+* internal error.  The sender will shut down the outgoing half of the connection after `abort`
+* and will completely close the connection shortly thereafter (it's up to the sender how much
+* of a time buffer they want to offer for the client to receive the `abort` before the
+* connection is reset).
+*
+*/
   get abort(): Exception {
     $.utils.testWhich("abort", $.utils.getUint16(0, this), 1, this);
     return $.utils.getStruct(0, Exception, this);
@@ -125,8 +128,9 @@ export class Message extends $.Struct {
     return $.utils.disown(this.bootstrap);
   }
   /**
-  * Request the peer's bootstrap interface.
-  * */
+* Request the peer's bootstrap interface.
+*
+*/
   get bootstrap(): Bootstrap {
     $.utils.testWhich("bootstrap", $.utils.getUint16(0, this), 8, this);
     return $.utils.getStruct(0, Bootstrap, this);
@@ -153,8 +157,9 @@ export class Message extends $.Struct {
     return $.utils.disown(this.call);
   }
   /**
-  * Begin a method call.
-  * */
+* Begin a method call.
+*
+*/
   get call(): Call {
     $.utils.testWhich("call", $.utils.getUint16(0, this), 2, this);
     return $.utils.getStruct(0, Call, this);
@@ -181,8 +186,9 @@ export class Message extends $.Struct {
     return $.utils.disown(this.return);
   }
   /**
-  * Complete a method call.
-  * */
+* Complete a method call.
+*
+*/
   get return(): Return {
     $.utils.testWhich("return", $.utils.getUint16(0, this), 3, this);
     return $.utils.getStruct(0, Return, this);
@@ -209,8 +215,9 @@ export class Message extends $.Struct {
     return $.utils.disown(this.finish);
   }
   /**
-  * Release a returned answer / cancel a call.
-  * */
+* Release a returned answer / cancel a call.
+*
+*/
   get finish(): Finish {
     $.utils.testWhich("finish", $.utils.getUint16(0, this), 4, this);
     return $.utils.getStruct(0, Finish, this);
@@ -237,8 +244,9 @@ export class Message extends $.Struct {
     return $.utils.disown(this.resolve);
   }
   /**
-  * Resolve a previously-sent promise.
-  * */
+* Resolve a previously-sent promise.
+*
+*/
   get resolve(): Resolve {
     $.utils.testWhich("resolve", $.utils.getUint16(0, this), 5, this);
     return $.utils.getStruct(0, Resolve, this);
@@ -265,8 +273,9 @@ export class Message extends $.Struct {
     return $.utils.disown(this.release);
   }
   /**
-  * Release a capability so that the remote object can be deallocated.
-  * */
+* Release a capability so that the remote object can be deallocated.
+*
+*/
   get release(): Release {
     $.utils.testWhich("release", $.utils.getUint16(0, this), 6, this);
     return $.utils.getStruct(0, Release, this);
@@ -293,8 +302,9 @@ export class Message extends $.Struct {
     return $.utils.disown(this.disembargo);
   }
   /**
-  * Lift an embargo used to enforce E-order over promise resolution.
-  * */
+* Lift an embargo used to enforce E-order over promise resolution.
+*
+*/
   get disembargo(): Disembargo {
     $.utils.testWhich("disembargo", $.utils.getUint16(0, this), 13, this);
     return $.utils.getStruct(0, Disembargo, this);
@@ -321,10 +331,11 @@ export class Message extends $.Struct {
     return $.utils.disown(this.obsoleteSave);
   }
   /**
-  * Obsolete request to save a capability, resulting in a SturdyRef. This has been replaced
-  * by the `Persistent` interface defined in `persistent.capnp`. This operation was never
-  * implemented.
-  * */
+* Obsolete request to save a capability, resulting in a SturdyRef. This has been replaced
+* by the `Persistent` interface defined in `persistent.capnp`. This operation was never
+* implemented.
+*
+*/
   get obsoleteSave(): $.Pointer {
     $.utils.testWhich("obsoleteSave", $.utils.getUint16(0, this), 7, this);
     return $.utils.getPointer(0, this);
@@ -347,8 +358,9 @@ export class Message extends $.Struct {
     return $.utils.disown(this.obsoleteDelete);
   }
   /**
-  * Obsolete way to delete a SturdyRef. This operation was never implemented.
-  * */
+* Obsolete way to delete a SturdyRef. This operation was never implemented.
+*
+*/
   get obsoleteDelete(): $.Pointer {
     $.utils.testWhich("obsoleteDelete", $.utils.getUint16(0, this), 9, this);
     return $.utils.getPointer(0, this);
@@ -371,8 +383,9 @@ export class Message extends $.Struct {
     return $.utils.disown(this.provide);
   }
   /**
-  * Provide a capability to a third party.
-  * */
+* Provide a capability to a third party.
+*
+*/
   get provide(): Provide {
     $.utils.testWhich("provide", $.utils.getUint16(0, this), 10, this);
     return $.utils.getStruct(0, Provide, this);
@@ -399,8 +412,9 @@ export class Message extends $.Struct {
     return $.utils.disown(this.accept);
   }
   /**
-  * Accept a capability provided by a third party.
-  * */
+* Accept a capability provided by a third party.
+*
+*/
   get accept(): Accept {
     $.utils.testWhich("accept", $.utils.getUint16(0, this), 11, this);
     return $.utils.getStruct(0, Accept, this);
@@ -427,8 +441,9 @@ export class Message extends $.Struct {
     return $.utils.disown(this.join);
   }
   /**
-  * Directly connect to the common root of two or more proxied caps.
-  * */
+* Directly connect to the common root of two or more proxied caps.
+*
+*/
   get join(): Join {
     $.utils.testWhich("join", $.utils.getUint16(0, this), 12, this);
     return $.utils.getStruct(0, Join, this);
@@ -447,9 +462,7 @@ export class Message extends $.Struct {
     $.utils.setUint16(0, 12, this);
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Message_" + super.toString();
-  }
+  toString(): string { return "Message_" + super.toString(); }
   which(): Message_Which {
     return $.utils.getUint16(0, this) as Message_Which;
   }
@@ -484,17 +497,19 @@ export class Message extends $.Struct {
 * Note that a vat need not provide a bootstrap interface, and in fact many vats (especially those
 * acting as clients) do not. In this case, the vat should either reply to `Bootstrap` with a
 * `Return` indicating an exception, or should return a dummy capability with no methods.
-* */
+*
+*/
 export class Bootstrap extends $.Struct {
   static readonly _capnp = {
     displayName: "Bootstrap",
     id: "e94ccf8031176ec4",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   /**
-  * A new question ID identifying this request, which will eventually receive a Return message
-  * containing the restored capability.
-  * */
+* A new question ID identifying this request, which will eventually receive a Return message
+* containing the restored capability.
+*
+*/
   get questionId(): number {
     return $.utils.getUint32(0, this);
   }
@@ -508,80 +523,81 @@ export class Bootstrap extends $.Struct {
     return $.utils.disown(this.deprecatedObjectId);
   }
   /**
-  * ** DEPRECATED **
-  *
-  * A Vat may export multiple bootstrap interfaces. In this case, `deprecatedObjectId` specifies
-  * which one to return. If this pointer is null, then the default bootstrap interface is returned.
-  *
-  * As of version 0.5, use of this field is deprecated. If a service wants to export multiple
-  * bootstrap interfaces, it should instead define a single bootstrap interface that has methods
-  * that return each of the other interfaces.
-  *
-  * **History**
-  *
-  * In the first version of Cap'n Proto RPC (0.4.x) the `Bootstrap` message was called `Restore`.
-  * At the time, it was thought that this would eventually serve as the way to restore SturdyRefs
-  * (level 2). Meanwhile, an application could offer its "main" interface on a well-known
-  * (non-secret) SturdyRef.
-  *
-  * Since level 2 RPC was not implemented at the time, the `Restore` message was in practice only
-  * used to obtain the main interface. Since most applications had only one main interface that
-  * they wanted to restore, they tended to designate this with a null `objectId`.
-  *
-  * Unfortunately, the earliest version of the EZ RPC interfaces set a precedent of exporting
-  * multiple main interfaces by allowing them to be exported under string names. In this case,
-  * `objectId` was a Text value specifying the name.
-  *
-  * All of this proved problematic for several reasons:
-  *
-  * - The arrangement assumed that a client wishing to restore a SturdyRef would know exactly what
-  *   machine to connect to and would be able to immediately restore a SturdyRef on connection.
-  *   However, in practice, the ability to restore SturdyRefs is itself a capability that may
-  *   require going through an authentication process to obtain. Thus, it makes more sense to
-  *   define a "restorer service" as a full Cap'n Proto interface. If this restorer interface is
-  *   offered as the vat's bootstrap interface, then this is equivalent to the old arrangement.
-  *
-  * - Overloading "Restore" for the purpose of obtaining well-known capabilities encouraged the
-  *   practice of exporting singleton services with string names. If singleton services are desired,
-  *   it is better to have one main interface that has methods that can be used to obtain each
-  *   service, in order to get all the usual benefits of schemas and type checking.
-  *
-  * - Overloading "Restore" also had a security problem: Often, "main" or "well-known"
-  *   capabilities exported by a vat are in fact not public: they are intended to be accessed only
-  *   by clients who are capable of forming a connection to the vat. This can lead to trouble if
-  *   the client itself has other clients and wishes to forward some `Restore` requests from those
-  *   external clients -- it has to be very careful not to allow through `Restore` requests
-  *   addressing the default capability.
-  *
-  *   For example, consider the case of a sandboxed Sandstorm application and its supervisor. The
-  *   application exports a default capability to its supervisor that provides access to
-  *   functionality that only the supervisor is supposed to access. Meanwhile, though, applications
-  *   may publish other capabilities that may be persistent, in which case the application needs
-  *   to field `Restore` requests that could come from anywhere. These requests of course have to
-  *   pass through the supervisor, as all communications with the outside world must. But, the
-  *   supervisor has to be careful not to honor an external request addressing the application's
-  *   default capability, since this capability is privileged. Unfortunately, the default
-  *   capability cannot be given an unguessable name, because then the supervisor itself would not
-  *   be able to address it!
-  *
-  * As of Cap'n Proto 0.5, `Restore` has been renamed to `Bootstrap` and is no longer planned for
-  * use in restoring SturdyRefs.
-  *
-  * Note that 0.4 also defined a message type called `Delete` that, like `Restore`, addressed a
-  * SturdyRef, but indicated that the client would not restore the ref again in the future. This
-  * operation was never implemented, so it was removed entirely. If a "delete" operation is desired,
-  * it should exist as a method on the same interface that handles restoring SturdyRefs. However,
-  * the utility of such an operation is questionable. You wouldn't be able to rely on it for
-  * garbage collection since a client could always disappear permanently without remembering to
-  * delete all its SturdyRefs, thus leaving them dangling forever. Therefore, it is advisable to
-  * design systems such that SturdyRefs never represent "owned" pointers.
-  *
-  * For example, say a SturdyRef points to an image file hosted on some server. That image file
-  * should also live inside a collection (a gallery, perhaps) hosted on the same server, owned by
-  * a user who can delete the image at any time. If the user deletes the image, the SturdyRef
-  * stops working. On the other hand, if the SturdyRef is discarded, this has no effect on the
-  * existence of the image in its collection.
-  * */
+* ** DEPRECATED **
+*
+* A Vat may export multiple bootstrap interfaces. In this case, `deprecatedObjectId` specifies
+* which one to return. If this pointer is null, then the default bootstrap interface is returned.
+*
+* As of version 0.5, use of this field is deprecated. If a service wants to export multiple
+* bootstrap interfaces, it should instead define a single bootstrap interface that has methods
+* that return each of the other interfaces.
+*
+* **History**
+*
+* In the first version of Cap'n Proto RPC (0.4.x) the `Bootstrap` message was called `Restore`.
+* At the time, it was thought that this would eventually serve as the way to restore SturdyRefs
+* (level 2). Meanwhile, an application could offer its "main" interface on a well-known
+* (non-secret) SturdyRef.
+*
+* Since level 2 RPC was not implemented at the time, the `Restore` message was in practice only
+* used to obtain the main interface. Since most applications had only one main interface that
+* they wanted to restore, they tended to designate this with a null `objectId`.
+*
+* Unfortunately, the earliest version of the EZ RPC interfaces set a precedent of exporting
+* multiple main interfaces by allowing them to be exported under string names. In this case,
+* `objectId` was a Text value specifying the name.
+*
+* All of this proved problematic for several reasons:
+*
+* - The arrangement assumed that a client wishing to restore a SturdyRef would know exactly what
+*   machine to connect to and would be able to immediately restore a SturdyRef on connection.
+*   However, in practice, the ability to restore SturdyRefs is itself a capability that may
+*   require going through an authentication process to obtain. Thus, it makes more sense to
+*   define a "restorer service" as a full Cap'n Proto interface. If this restorer interface is
+*   offered as the vat's bootstrap interface, then this is equivalent to the old arrangement.
+*
+* - Overloading "Restore" for the purpose of obtaining well-known capabilities encouraged the
+*   practice of exporting singleton services with string names. If singleton services are desired,
+*   it is better to have one main interface that has methods that can be used to obtain each
+*   service, in order to get all the usual benefits of schemas and type checking.
+*
+* - Overloading "Restore" also had a security problem: Often, "main" or "well-known"
+*   capabilities exported by a vat are in fact not public: they are intended to be accessed only
+*   by clients who are capable of forming a connection to the vat. This can lead to trouble if
+*   the client itself has other clients and wishes to forward some `Restore` requests from those
+*   external clients -- it has to be very careful not to allow through `Restore` requests
+*   addressing the default capability.
+*
+*   For example, consider the case of a sandboxed Sandstorm application and its supervisor. The
+*   application exports a default capability to its supervisor that provides access to
+*   functionality that only the supervisor is supposed to access. Meanwhile, though, applications
+*   may publish other capabilities that may be persistent, in which case the application needs
+*   to field `Restore` requests that could come from anywhere. These requests of course have to
+*   pass through the supervisor, as all communications with the outside world must. But, the
+*   supervisor has to be careful not to honor an external request addressing the application's
+*   default capability, since this capability is privileged. Unfortunately, the default
+*   capability cannot be given an unguessable name, because then the supervisor itself would not
+*   be able to address it!
+*
+* As of Cap'n Proto 0.5, `Restore` has been renamed to `Bootstrap` and is no longer planned for
+* use in restoring SturdyRefs.
+*
+* Note that 0.4 also defined a message type called `Delete` that, like `Restore`, addressed a
+* SturdyRef, but indicated that the client would not restore the ref again in the future. This
+* operation was never implemented, so it was removed entirely. If a "delete" operation is desired,
+* it should exist as a method on the same interface that handles restoring SturdyRefs. However,
+* the utility of such an operation is questionable. You wouldn't be able to rely on it for
+* garbage collection since a client could always disappear permanently without remembering to
+* delete all its SturdyRefs, thus leaving them dangling forever. Therefore, it is advisable to
+* design systems such that SturdyRefs never represent "owned" pointers.
+*
+* For example, say a SturdyRef points to an image file hosted on some server. That image file
+* should also live inside a collection (a gallery, perhaps) hosted on the same server, owned by
+* a user who can delete the image at any time. If the user deletes the image, the SturdyRef
+* stops working. On the other hand, if the SturdyRef is discarded, this has no effect on the
+* existence of the image in its collection.
+*
+*/
   get deprecatedObjectId(): $.Pointer {
     return $.utils.getPointer(0, this);
   }
@@ -591,9 +607,7 @@ export class Bootstrap extends $.Struct {
   set deprecatedObjectId(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Bootstrap_" + super.toString();
-  }
+  toString(): string { return "Bootstrap_" + super.toString(); }
 }
 export const Call_SendResultsTo_Which = {
   CALLER: 0,
@@ -603,7 +617,8 @@ export const Call_SendResultsTo_Which = {
 export type Call_SendResultsTo_Which = (typeof Call_SendResultsTo_Which)[keyof typeof Call_SendResultsTo_Which];
 /**
 * Where should the return message be sent?
-* */
+*
+*/
 export class Call_SendResultsTo extends $.Struct {
   static readonly CALLER = Call_SendResultsTo_Which.CALLER;
   static readonly YOURSELF = Call_SendResultsTo_Which.YOURSELF;
@@ -611,7 +626,7 @@ export class Call_SendResultsTo extends $.Struct {
   static readonly _capnp = {
     displayName: "sendResultsTo",
     id: "dae8b0f61aab5f99",
-    size: new $.ObjectSize(24, 3)
+    size: new $.ObjectSize(24, 3),
   };
   get _isCaller(): boolean {
     return $.utils.getUint16(6, this) === 0;
@@ -633,18 +648,19 @@ export class Call_SendResultsTo extends $.Struct {
     return $.utils.disown(this.thirdParty);
   }
   /**
-  * **(level 3)**
-  *
-  * The call's result should be returned to a different vat.  The receiver (the callee) expects
-  * to receive an `Accept` message from the indicated vat, and should return the call's result
-  * to it, rather than to the sender of the `Call`.
-  *
-  * This operates much like `yourself`, above, except that Carol is in a separate Vat C.  `Call`
-  * messages are sent from Vat A -> Vat B and Vat B -> Vat C.  A `Return` message is sent from
-  * Vat B -> Vat A that contains `acceptFromThirdParty` in place of results.  When Vat A sends
-  * an `Accept` to Vat C, it receives back a `Return` containing the call's actual result.  Vat C
-  * also sends a `Return` to Vat B with `resultsSentElsewhere`.
-  * */
+* **(level 3)**
+*
+* The call's result should be returned to a different vat.  The receiver (the callee) expects
+* to receive an `Accept` message from the indicated vat, and should return the call's result
+* to it, rather than to the sender of the `Call`.
+*
+* This operates much like `yourself`, above, except that Carol is in a separate Vat C.  `Call`
+* messages are sent from Vat A -> Vat B and Vat B -> Vat C.  A `Return` message is sent from
+* Vat B -> Vat A that contains `acceptFromThirdParty` in place of results.  When Vat A sends
+* an `Accept` to Vat C, it receives back a `Return` containing the call's actual result.  Vat C
+* also sends a `Return` to Vat B with `resultsSentElsewhere`.
+*
+*/
   get thirdParty(): $.Pointer {
     $.utils.testWhich("thirdParty", $.utils.getUint16(6, this), 2, this);
     return $.utils.getPointer(2, this);
@@ -659,9 +675,7 @@ export class Call_SendResultsTo extends $.Struct {
     $.utils.setUint16(6, 2, this);
     $.utils.copyFrom(value, $.utils.getPointer(2, this));
   }
-  toString(): string {
-    return "Call_SendResultsTo_" + super.toString();
-  }
+  toString(): string { return "Call_SendResultsTo_" + super.toString(); }
   which(): Call_SendResultsTo_Which {
     return $.utils.getUint16(6, this) as Call_SendResultsTo_Which;
   }
@@ -670,7 +684,8 @@ export class Call_SendResultsTo extends $.Struct {
 * **(level 0)**
 *
 * Message type initiating a method call on a capability.
-* */
+*
+*/
 export class Call extends $.Struct {
   static readonly _capnp = {
     displayName: "Call",
@@ -681,15 +696,16 @@ export class Call extends $.Struct {
     defaultOnlyPromisePipeline: $.getBitMask(false, 2)
   };
   /**
-  * A number, chosen by the caller, that identifies this call in future messages.  This number
-  * must be different from all other calls originating from the same end of the connection (but
-  * may overlap with question IDs originating from the opposite end).  A fine strategy is to use
-  * sequential question IDs, but the recipient should not assume this.
-  *
-  * A question ID can be reused once both:
-  * - A matching Return has been received from the callee.
-  * - A matching Finish has been sent from the caller.
-  * */
+* A number, chosen by the caller, that identifies this call in future messages.  This number
+* must be different from all other calls originating from the same end of the connection (but
+* may overlap with question IDs originating from the opposite end).  A fine strategy is to use
+* sequential question IDs, but the recipient should not assume this.
+*
+* A question ID can be reused once both:
+* - A matching Return has been received from the callee.
+* - A matching Finish has been sent from the caller.
+*
+*/
   get questionId(): number {
     return $.utils.getUint32(0, this);
   }
@@ -703,8 +719,9 @@ export class Call extends $.Struct {
     return $.utils.disown(this.target);
   }
   /**
-  * The object that should receive this call.
-  * */
+* The object that should receive this call.
+*
+*/
   get target(): MessageTarget {
     return $.utils.getStruct(0, MessageTarget, this);
   }
@@ -718,8 +735,9 @@ export class Call extends $.Struct {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
   /**
-  * The type ID of the interface being called.  Each capability may implement multiple interfaces.
-  * */
+* The type ID of the interface being called.  Each capability may implement multiple interfaces.
+*
+*/
   get interfaceId(): bigint {
     return $.utils.getUint64(8, this);
   }
@@ -727,8 +745,9 @@ export class Call extends $.Struct {
     $.utils.setUint64(8, value, this);
   }
   /**
-  * The ordinal number of the method to call within the requested interface.
-  * */
+* The ordinal number of the method to call within the requested interface.
+*
+*/
   get methodId(): number {
     return $.utils.getUint16(4, this);
   }
@@ -736,10 +755,11 @@ export class Call extends $.Struct {
     $.utils.setUint16(4, value, this);
   }
   /**
-  * Indicates whether or not the receiver is allowed to send a `Return` containing
-  * `acceptFromThirdParty`.  Level 3 implementations should set this true.  Otherwise, the callee
-  * will have to proxy the return in the case of a tail call to a third-party vat.
-  * */
+* Indicates whether or not the receiver is allowed to send a `Return` containing
+* `acceptFromThirdParty`.  Level 3 implementations should set this true.  Otherwise, the callee
+* will have to proxy the return in the case of a tail call to a third-party vat.
+*
+*/
   get allowThirdPartyTailCall(): boolean {
     return $.utils.getBit(128, this, Call._capnp.defaultAllowThirdPartyTailCall);
   }
@@ -747,14 +767,15 @@ export class Call extends $.Struct {
     $.utils.setBit(128, value, this, Call._capnp.defaultAllowThirdPartyTailCall);
   }
   /**
-  * If true, the sender promises that it won't make any promise-pipelined calls on the results of
-  * this call. If it breaks this promise, the receiver may throw an arbitrary error from such
-  * calls.
-  *
-  * The receiver may use this as an optimization, by skipping the bookkeeping needed for pipelining
-  * when no pipelined calls are expected. The sender typically sets this to false when the method's
-  * schema does not specify any return capabilities.
-  * */
+* If true, the sender promises that it won't make any promise-pipelined calls on the results of
+* this call. If it breaks this promise, the receiver may throw an arbitrary error from such
+* calls.
+*
+* The receiver may use this as an optimization, by skipping the bookkeeping needed for pipelining
+* when no pipelined calls are expected. The sender typically sets this to false when the method's
+* schema does not specify any return capabilities.
+*
+*/
   get noPromisePipelining(): boolean {
     return $.utils.getBit(129, this, Call._capnp.defaultNoPromisePipelining);
   }
@@ -762,20 +783,21 @@ export class Call extends $.Struct {
     $.utils.setBit(129, value, this, Call._capnp.defaultNoPromisePipelining);
   }
   /**
-  * If true, the sender only plans to use this call to make pipelined calls. The receiver need not
-  * send a `Return` message (but is still allowed to do so).
-  *
-  * Since the sender does not know whether a `Return` will be sent, it must release all state
-  * related to the call when it sends `Finish`. However, in the case that the callee does not
-  * recognize this hint and chooses to send a `Return`, then technically the caller is not allowed
-  * to reuse the question ID until it receives said `Return`. This creates a conundrum: How does
-  * the caller decide when it's OK to reuse the ID? To sidestep the problem, the C++ implementation
-  * uses high-numbered IDs (with the high-order bit set) for such calls, and cycles through the
-  * IDs in order. If all 2^31 IDs in this space are used without ever seeing a `Return`, then the
-  * implementation assumes that the other end is in fact honoring the hint, and the ID counter is
-  * allowed to loop around. If a `Return` is ever seen when `onlyPromisePipeline` was set, then
-  * the implementation stops using this hint.
-  * */
+* If true, the sender only plans to use this call to make pipelined calls. The receiver need not
+* send a `Return` message (but is still allowed to do so).
+*
+* Since the sender does not know whether a `Return` will be sent, it must release all state
+* related to the call when it sends `Finish`. However, in the case that the callee does not
+* recognize this hint and chooses to send a `Return`, then technically the caller is not allowed
+* to reuse the question ID until it receives said `Return`. This creates a conundrum: How does
+* the caller decide when it's OK to reuse the ID? To sidestep the problem, the C++ implementation
+* uses high-numbered IDs (with the high-order bit set) for such calls, and cycles through the
+* IDs in order. If all 2^31 IDs in this space are used without ever seeing a `Return`, then the
+* implementation assumes that the other end is in fact honoring the hint, and the ID counter is
+* allowed to loop around. If a `Return` is ever seen when `onlyPromisePipeline` was set, then
+* the implementation stops using this hint.
+*
+*/
   get onlyPromisePipeline(): boolean {
     return $.utils.getBit(130, this, Call._capnp.defaultOnlyPromisePipeline);
   }
@@ -789,9 +811,10 @@ export class Call extends $.Struct {
     return $.utils.disown(this.params);
   }
   /**
-  * The call parameters.  `params.content` is a struct whose fields correspond to the parameters of
-  * the method.
-  * */
+* The call parameters.  `params.content` is a struct whose fields correspond to the parameters of
+* the method.
+*
+*/
   get params(): Payload {
     return $.utils.getStruct(1, Payload, this);
   }
@@ -805,17 +828,16 @@ export class Call extends $.Struct {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
   /**
-  * Where should the return message be sent?
-  * */
+* Where should the return message be sent?
+*
+*/
   get sendResultsTo(): Call_SendResultsTo {
     return $.utils.getAs(Call_SendResultsTo, this);
   }
   _initSendResultsTo(): Call_SendResultsTo {
     return $.utils.getAs(Call_SendResultsTo, this);
   }
-  toString(): string {
-    return "Call_" + super.toString();
-  }
+  toString(): string { return "Call_" + super.toString(); }
 }
 export const Return_Which = {
   RESULTS: 0,
@@ -830,7 +852,8 @@ export type Return_Which = (typeof Return_Which)[keyof typeof Return_Which];
 * **(level 0)**
 *
 * Message type sent from callee to caller indicating that the call has completed.
-* */
+*
+*/
 export class Return extends $.Struct {
   static readonly RESULTS = Return_Which.RESULTS;
   static readonly EXCEPTION = Return_Which.EXCEPTION;
@@ -846,8 +869,9 @@ export class Return extends $.Struct {
     defaultNoFinishNeeded: $.getBitMask(false, 1)
   };
   /**
-  * Equal to the QuestionId of the corresponding `Call` message.
-  * */
+* Equal to the QuestionId of the corresponding `Call` message.
+*
+*/
   get answerId(): number {
     return $.utils.getUint32(0, this);
   }
@@ -855,15 +879,16 @@ export class Return extends $.Struct {
     $.utils.setUint32(0, value, this);
   }
   /**
-  * If true, all capabilities that were in the params should be considered released.  The sender
-  * must not send separate `Release` messages for them.  Level 0 implementations in particular
-  * should always set this true.  This defaults true because if level 0 implementations forget to
-  * set it they'll never notice (just silently leak caps), but if level >=1 implementations forget
-  * to set it to false they'll quickly get errors.
-  *
-  * The receiver should act as if the sender had sent a release message with count=1 for each
-  * CapDescriptor in the original Call message.
-  * */
+* If true, all capabilities that were in the params should be considered released.  The sender
+* must not send separate `Release` messages for them.  Level 0 implementations in particular
+* should always set this true.  This defaults true because if level 0 implementations forget to
+* set it they'll never notice (just silently leak caps), but if level >=1 implementations forget
+* to set it to false they'll quickly get errors.
+*
+* The receiver should act as if the sender had sent a release message with count=1 for each
+* CapDescriptor in the original Call message.
+*
+*/
   get releaseParamCaps(): boolean {
     return $.utils.getBit(32, this, Return._capnp.defaultReleaseParamCaps);
   }
@@ -871,12 +896,13 @@ export class Return extends $.Struct {
     $.utils.setBit(32, value, this, Return._capnp.defaultReleaseParamCaps);
   }
   /**
-  * If true, the sender does not need the receiver to send a `Finish` message; its answer table
-  * entry has already been cleaned up. This implies that the results do not contain any
-  * capabilities, since the `Finish` message would normally release those capabilities from
-  * promise pipelining responsibility. The caller may still send a `Finish` message if it wants,
-  * which will be silently ignored by the callee.
-  * */
+* If true, the sender does not need the receiver to send a `Finish` message; its answer table
+* entry has already been cleaned up. This implies that the results do not contain any
+* capabilities, since the `Finish` message would normally release those capabilities from
+* promise pipelining responsibility. The caller may still send a `Finish` message if it wants,
+* which will be silently ignored by the callee.
+*
+*/
   get noFinishNeeded(): boolean {
     return $.utils.getBit(33, this, Return._capnp.defaultNoFinishNeeded);
   }
@@ -891,14 +917,15 @@ export class Return extends $.Struct {
     return $.utils.disown(this.results);
   }
   /**
-  * The result.
-  *
-  * For regular method calls, `results.content` points to the result struct.
-  *
-  * For a `Return` in response to an `Accept` or `Bootstrap`, `results` contains a single
-  * capability (rather than a struct), and `results.content` is just a capability pointer with
-  * index 0.  A `Finish` is still required in this case.
-  * */
+* The result.
+*
+* For regular method calls, `results.content` points to the result struct.
+*
+* For a `Return` in response to an `Accept` or `Bootstrap`, `results` contains a single
+* capability (rather than a struct), and `results.content` is just a capability pointer with
+* index 0.  A `Finish` is still required in this case.
+*
+*/
   get results(): Payload {
     $.utils.testWhich("results", $.utils.getUint16(6, this), 0, this);
     return $.utils.getStruct(0, Payload, this);
@@ -925,8 +952,9 @@ export class Return extends $.Struct {
     return $.utils.disown(this.exception);
   }
   /**
-  * Indicates that the call failed and explains why.
-  * */
+* Indicates that the call failed and explains why.
+*
+*/
   get exception(): Exception {
     $.utils.testWhich("exception", $.utils.getUint16(6, this), 1, this);
     return $.utils.getStruct(0, Exception, this);
@@ -958,10 +986,11 @@ export class Return extends $.Struct {
     $.utils.setUint16(6, 3, this);
   }
   /**
-  * The sender has also sent (before this message) a `Call` with the given question ID and with
-  * `sendResultsTo.yourself` set, and the results of that other call should be used as the
-  * results here.  `takeFromOtherQuestion` can only used once per question.
-  * */
+* The sender has also sent (before this message) a `Call` with the given question ID and with
+* `sendResultsTo.yourself` set, and the results of that other call should be used as the
+* results here.  `takeFromOtherQuestion` can only used once per question.
+*
+*/
   get takeFromOtherQuestion(): number {
     $.utils.testWhich("takeFromOtherQuestion", $.utils.getUint16(6, this), 4, this);
     return $.utils.getUint32(8, this);
@@ -981,12 +1010,13 @@ export class Return extends $.Struct {
     return $.utils.disown(this.acceptFromThirdParty);
   }
   /**
-  * **(level 3)**
-  *
-  * The caller should contact a third-party vat to pick up the results.  An `Accept` message
-  * sent to the vat will return the result.  This pairs with `Call.sendResultsTo.thirdParty`.
-  * It should only be used if the corresponding `Call` had `allowThirdPartyTailCall` set.
-  * */
+* **(level 3)**
+*
+* The caller should contact a third-party vat to pick up the results.  An `Accept` message
+* sent to the vat will return the result.  This pairs with `Call.sendResultsTo.thirdParty`.
+* It should only be used if the corresponding `Call` had `allowThirdPartyTailCall` set.
+*
+*/
   get acceptFromThirdParty(): $.Pointer {
     $.utils.testWhich("acceptFromThirdParty", $.utils.getUint16(6, this), 5, this);
     return $.utils.getPointer(0, this);
@@ -1001,9 +1031,7 @@ export class Return extends $.Struct {
     $.utils.setUint16(6, 5, this);
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Return_" + super.toString();
-  }
+  toString(): string { return "Return_" + super.toString(); }
   which(): Return_Which {
     return $.utils.getUint16(6, this) as Return_Which;
   }
@@ -1027,7 +1055,8 @@ export class Return extends $.Struct {
 *   finished processing it.  It could also be useful to notify the server that it need not marshal
 *   the results because the caller doesn't want them anyway, even if the caller is still sending
 *   pipelined calls, although this seems less useful (just saving some bytes on the wire).
-* */
+*
+*/
 export class Finish extends $.Struct {
   static readonly _capnp = {
     displayName: "Finish",
@@ -1037,8 +1066,9 @@ export class Finish extends $.Struct {
     defaultRequireEarlyCancellationWorkaround: $.getBitMask(true, 1)
   };
   /**
-  * ID of the call whose result is to be released.
-  * */
+* ID of the call whose result is to be released.
+*
+*/
   get questionId(): number {
     return $.utils.getUint32(0, this);
   }
@@ -1046,12 +1076,13 @@ export class Finish extends $.Struct {
     $.utils.setUint32(0, value, this);
   }
   /**
-  * If true, all capabilities that were in the results should be considered released.  The sender
-  * must not send separate `Release` messages for them.  Level 0 implementations in particular
-  * should always set this true.  This defaults true because if level 0 implementations forget to
-  * set it they'll never notice (just silently leak caps), but if level >=1 implementations forget
-  * set it false they'll quickly get errors.
-  * */
+* If true, all capabilities that were in the results should be considered released.  The sender
+* must not send separate `Release` messages for them.  Level 0 implementations in particular
+* should always set this true.  This defaults true because if level 0 implementations forget to
+* set it they'll never notice (just silently leak caps), but if level >=1 implementations forget
+* set it false they'll quickly get errors.
+*
+*/
   get releaseResultCaps(): boolean {
     return $.utils.getBit(32, this, Finish._capnp.defaultReleaseResultCaps);
   }
@@ -1059,28 +1090,27 @@ export class Finish extends $.Struct {
     $.utils.setBit(32, value, this, Finish._capnp.defaultReleaseResultCaps);
   }
   /**
-  * If true, if the RPC system receives this Finish message before the original call has even been
-  * delivered, it should defer cancellation util after delivery. In particular, this gives the
-  * destination object a chance to opt out of cancellation, e.g. as controlled by the
-  * `allowCancellation` annotation defined in `c++.capnp`.
-  *
-  * This is a work-around. Versions 1.0 and up of Cap'n Proto always set this to false. However,
-  * older versions of Cap'n Proto unintentionally exhibited this errant behavior by default, and
-  * as a result programs built with older versions could be inadvertently relying on their peers
-  * to implement the behavior. The purpose of this flag is to let newer versions know when the
-  * peer is an older version, so that it can attempt to work around the issue.
-  *
-  * See also comments in handleFinish() in rpc.c++ for more details.
-  * */
+* If true, if the RPC system receives this Finish message before the original call has even been
+* delivered, it should defer cancellation util after delivery. In particular, this gives the
+* destination object a chance to opt out of cancellation, e.g. as controlled by the
+* `allowCancellation` annotation defined in `c++.capnp`.
+*
+* This is a work-around. Versions 1.0 and up of Cap'n Proto always set this to false. However,
+* older versions of Cap'n Proto unintentionally exhibited this errant behavior by default, and
+* as a result programs built with older versions could be inadvertently relying on their peers
+* to implement the behavior. The purpose of this flag is to let newer versions know when the
+* peer is an older version, so that it can attempt to work around the issue.
+*
+* See also comments in handleFinish() in rpc.c++ for more details.
+*
+*/
   get requireEarlyCancellationWorkaround(): boolean {
     return $.utils.getBit(33, this, Finish._capnp.defaultRequireEarlyCancellationWorkaround);
   }
   set requireEarlyCancellationWorkaround(value: boolean) {
     $.utils.setBit(33, value, this, Finish._capnp.defaultRequireEarlyCancellationWorkaround);
   }
-  toString(): string {
-    return "Finish_" + super.toString();
-  }
+  toString(): string { return "Finish_" + super.toString(); }
 }
 export const Resolve_Which = {
   CAP: 0,
@@ -1104,37 +1134,39 @@ export type Resolve_Which = (typeof Resolve_Which)[keyof typeof Resolve_Which];
 * When implementing promise resolution, it's important to understand how embargos work and the
 * tricky case of the Tribble 4-way race condition. See the comments for the Disembargo message,
 * below.
-* */
+*
+*/
 export class Resolve extends $.Struct {
   static readonly CAP = Resolve_Which.CAP;
   static readonly EXCEPTION = Resolve_Which.EXCEPTION;
   static readonly _capnp = {
     displayName: "Resolve",
     id: "bbc29655fa89086e",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   /**
-  * The ID of the promise to be resolved.
-  *
-  * Unlike all other instances of `ExportId` sent from the exporter, the `Resolve` message does
-  * _not_ increase the reference count of `promiseId`.  In fact, it is expected that the receiver
-  * will release the export soon after receiving `Resolve`, and the sender will not send this
-  * `ExportId` again until it has been released and recycled.
-  *
-  * When an export ID sent over the wire (e.g. in a `CapDescriptor`) is indicated to be a promise,
-  * this indicates that the sender will follow up at some point with a `Resolve` message.  If the
-  * same `promiseId` is sent again before `Resolve`, still only one `Resolve` is sent.  If the
-  * same ID is sent again later _after_ a `Resolve`, it can only be because the export's
-  * reference count hit zero in the meantime and the ID was re-assigned to a new export, therefore
-  * this later promise does _not_ correspond to the earlier `Resolve`.
-  *
-  * If a promise ID's reference count reaches zero before a `Resolve` is sent, the `Resolve`
-  * message may or may not still be sent (the `Resolve` may have already been in-flight when
-  * `Release` was sent, but if the `Release` is received before `Resolve` then there is no longer
-  * any reason to send a `Resolve`).  Thus a `Resolve` may be received for a promise of which
-  * the receiver has no knowledge, because it already released it earlier.  In this case, the
-  * receiver should simply release the capability to which the promise resolved.
-  * */
+* The ID of the promise to be resolved.
+*
+* Unlike all other instances of `ExportId` sent from the exporter, the `Resolve` message does
+* _not_ increase the reference count of `promiseId`.  In fact, it is expected that the receiver
+* will release the export soon after receiving `Resolve`, and the sender will not send this
+* `ExportId` again until it has been released and recycled.
+*
+* When an export ID sent over the wire (e.g. in a `CapDescriptor`) is indicated to be a promise,
+* this indicates that the sender will follow up at some point with a `Resolve` message.  If the
+* same `promiseId` is sent again before `Resolve`, still only one `Resolve` is sent.  If the
+* same ID is sent again later _after_ a `Resolve`, it can only be because the export's
+* reference count hit zero in the meantime and the ID was re-assigned to a new export, therefore
+* this later promise does _not_ correspond to the earlier `Resolve`.
+*
+* If a promise ID's reference count reaches zero before a `Resolve` is sent, the `Resolve`
+* message may or may not still be sent (the `Resolve` may have already been in-flight when
+* `Release` was sent, but if the `Release` is received before `Resolve` then there is no longer
+* any reason to send a `Resolve`).  Thus a `Resolve` may be received for a promise of which
+* the receiver has no knowledge, because it already released it earlier.  In this case, the
+* receiver should simply release the capability to which the promise resolved.
+*
+*/
   get promiseId(): number {
     return $.utils.getUint32(0, this);
   }
@@ -1149,17 +1181,18 @@ export class Resolve extends $.Struct {
     return $.utils.disown(this.cap);
   }
   /**
-  * The object to which the promise resolved.
-  *
-  * The sender promises that from this point forth, until `promiseId` is released, it shall
-  * simply forward all messages to the capability designated by `cap`.  This is true even if
-  * `cap` itself happens to designate another promise, and that other promise later resolves --
-  * messages sent to `promiseId` shall still go to that other promise, not to its resolution.
-  * This is important in the case that the receiver of the `Resolve` ends up sending a
-  * `Disembargo` message towards `promiseId` in order to control message ordering -- that
-  * `Disembargo` really needs to reflect back to exactly the object designated by `cap` even
-  * if that object is itself a promise.
-  * */
+* The object to which the promise resolved.
+*
+* The sender promises that from this point forth, until `promiseId` is released, it shall
+* simply forward all messages to the capability designated by `cap`.  This is true even if
+* `cap` itself happens to designate another promise, and that other promise later resolves --
+* messages sent to `promiseId` shall still go to that other promise, not to its resolution.
+* This is important in the case that the receiver of the `Resolve` ends up sending a
+* `Disembargo` message towards `promiseId` in order to control message ordering -- that
+* `Disembargo` really needs to reflect back to exactly the object designated by `cap` even
+* if that object is itself a promise.
+*
+*/
   get cap(): CapDescriptor {
     $.utils.testWhich("cap", $.utils.getUint16(4, this), 0, this);
     return $.utils.getStruct(0, CapDescriptor, this);
@@ -1186,8 +1219,9 @@ export class Resolve extends $.Struct {
     return $.utils.disown(this.exception);
   }
   /**
-  * Indicates that the promise was broken.
-  * */
+* Indicates that the promise was broken.
+*
+*/
   get exception(): Exception {
     $.utils.testWhich("exception", $.utils.getUint16(4, this), 1, this);
     return $.utils.getStruct(0, Exception, this);
@@ -1206,9 +1240,7 @@ export class Resolve extends $.Struct {
     $.utils.setUint16(4, 1, this);
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Resolve_" + super.toString();
-  }
+  toString(): string { return "Resolve_" + super.toString(); }
   which(): Resolve_Which {
     return $.utils.getUint16(4, this) as Resolve_Which;
   }
@@ -1218,16 +1250,18 @@ export class Resolve extends $.Struct {
 *
 * Message type sent to indicate that the sender is done with the given capability and the receiver
 * can free resources allocated to it.
-* */
+*
+*/
 export class Release extends $.Struct {
   static readonly _capnp = {
     displayName: "Release",
     id: "ad1a6c0d7dd07497",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   /**
-  * What to release.
-  * */
+* What to release.
+*
+*/
   get id(): number {
     return $.utils.getUint32(0, this);
   }
@@ -1235,18 +1269,17 @@ export class Release extends $.Struct {
     $.utils.setUint32(0, value, this);
   }
   /**
-  * The amount by which to decrement the reference count.  The export is only actually released
-  * when the reference count reaches zero.
-  * */
+* The amount by which to decrement the reference count.  The export is only actually released
+* when the reference count reaches zero.
+*
+*/
   get referenceCount(): number {
     return $.utils.getUint32(4, this);
   }
   set referenceCount(value: number) {
     $.utils.setUint32(4, value, this);
   }
-  toString(): string {
-    return "Release_" + super.toString();
-  }
+  toString(): string { return "Release_" + super.toString(); }
 }
 export const Disembargo_Context_Which = {
   SENDER_LOOPBACK: 0,
@@ -1263,19 +1296,20 @@ export class Disembargo_Context extends $.Struct {
   static readonly _capnp = {
     displayName: "context",
     id: "d562b4df655bdd4d",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   /**
-  * The sender is requesting a disembargo on a promise that is known to resolve back to a
-  * capability hosted by the sender.  As soon as the receiver has echoed back all pipelined calls
-  * on this promise, it will deliver the Disembargo back to the sender with `receiverLoopback`
-  * set to the same value as `senderLoopback`.  This value is chosen by the sender, and since
-  * it is also consumed be the sender, the sender can use whatever strategy it wants to make sure
-  * the value is unambiguous.
-  *
-  * The receiver must verify that the target capability actually resolves back to the sender's
-  * vat.  Otherwise, the sender has committed a protocol error and should be disconnected.
-  * */
+* The sender is requesting a disembargo on a promise that is known to resolve back to a
+* capability hosted by the sender.  As soon as the receiver has echoed back all pipelined calls
+* on this promise, it will deliver the Disembargo back to the sender with `receiverLoopback`
+* set to the same value as `senderLoopback`.  This value is chosen by the sender, and since
+* it is also consumed be the sender, the sender can use whatever strategy it wants to make sure
+* the value is unambiguous.
+*
+* The receiver must verify that the target capability actually resolves back to the sender's
+* vat.  Otherwise, the sender has committed a protocol error and should be disconnected.
+*
+*/
   get senderLoopback(): number {
     $.utils.testWhich("senderLoopback", $.utils.getUint16(4, this), 0, this);
     return $.utils.getUint32(0, this);
@@ -1288,9 +1322,10 @@ export class Disembargo_Context extends $.Struct {
     $.utils.setUint32(0, value, this);
   }
   /**
-  * The receiver previously sent a `senderLoopback` Disembargo towards a promise resolving to
-  * this capability, and that Disembargo is now being echoed back.
-  * */
+* The receiver previously sent a `senderLoopback` Disembargo towards a promise resolving to
+* this capability, and that Disembargo is now being echoed back.
+*
+*/
   get receiverLoopback(): number {
     $.utils.testWhich("receiverLoopback", $.utils.getUint16(4, this), 1, this);
     return $.utils.getUint32(0, this);
@@ -1309,14 +1344,15 @@ export class Disembargo_Context extends $.Struct {
     $.utils.setUint16(4, 2, this);
   }
   /**
-  * **(level 3)**
-  *
-  * The sender is requesting a disembargo on a capability currently being provided to a third
-  * party.  The question ID identifies the `Provide` message previously sent by the sender to
-  * this capability.  On receipt, the receiver (the capability host) shall release the embargo
-  * on the `Accept` message that it has received from the third party.  See `Accept.embargo` for
-  * an example.
-  * */
+* **(level 3)**
+*
+* The sender is requesting a disembargo on a capability currently being provided to a third
+* party.  The question ID identifies the `Provide` message previously sent by the sender to
+* this capability.  On receipt, the receiver (the capability host) shall release the embargo
+* on the `Accept` message that it has received from the third party.  See `Accept.embargo` for
+* an example.
+*
+*/
   get provide(): number {
     $.utils.testWhich("provide", $.utils.getUint16(4, this), 3, this);
     return $.utils.getUint32(0, this);
@@ -1328,9 +1364,7 @@ export class Disembargo_Context extends $.Struct {
     $.utils.setUint16(4, 3, this);
     $.utils.setUint32(0, value, this);
   }
-  toString(): string {
-    return "Disembargo_Context_" + super.toString();
-  }
+  toString(): string { return "Disembargo_Context_" + super.toString(); }
   which(): Disembargo_Context_Which {
     return $.utils.getUint16(4, this) as Disembargo_Context_Which;
   }
@@ -1406,12 +1440,13 @@ export class Disembargo_Context extends $.Struct {
 * Note well: the Tribble 4-way race condition does not require each vat to be *distinct*; as long
 * as each resolution crosses a network boundary the race can occur -- so this concerns even level
 * 1 implementations, not just level 3 implementations.
-* */
+*
+*/
 export class Disembargo extends $.Struct {
   static readonly _capnp = {
     displayName: "Disembargo",
     id: "f964368b0fbd3711",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   _adoptTarget(value: $.Orphan<MessageTarget>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -1420,8 +1455,9 @@ export class Disembargo extends $.Struct {
     return $.utils.disown(this.target);
   }
   /**
-  * What is to be disembargoed.
-  * */
+* What is to be disembargoed.
+*
+*/
   get target(): MessageTarget {
     return $.utils.getStruct(0, MessageTarget, this);
   }
@@ -1440,9 +1476,7 @@ export class Disembargo extends $.Struct {
   _initContext(): Disembargo_Context {
     return $.utils.getAs(Disembargo_Context, this);
   }
-  toString(): string {
-    return "Disembargo_" + super.toString();
-  }
+  toString(): string { return "Disembargo_" + super.toString(); }
 }
 /**
 * **(level 3)**
@@ -1453,19 +1487,21 @@ export class Disembargo extends $.Struct {
 *
 * (In CapTP, `Provide` and `Accept` are methods of the global `NonceLocator` object exported by
 * every vat.  In Cap'n Proto, we bake this into the core protocol.)
-* */
+*
+*/
 export class Provide extends $.Struct {
   static readonly _capnp = {
     displayName: "Provide",
     id: "9c6a046bfbc1ac5a",
-    size: new $.ObjectSize(8, 2)
+    size: new $.ObjectSize(8, 2),
   };
   /**
-  * Question ID to be held open until the recipient has received the capability.  A result will be
-  * returned once the third party has successfully received the capability.  The sender must at some
-  * point send a `Finish` message as with any other call, and that message can be used to cancel the
-  * whole operation.
-  * */
+* Question ID to be held open until the recipient has received the capability.  A result will be
+* returned once the third party has successfully received the capability.  The sender must at some
+* point send a `Finish` message as with any other call, and that message can be used to cancel the
+* whole operation.
+*
+*/
   get questionId(): number {
     return $.utils.getUint32(0, this);
   }
@@ -1479,8 +1515,9 @@ export class Provide extends $.Struct {
     return $.utils.disown(this.target);
   }
   /**
-  * What is to be provided to the third party.
-  * */
+* What is to be provided to the third party.
+*
+*/
   get target(): MessageTarget {
     return $.utils.getStruct(0, MessageTarget, this);
   }
@@ -1500,8 +1537,9 @@ export class Provide extends $.Struct {
     return $.utils.disown(this.recipient);
   }
   /**
-  * Identity of the third party that is expected to pick up the capability.
-  * */
+* Identity of the third party that is expected to pick up the capability.
+*
+*/
   get recipient(): $.Pointer {
     return $.utils.getPointer(1, this);
   }
@@ -1511,9 +1549,7 @@ export class Provide extends $.Struct {
   set recipient(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "Provide_" + super.toString();
-  }
+  toString(): string { return "Provide_" + super.toString(); }
 }
 /**
 * **(level 3)**
@@ -1522,18 +1558,20 @@ export class Provide extends $.Struct {
 * party.  The third party previously designated the capability using `Provide`.
 *
 * This message is also used to pick up a redirected return -- see `Return.acceptFromThirdParty`.
-* */
+*
+*/
 export class Accept extends $.Struct {
   static readonly _capnp = {
     displayName: "Accept",
     id: "d4c9b56290554016",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   /**
-  * A new question ID identifying this accept message, which will eventually receive a Return
-  * message containing the provided capability (or the call result in the case of a redirected
-  * return).
-  * */
+* A new question ID identifying this accept message, which will eventually receive a Return
+* message containing the provided capability (or the call result in the case of a redirected
+* return).
+*
+*/
   get questionId(): number {
     return $.utils.getUint32(0, this);
   }
@@ -1547,8 +1585,9 @@ export class Accept extends $.Struct {
     return $.utils.disown(this.provision);
   }
   /**
-  * Identifies the provided object to be picked up.
-  * */
+* Identifies the provided object to be picked up.
+*
+*/
   get provision(): $.Pointer {
     return $.utils.getPointer(0, this);
   }
@@ -1559,48 +1598,47 @@ export class Accept extends $.Struct {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
   /**
-  * If true, this accept shall be temporarily embargoed.  The resulting `Return` will not be sent,
-  * and any pipelined calls will not be delivered, until the embargo is released.  The receiver
-  * (the capability host) will expect the provider (the vat that sent the `Provide` message) to
-  * eventually send a `Disembargo` message with the field `context.provide` set to the question ID
-  * of the original `Provide` message.  At that point, the embargo is released and the queued
-  * messages are delivered.
-  *
-  * For example:
-  * - Alice, in Vat A, holds a promise P, which currently points toward Vat B.
-  * - Alice calls foo() on P.  The `Call` message is sent to Vat B.
-  * - The promise P in Vat B ends up resolving to Carol, in Vat C.
-  * - Vat B sends a `Provide` message to Vat C, identifying Vat A as the recipient.
-  * - Vat B sends a `Resolve` message to Vat A, indicating that the promise has resolved to a
-  *   `ThirdPartyCapId` identifying Carol in Vat C.
-  * - Vat A sends an `Accept` message to Vat C to pick up the capability.  Since Vat A knows that
-  *   it has an outstanding call to the promise, it sets `embargo` to `true` in the `Accept`
-  *   message.
-  * - Vat A sends a `Disembargo` message to Vat B on promise P, with `context.accept` set.
-  * - Alice makes a call bar() to promise P, which is now pointing towards Vat C.  Alice doesn't
-  *   know anything about the mechanics of promise resolution happening under the hood, but she
-  *   expects that bar() will be delivered after foo() because that is the order in which she
-  *   initiated the calls.
-  * - Vat A sends the bar() call to Vat C, as a pipelined call on the result of the `Accept` (which
-  *   hasn't returned yet, due to the embargo).  Since calls to the newly-accepted capability
-  *   are embargoed, Vat C does not deliver the call yet.
-  * - At some point, Vat B forwards the foo() call from the beginning of this example on to Vat C.
-  * - Vat B forwards the `Disembargo` from Vat A on to vat C.  It sets `context.provide` to the
-  *   question ID of the `Provide` message it had sent previously.
-  * - Vat C receives foo() before `Disembargo`, thus allowing it to correctly deliver foo()
-  *   before delivering bar().
-  * - Vat C receives `Disembargo` from Vat B.  It can now send a `Return` for the `Accept` from
-  *   Vat A, as well as deliver bar().
-  * */
+* If true, this accept shall be temporarily embargoed.  The resulting `Return` will not be sent,
+* and any pipelined calls will not be delivered, until the embargo is released.  The receiver
+* (the capability host) will expect the provider (the vat that sent the `Provide` message) to
+* eventually send a `Disembargo` message with the field `context.provide` set to the question ID
+* of the original `Provide` message.  At that point, the embargo is released and the queued
+* messages are delivered.
+*
+* For example:
+* - Alice, in Vat A, holds a promise P, which currently points toward Vat B.
+* - Alice calls foo() on P.  The `Call` message is sent to Vat B.
+* - The promise P in Vat B ends up resolving to Carol, in Vat C.
+* - Vat B sends a `Provide` message to Vat C, identifying Vat A as the recipient.
+* - Vat B sends a `Resolve` message to Vat A, indicating that the promise has resolved to a
+*   `ThirdPartyCapId` identifying Carol in Vat C.
+* - Vat A sends an `Accept` message to Vat C to pick up the capability.  Since Vat A knows that
+*   it has an outstanding call to the promise, it sets `embargo` to `true` in the `Accept`
+*   message.
+* - Vat A sends a `Disembargo` message to Vat B on promise P, with `context.accept` set.
+* - Alice makes a call bar() to promise P, which is now pointing towards Vat C.  Alice doesn't
+*   know anything about the mechanics of promise resolution happening under the hood, but she
+*   expects that bar() will be delivered after foo() because that is the order in which she
+*   initiated the calls.
+* - Vat A sends the bar() call to Vat C, as a pipelined call on the result of the `Accept` (which
+*   hasn't returned yet, due to the embargo).  Since calls to the newly-accepted capability
+*   are embargoed, Vat C does not deliver the call yet.
+* - At some point, Vat B forwards the foo() call from the beginning of this example on to Vat C.
+* - Vat B forwards the `Disembargo` from Vat A on to vat C.  It sets `context.provide` to the
+*   question ID of the `Provide` message it had sent previously.
+* - Vat C receives foo() before `Disembargo`, thus allowing it to correctly deliver foo()
+*   before delivering bar().
+* - Vat C receives `Disembargo` from Vat B.  It can now send a `Return` for the `Accept` from
+*   Vat A, as well as deliver bar().
+*
+*/
   get embargo(): boolean {
     return $.utils.getBit(32, this);
   }
   set embargo(value: boolean) {
     $.utils.setBit(32, value, this);
   }
-  toString(): string {
-    return "Accept_" + super.toString();
-  }
+  toString(): string { return "Accept_" + super.toString(); }
 }
 /**
 * **(level 4)**
@@ -1640,30 +1678,32 @@ export class Accept extends $.Struct {
 * If the two capabilities aren't actually proxies of the same object, then the join requests
 * will come back with conflicting `hostId`s and the join will fail before attempting to form any
 * connection.
-* */
+*
+*/
 export class Join extends $.Struct {
   static readonly _capnp = {
     displayName: "Join",
     id: "fbe1980490e001af",
-    size: new $.ObjectSize(8, 2)
+    size: new $.ObjectSize(8, 2),
   };
   /**
-  * Question ID used to respond to this Join.  (Note that this ID only identifies one part of the
-  * request for one hop; each part has a different ID and relayed copies of the request have
-  * (probably) different IDs still.)
-  *
-  * The receiver will reply with a `Return` whose `results` is a JoinResult.  This `JoinResult`
-  * is relayed from the joined object's host, possibly with transformation applied as needed
-  * by the network.
-  *
-  * Like any return, the result must be released using a `Finish`.  However, this release
-  * should not occur until the joiner has either successfully connected to the joined object.
-  * Vats relaying a `Join` message similarly must not release the result they receive until the
-  * return they relayed back towards the joiner has itself been released.  This allows the
-  * joined object's host to detect when the Join operation is canceled before completing -- if
-  * it receives a `Finish` for one of the join results before the joiner successfully
-  * connects.  It can then free any resources it had allocated as part of the join.
-  * */
+* Question ID used to respond to this Join.  (Note that this ID only identifies one part of the
+* request for one hop; each part has a different ID and relayed copies of the request have
+* (probably) different IDs still.)
+*
+* The receiver will reply with a `Return` whose `results` is a JoinResult.  This `JoinResult`
+* is relayed from the joined object's host, possibly with transformation applied as needed
+* by the network.
+*
+* Like any return, the result must be released using a `Finish`.  However, this release
+* should not occur until the joiner has either successfully connected to the joined object.
+* Vats relaying a `Join` message similarly must not release the result they receive until the
+* return they relayed back towards the joiner has itself been released.  This allows the
+* joined object's host to detect when the Join operation is canceled before completing -- if
+* it receives a `Finish` for one of the join results before the joiner successfully
+* connects.  It can then free any resources it had allocated as part of the join.
+*
+*/
   get questionId(): number {
     return $.utils.getUint32(0, this);
   }
@@ -1677,8 +1717,9 @@ export class Join extends $.Struct {
     return $.utils.disown(this.target);
   }
   /**
-  * The capability to join.
-  * */
+* The capability to join.
+*
+*/
   get target(): MessageTarget {
     return $.utils.getStruct(0, MessageTarget, this);
   }
@@ -1698,9 +1739,10 @@ export class Join extends $.Struct {
     return $.utils.disown(this.keyPart);
   }
   /**
-  * A part of the join key.  These combine to form the complete join key, which is used to establish
-  * a direct connection.
-  * */
+* A part of the join key.  These combine to form the complete join key, which is used to establish
+* a direct connection.
+*
+*/
   get keyPart(): $.Pointer {
     return $.utils.getPointer(1, this);
   }
@@ -1710,9 +1752,7 @@ export class Join extends $.Struct {
   set keyPart(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "Join_" + super.toString();
-  }
+  toString(): string { return "Join_" + super.toString(); }
 }
 export const MessageTarget_Which = {
   IMPORTED_CAP: 0,
@@ -1721,19 +1761,21 @@ export const MessageTarget_Which = {
 export type MessageTarget_Which = (typeof MessageTarget_Which)[keyof typeof MessageTarget_Which];
 /**
 * The target of a `Call` or other messages that target a capability.
-* */
+*
+*/
 export class MessageTarget extends $.Struct {
   static readonly IMPORTED_CAP = MessageTarget_Which.IMPORTED_CAP;
   static readonly PROMISED_ANSWER = MessageTarget_Which.PROMISED_ANSWER;
   static readonly _capnp = {
     displayName: "MessageTarget",
     id: "95bc14545813fbc1",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   /**
-  * This message is to a capability or promise previously imported by the caller (exported by
-  * the receiver).
-  * */
+* This message is to a capability or promise previously imported by the caller (exported by
+* the receiver).
+*
+*/
   get importedCap(): number {
     $.utils.testWhich("importedCap", $.utils.getUint16(4, this), 0, this);
     return $.utils.getUint32(0, this);
@@ -1753,12 +1795,13 @@ export class MessageTarget extends $.Struct {
     return $.utils.disown(this.promisedAnswer);
   }
   /**
-  * This message is to a capability that is expected to be returned by another call that has not
-  * yet been completed.
-  *
-  * At level 0, this is supported only for addressing the result of a previous `Bootstrap`, so
-  * that initial startup doesn't require a round trip.
-  * */
+* This message is to a capability that is expected to be returned by another call that has not
+* yet been completed.
+*
+* At level 0, this is supported only for addressing the result of a previous `Bootstrap`, so
+* that initial startup doesn't require a round trip.
+*
+*/
   get promisedAnswer(): PromisedAnswer {
     $.utils.testWhich("promisedAnswer", $.utils.getUint16(4, this), 1, this);
     return $.utils.getStruct(0, PromisedAnswer, this);
@@ -1777,21 +1820,20 @@ export class MessageTarget extends $.Struct {
     $.utils.setUint16(4, 1, this);
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "MessageTarget_" + super.toString();
-  }
+  toString(): string { return "MessageTarget_" + super.toString(); }
   which(): MessageTarget_Which {
     return $.utils.getUint16(4, this) as MessageTarget_Which;
   }
 }
 /**
 * Represents some data structure that might contain capabilities.
-* */
+*
+*/
 export class Payload extends $.Struct {
   static readonly _capnp = {
     displayName: "Payload",
     id: "9a0e61223d96743b",
-    size: new $.ObjectSize(0, 2)
+    size: new $.ObjectSize(0, 2),
   };
   static _CapTable: $.ListCtor<CapDescriptor>;
   _adoptContent(value: $.Orphan<$.Pointer>): void {
@@ -1801,9 +1843,10 @@ export class Payload extends $.Struct {
     return $.utils.disown(this.content);
   }
   /**
-  * Some Cap'n Proto data structure.  Capability pointers embedded in this structure index into
-  * `capTable`.
-  * */
+* Some Cap'n Proto data structure.  Capability pointers embedded in this structure index into
+* `capTable`.
+*
+*/
   get content(): $.Pointer {
     return $.utils.getPointer(0, this);
   }
@@ -1820,8 +1863,9 @@ export class Payload extends $.Struct {
     return $.utils.disown(this.capTable);
   }
   /**
-  * Descriptors corresponding to the cap pointers in `content`.
-  * */
+* Descriptors corresponding to the cap pointers in `content`.
+*
+*/
   get capTable(): $.List<CapDescriptor> {
     return $.utils.getList(1, Payload._CapTable, this);
   }
@@ -1834,9 +1878,7 @@ export class Payload extends $.Struct {
   set capTable(value: $.List<CapDescriptor>) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "Payload_" + super.toString();
-  }
+  toString(): string { return "Payload_" + super.toString(); }
 }
 export const CapDescriptor_Which = {
   NONE: 0,
@@ -1863,7 +1905,8 @@ export type CapDescriptor_Which = (typeof CapDescriptor_Which)[keyof typeof CapD
 * table.  Instead, create a new export (`senderPromise`) for each broken capability and then
 * immediately follow the payload-bearing Call or Return message with one Resolve message for each
 * broken capability, resolving it to an exception.
-* */
+*
+*/
 export class CapDescriptor extends $.Struct {
   static readonly NONE = CapDescriptor_Which.NONE;
   static readonly SENDER_HOSTED = CapDescriptor_Which.SENDER_HOSTED;
@@ -1884,9 +1927,10 @@ export class CapDescriptor extends $.Struct {
     $.utils.setUint16(0, 0, this);
   }
   /**
-  * The ID of a capability in the sender's export table (receiver's import table).  It may be a
-  * newly allocated table entry, or an existing entry (increments the reference count).
-  * */
+* The ID of a capability in the sender's export table (receiver's import table).  It may be a
+* newly allocated table entry, or an existing entry (increments the reference count).
+*
+*/
   get senderHosted(): number {
     $.utils.testWhich("senderHosted", $.utils.getUint16(0, this), 1, this);
     return $.utils.getUint32(4, this);
@@ -1899,12 +1943,13 @@ export class CapDescriptor extends $.Struct {
     $.utils.setUint32(4, value, this);
   }
   /**
-  * A promise that the sender will resolve later.  The sender will send exactly one Resolve
-  * message at a future point in time to replace this promise.  Note that even if the same
-  * `senderPromise` is received multiple times, only one `Resolve` is sent to cover all of
-  * them.  If `senderPromise` is released before the `Resolve` is sent, the sender (of this
-  * `CapDescriptor`) may choose not to send the `Resolve` at all.
-  * */
+* A promise that the sender will resolve later.  The sender will send exactly one Resolve
+* message at a future point in time to replace this promise.  Note that even if the same
+* `senderPromise` is received multiple times, only one `Resolve` is sent to cover all of
+* them.  If `senderPromise` is released before the `Resolve` is sent, the sender (of this
+* `CapDescriptor`) may choose not to send the `Resolve` at all.
+*
+*/
   get senderPromise(): number {
     $.utils.testWhich("senderPromise", $.utils.getUint16(0, this), 2, this);
     return $.utils.getUint32(4, this);
@@ -1917,8 +1962,9 @@ export class CapDescriptor extends $.Struct {
     $.utils.setUint32(4, value, this);
   }
   /**
-  * A capability (or promise) previously exported by the receiver (imported by the sender).
-  * */
+* A capability (or promise) previously exported by the receiver (imported by the sender).
+*
+*/
   get receiverHosted(): number {
     $.utils.testWhich("receiverHosted", $.utils.getUint16(0, this), 3, this);
     return $.utils.getUint32(4, this);
@@ -1938,9 +1984,10 @@ export class CapDescriptor extends $.Struct {
     return $.utils.disown(this.receiverAnswer);
   }
   /**
-  * A capability expected to be returned in the results of a currently-outstanding call posed
-  * by the sender.
-  * */
+* A capability expected to be returned in the results of a currently-outstanding call posed
+* by the sender.
+*
+*/
   get receiverAnswer(): PromisedAnswer {
     $.utils.testWhich("receiverAnswer", $.utils.getUint16(0, this), 4, this);
     return $.utils.getStruct(0, PromisedAnswer, this);
@@ -1967,14 +2014,15 @@ export class CapDescriptor extends $.Struct {
     return $.utils.disown(this.thirdPartyHosted);
   }
   /**
-  * **(level 3)**
-  *
-  * A capability that lives in neither the sender's nor the receiver's vat.  The sender needs
-  * to form a direct connection to a third party to pick up the capability.
-  *
-  * Level 1 and 2 implementations that receive a `thirdPartyHosted` may simply send calls to its
-  * `vine` instead.
-  * */
+* **(level 3)**
+*
+* A capability that lives in neither the sender's nor the receiver's vat.  The sender needs
+* to form a direct connection to a third party to pick up the capability.
+*
+* Level 1 and 2 implementations that receive a `thirdPartyHosted` may simply send calls to its
+* `vine` instead.
+*
+*/
   get thirdPartyHosted(): ThirdPartyCapDescriptor {
     $.utils.testWhich("thirdPartyHosted", $.utils.getUint16(0, this), 5, this);
     return $.utils.getStruct(0, ThirdPartyCapDescriptor, this);
@@ -1994,71 +2042,70 @@ export class CapDescriptor extends $.Struct {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
   /**
-  * If the RPC message in which this CapDescriptor was delivered also had file descriptors
-  * attached, and `fd` is a valid index into the list of attached file descriptors, then
-  * that file descriptor should be attached to this capability. If `attachedFd` is out-of-bounds
-  * for said list, then no FD is attached.
-  *
-  * For example, if the RPC message arrived over a Unix socket, then file descriptors may be
-  * attached by sending an SCM_RIGHTS ancillary message attached to the data bytes making up the
-  * raw message. Receivers who wish to opt into FD passing should arrange to receive SCM_RIGHTS
-  * whenever receiving an RPC message. Senders who wish to send FDs need not verify whether the
-  * receiver knows how to receive them, because the operating system will automatically discard
-  * ancillary messages like SCM_RIGHTS if the receiver doesn't ask to receive them, including
-  * automatically closing any FDs.
-  *
-  * It is up to the application protocol to define what capabilities are expected to have file
-  * descriptors attached, and what those FDs mean. But, for example, an application could use this
-  * to open a file on disk and then transmit the open file descriptor to a sandboxed process that
-  * does not otherwise have permission to access the filesystem directly. This is usually an
-  * optimization: the sending process could instead provide an RPC interface supporting all the
-  * operations needed (such as reading and writing a file), but by passing the file descriptor
-  * directly, the recipient can often perform operations much more efficiently. Application
-  * designers are encouraged to provide such RPC interfaces and automatically fall back to them
-  * when FD passing is not available, so that the application can still work when the parties are
-  * remote over a network.
-  *
-  * An attached FD is most often associated with a `senderHosted` descriptor. It could also make
-  * sense in the case of `thirdPartyHosted`: in this case, the sender is forwarding the FD that
-  * they received from the third party, so that the receiver can start using it without first
-  * interacting with the third party. This is an optional optimization -- the middleman may choose
-  * not to forward capabilities, in which case the receiver will need to complete the handshake
-  * with the third party directly before receiving the FD. If an implementation receives a second
-  * attached FD after having already received one previously (e.g. both in a `thirdPartyHosted`
-  * CapDescriptor and then later again when receiving the final capability directly from the
-  * third party), the implementation should discard the later FD and stick with the original. At
-  * present, there is no known reason why other capability types (e.g. `receiverHosted`) would want
-  * to carry an attached FD, but we reserve the right to define a meaning for this in the future.
-  *
-  * Each file descriptor attached to the message must be used in no more than one CapDescriptor,
-  * so that the receiver does not need to use dup() or refcounting to handle the possibility of
-  * multiple capabilities using the same descriptor. If multiple CapDescriptors do point to the
-  * same FD index, then the receiver can arbitrarily choose which capability ends up having the
-  * FD attached.
-  *
-  * To mitigate DoS attacks, RPC implementations should limit the number of FDs they are willing to
-  * receive in a single message to a small value. If a message happens to contain more than that,
-  * the list is truncated. Moreover, in some cases, FD passing needs to be blocked entirely for
-  * security or implementation reasons, in which case the list may be truncated to zero. Hence,
-  * `attachedFd` might point past the end of the list, which the implementation should treat as if
-  * no FD was attached at all.
-  *
-  * The type of this field was chosen to be UInt8 because Linux supports sending only a maximum
-  * of 253 file descriptors in an SCM_RIGHTS message anyway, and CapDescriptor had two bytes of
-  * padding left -- so after adding this, there is still one byte for a future feature.
-  * Conveniently, this also means we're able to use 0xff as the default value, which will always
-  * be out-of-range (of course, the implementation should explicitly enforce that 255 descriptors
-  * cannot be sent at once, rather than relying on Linux to do so).
-  * */
+* If the RPC message in which this CapDescriptor was delivered also had file descriptors
+* attached, and `fd` is a valid index into the list of attached file descriptors, then
+* that file descriptor should be attached to this capability. If `attachedFd` is out-of-bounds
+* for said list, then no FD is attached.
+*
+* For example, if the RPC message arrived over a Unix socket, then file descriptors may be
+* attached by sending an SCM_RIGHTS ancillary message attached to the data bytes making up the
+* raw message. Receivers who wish to opt into FD passing should arrange to receive SCM_RIGHTS
+* whenever receiving an RPC message. Senders who wish to send FDs need not verify whether the
+* receiver knows how to receive them, because the operating system will automatically discard
+* ancillary messages like SCM_RIGHTS if the receiver doesn't ask to receive them, including
+* automatically closing any FDs.
+*
+* It is up to the application protocol to define what capabilities are expected to have file
+* descriptors attached, and what those FDs mean. But, for example, an application could use this
+* to open a file on disk and then transmit the open file descriptor to a sandboxed process that
+* does not otherwise have permission to access the filesystem directly. This is usually an
+* optimization: the sending process could instead provide an RPC interface supporting all the
+* operations needed (such as reading and writing a file), but by passing the file descriptor
+* directly, the recipient can often perform operations much more efficiently. Application
+* designers are encouraged to provide such RPC interfaces and automatically fall back to them
+* when FD passing is not available, so that the application can still work when the parties are
+* remote over a network.
+*
+* An attached FD is most often associated with a `senderHosted` descriptor. It could also make
+* sense in the case of `thirdPartyHosted`: in this case, the sender is forwarding the FD that
+* they received from the third party, so that the receiver can start using it without first
+* interacting with the third party. This is an optional optimization -- the middleman may choose
+* not to forward capabilities, in which case the receiver will need to complete the handshake
+* with the third party directly before receiving the FD. If an implementation receives a second
+* attached FD after having already received one previously (e.g. both in a `thirdPartyHosted`
+* CapDescriptor and then later again when receiving the final capability directly from the
+* third party), the implementation should discard the later FD and stick with the original. At
+* present, there is no known reason why other capability types (e.g. `receiverHosted`) would want
+* to carry an attached FD, but we reserve the right to define a meaning for this in the future.
+*
+* Each file descriptor attached to the message must be used in no more than one CapDescriptor,
+* so that the receiver does not need to use dup() or refcounting to handle the possibility of
+* multiple capabilities using the same descriptor. If multiple CapDescriptors do point to the
+* same FD index, then the receiver can arbitrarily choose which capability ends up having the
+* FD attached.
+*
+* To mitigate DoS attacks, RPC implementations should limit the number of FDs they are willing to
+* receive in a single message to a small value. If a message happens to contain more than that,
+* the list is truncated. Moreover, in some cases, FD passing needs to be blocked entirely for
+* security or implementation reasons, in which case the list may be truncated to zero. Hence,
+* `attachedFd` might point past the end of the list, which the implementation should treat as if
+* no FD was attached at all.
+*
+* The type of this field was chosen to be UInt8 because Linux supports sending only a maximum
+* of 253 file descriptors in an SCM_RIGHTS message anyway, and CapDescriptor had two bytes of
+* padding left -- so after adding this, there is still one byte for a future feature.
+* Conveniently, this also means we're able to use 0xff as the default value, which will always
+* be out-of-range (of course, the implementation should explicitly enforce that 255 descriptors
+* cannot be sent at once, rather than relying on Linux to do so).
+*
+*/
   get attachedFd(): number {
     return $.utils.getUint8(2, this, CapDescriptor._capnp.defaultAttachedFd);
   }
   set attachedFd(value: number) {
     $.utils.setUint8(2, value, this, CapDescriptor._capnp.defaultAttachedFd);
   }
-  toString(): string {
-    return "CapDescriptor_" + super.toString();
-  }
+  toString(): string { return "CapDescriptor_" + super.toString(); }
   which(): CapDescriptor_Which {
     return $.utils.getUint16(0, this) as CapDescriptor_Which;
   }
@@ -2074,7 +2121,7 @@ export class PromisedAnswer_Op extends $.Struct {
   static readonly _capnp = {
     displayName: "Op",
     id: "f316944415569081",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   get _isNoop(): boolean {
     return $.utils.getUint16(0, this) === 0;
@@ -2083,9 +2130,10 @@ export class PromisedAnswer_Op extends $.Struct {
     $.utils.setUint16(0, 0, this);
   }
   /**
-  * Get a pointer field within a struct.  The number is an index into the pointer section, NOT
-  * a field ordinal, so that the receiver does not need to understand the schema.
-  * */
+* Get a pointer field within a struct.  The number is an index into the pointer section, NOT
+* a field ordinal, so that the receiver does not need to understand the schema.
+*
+*/
   get getPointerField(): number {
     $.utils.testWhich("getPointerField", $.utils.getUint16(0, this), 1, this);
     return $.utils.getUint16(2, this);
@@ -2097,9 +2145,7 @@ export class PromisedAnswer_Op extends $.Struct {
     $.utils.setUint16(0, 1, this);
     $.utils.setUint16(2, value, this);
   }
-  toString(): string {
-    return "PromisedAnswer_Op_" + super.toString();
-  }
+  toString(): string { return "PromisedAnswer_Op_" + super.toString(); }
   which(): PromisedAnswer_Op_Which {
     return $.utils.getUint16(0, this) as PromisedAnswer_Op_Which;
   }
@@ -2115,19 +2161,21 @@ export class PromisedAnswer_Op extends $.Struct {
 * Level 0 implementations must support `PromisedAnswer` only for the case where the answer is
 * to a `Bootstrap` message.  In this case, `path` is always empty since `Bootstrap` always returns
 * a raw capability.
-* */
+*
+*/
 export class PromisedAnswer extends $.Struct {
   static readonly Op = PromisedAnswer_Op;
   static readonly _capnp = {
     displayName: "PromisedAnswer",
     id: "d800b1d6cd6f1ca0",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   static _Transform: $.ListCtor<PromisedAnswer_Op>;
   /**
-  * ID of the question (in the sender's question table / receiver's answer table) whose answer is
-  * expected to contain the capability.
-  * */
+* ID of the question (in the sender's question table / receiver's answer table) whose answer is
+* expected to contain the capability.
+*
+*/
   get questionId(): number {
     return $.utils.getUint32(0, this);
   }
@@ -2141,10 +2189,11 @@ export class PromisedAnswer extends $.Struct {
     return $.utils.disown(this.transform);
   }
   /**
-  * Operations / transformations to apply to the result in order to get the capability actually
-  * being addressed.  E.g. if the result is a struct and you want to call a method on a capability
-  * pointed to by a field of the struct, you need a `getPointerField` op.
-  * */
+* Operations / transformations to apply to the result in order to get the capability actually
+* being addressed.  E.g. if the result is a struct and you want to call a method on a capability
+* pointed to by a field of the struct, you need a `getPointerField` op.
+*
+*/
   get transform(): $.List<PromisedAnswer_Op> {
     return $.utils.getList(0, PromisedAnswer._Transform, this);
   }
@@ -2157,20 +2206,19 @@ export class PromisedAnswer extends $.Struct {
   set transform(value: $.List<PromisedAnswer_Op>) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "PromisedAnswer_" + super.toString();
-  }
+  toString(): string { return "PromisedAnswer_" + super.toString(); }
 }
 /**
 * **(level 3)**
 *
 * Identifies a capability in a third-party vat that the sender wants the receiver to pick up.
-* */
+*
+*/
 export class ThirdPartyCapDescriptor extends $.Struct {
   static readonly _capnp = {
     displayName: "ThirdPartyCapDescriptor",
     id: "d37007fde1f0027d",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   _adoptId(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -2179,8 +2227,9 @@ export class ThirdPartyCapDescriptor extends $.Struct {
     return $.utils.disown(this.id);
   }
   /**
-  * Identifies the third-party host and the specific capability to accept from it.
-  * */
+* Identifies the third-party host and the specific capability to accept from it.
+*
+*/
   get id(): $.Pointer {
     return $.utils.getPointer(0, this);
   }
@@ -2191,30 +2240,29 @@ export class ThirdPartyCapDescriptor extends $.Struct {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
   /**
-  * A proxy for the third-party object exported by the sender.  In CapTP terminology this is called
-  * a "vine", because it is an indirect reference to the third-party object that snakes through the
-  * sender vat.  This serves two purposes:
-  *
-  * * Level 1 and 2 implementations that don't understand how to connect to a third party may
-  *   simply send calls to the vine.  Such calls will be forwarded to the third-party by the
-  *   sender.
-  *
-  * * Level 3 implementations must release the vine only once they have successfully picked up the
-  *   object from the third party.  This ensures that the capability is not released by the sender
-  *   prematurely.
-  *
-  * The sender will close the `Provide` request that it has sent to the third party as soon as
-  * it receives either a `Call` or a `Release` message directed at the vine.
-  * */
+* A proxy for the third-party object exported by the sender.  In CapTP terminology this is called
+* a "vine", because it is an indirect reference to the third-party object that snakes through the
+* sender vat.  This serves two purposes:
+*
+* * Level 1 and 2 implementations that don't understand how to connect to a third party may
+*   simply send calls to the vine.  Such calls will be forwarded to the third-party by the
+*   sender.
+*
+* * Level 3 implementations must release the vine only once they have successfully picked up the
+*   object from the third party.  This ensures that the capability is not released by the sender
+*   prematurely.
+*
+* The sender will close the `Provide` request that it has sent to the third party as soon as
+* it receives either a `Call` or a `Release` message directed at the vine.
+*
+*/
   get vineId(): number {
     return $.utils.getUint32(0, this);
   }
   set vineId(value: number) {
     $.utils.setUint32(0, value, this);
   }
-  toString(): string {
-    return "ThirdPartyCapDescriptor_" + super.toString();
-  }
+  toString(): string { return "ThirdPartyCapDescriptor_" + super.toString(); }
 }
 export const Exception_Type = {
   FAILED: 0,
@@ -2244,17 +2292,19 @@ export type Exception_Type = (typeof Exception_Type)[keyof typeof Exception_Type
 * to handle in an application-specific way. Put another way, in the Cap'n Proto world,
 * "checked exceptions" (where an interface explicitly defines the exceptions it throws and
 * clients are forced by the type system to handle those exceptions) do NOT make sense.
-* */
+*
+*/
 export class Exception extends $.Struct {
   static readonly Type = Exception_Type;
   static readonly _capnp = {
     displayName: "Exception",
     id: "d625b7063acf691a",
-    size: new $.ObjectSize(8, 2)
+    size: new $.ObjectSize(8, 2),
   };
   /**
-  * Human-readable failure description.
-  * */
+* Human-readable failure description.
+*
+*/
   get reason(): string {
     return $.utils.getText(0, this);
   }
@@ -2262,18 +2312,20 @@ export class Exception extends $.Struct {
     $.utils.setText(0, value, this);
   }
   /**
-  * The type of the error. The purpose of this enum is not to describe the error itself, but
-  * rather to describe how the client might want to respond to the error.
-  * */
+* The type of the error. The purpose of this enum is not to describe the error itself, but
+* rather to describe how the client might want to respond to the error.
+*
+*/
   get type(): Exception_Type {
-    return $.utils.getUint16(4, this) as Exception_Type;
+    return ($.utils.getUint16(4, this) as Exception_Type);
   }
   set type(value: Exception_Type) {
     $.utils.setUint16(4, value, this);
   }
   /**
-  * OBSOLETE. Ignore.
-  * */
+* OBSOLETE. Ignore.
+*
+*/
   get obsoleteIsCallersFault(): boolean {
     return $.utils.getBit(0, this);
   }
@@ -2281,8 +2333,9 @@ export class Exception extends $.Struct {
     $.utils.setBit(0, value, this);
   }
   /**
-  * OBSOLETE. See `type` instead.
-  * */
+* OBSOLETE. See `type` instead.
+*
+*/
   get obsoleteDurability(): number {
     return $.utils.getUint16(2, this);
   }
@@ -2290,19 +2343,18 @@ export class Exception extends $.Struct {
     $.utils.setUint16(2, value, this);
   }
   /**
-  * Stack trace text from the remote server. The format is not specified. By default,
-  * implementations do not provide stack traces; the application must explicitly enable them
-  * when desired.
-  * */
+* Stack trace text from the remote server. The format is not specified. By default,
+* implementations do not provide stack traces; the application must explicitly enable them
+* when desired.
+*
+*/
   get trace(): string {
     return $.utils.getText(1, this);
   }
   set trace(value: string) {
     $.utils.setText(1, value, this);
   }
-  toString(): string {
-    return "Exception_" + super.toString();
-  }
+  toString(): string { return "Exception_" + super.toString(); }
 }
 Payload._CapTable = $.CompositeList(CapDescriptor);
 PromisedAnswer._Transform = $.CompositeList(PromisedAnswer_Op);
