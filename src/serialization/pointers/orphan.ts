@@ -46,7 +46,6 @@ export interface _Orphan {
  * @extends {Pointer}
  * @template T
  */
-
 export class Orphan<T extends Pointer> {
   /** If this member is not present then the orphan has already been adopted, or something went very wrong. */
   _capnp?: _Orphan;
@@ -63,7 +62,6 @@ export class Orphan<T extends Pointer> {
     this._capnp = {} as _Orphan;
 
     // Read vital info from the src pointer so we can reconstruct it during adoption.
-
     this._capnp.type = getTargetPointerType(src);
 
     switch (this._capnp.type) {
@@ -98,7 +96,6 @@ export class Orphan<T extends Pointer> {
     }
 
     // Zero out the source pointer (but not the contents!).
-
     erasePointer(src);
   }
 
@@ -108,7 +105,6 @@ export class Orphan<T extends Pointer> {
    * @param {T} dst The destination pointer.
    * @returns {void}
    */
-
   _moveTo(dst: T): void {
     if (this._capnp === undefined) {
       throw new Error(format(PTR_ALREADY_ADOPTED, this));
@@ -120,7 +116,6 @@ export class Orphan<T extends Pointer> {
     }
 
     // Recursively wipe out the destination pointer first.
-
     erase(dst);
 
     const res = initPointer(this.segment, this.byteOffset, dst);
@@ -128,12 +123,11 @@ export class Orphan<T extends Pointer> {
     switch (this._capnp.type) {
       case PointerType.STRUCT: {
         setStructPointer(res.offsetWords, this._capnp.size, res.pointer);
-
         break;
       }
 
       case PointerType.LIST: {
-        let offsetWords = res.offsetWords;
+        let { offsetWords } = res;
 
         if (this._capnp.elementSize === ListElementSize.COMPOSITE) {
           offsetWords--; // The tag word gets skipped.
@@ -146,12 +140,11 @@ export class Orphan<T extends Pointer> {
           res.pointer,
           this._capnp.size,
         );
-
         break;
       }
+
       case PointerType.OTHER: {
         setInterfacePointer(this._capnp.capId, res.pointer);
-
         break;
       }
 
@@ -176,7 +169,6 @@ export class Orphan<T extends Pointer> {
           this.byteOffset,
           getWordLength(this._capnp.size),
         );
-
         break;
       }
 
@@ -187,12 +179,10 @@ export class Orphan<T extends Pointer> {
           this._capnp.size,
         );
         this.segment.fillZeroWords(this.byteOffset, byteLength);
-
         break;
       }
       default: {
         // Other pointer types don't actually have any content.
-
         break;
       }
     }

@@ -77,7 +77,7 @@ export function dumpBuffer(buffer: ArrayBuffer | ArrayBufferView): string {
       }
     }
 
-    r += `${repeat((17 - k) * 3, " ")}${s}`;
+    r += `${" ".repeat((17 - k) * 3)}${s}`;
   }
 
   r += "\n";
@@ -292,19 +292,6 @@ export function format(s: string, ...args: unknown[]): string {
   return result;
 }
 
-/**
- * Return the thing that was passed in. Yaaaaawn.
- *
- * @export
- * @template T
- * @param {T} x A thing.
- * @returns {T} The same thing.
- */
-
-export function identity<T>(x: T): T {
-  return x;
-}
-
 export function pad(v: string, width: number, pad = "0"): string {
   return v.length >= width
     ? v
@@ -321,38 +308,4 @@ export function pad(v: string, width: number, pad = "0"): string {
 
 export function padToWord(size: number): number {
   return (size + 7) & ~7;
-}
-
-/**
- * Repeat a string n times. Shamelessly copied from lodash.repeat.
- *
- * @param {number} times Number of times to repeat.
- * @param {string} str The string to repeat.
- * @returns {string} The repeated string.
- */
-
-export function repeat(times: number, str: string): string {
-  let out = "";
-  let n = times;
-  let s = str;
-
-  if (n < 1 || n > Number.MAX_VALUE) {
-    return out;
-  }
-
-  // https://en.wikipedia.org/wiki/Exponentiation_by_squaring
-
-  do {
-    if (n % 2) {
-      out += s;
-    }
-
-    n = Math.floor(n / 2);
-
-    if (n) {
-      s += s;
-    }
-  } while (n);
-
-  return out;
 }

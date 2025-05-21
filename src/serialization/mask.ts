@@ -60,7 +60,9 @@ export const getUint8Mask = _makePrimitiveMaskFn(
 export function getBitMask(value: boolean, bitOffset: number): DataView {
   const dv = new DataView(new ArrayBuffer(1));
 
-  if (!value) return dv;
+  if (!value) {
+    return dv;
+  }
 
   dv.setUint8(0, 1 << bitOffset % 8);
   return dv;

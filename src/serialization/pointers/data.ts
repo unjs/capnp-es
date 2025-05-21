@@ -13,7 +13,6 @@ import { Pointer, PointerType } from "./pointer";
  * @class Data
  * @extends {List<number>}
  */
-
 export class Data extends List<number> {
   static fromPointer(pointer: Pointer): Data {
     validate(PointerType.LIST, pointer, ListElementSize.BYTE);
@@ -36,10 +35,8 @@ export class Data extends List<number> {
    * @param {(ArrayBuffer | ArrayBufferView)} src The source buffer.
    * @returns {void}
    */
-
   // TODO: Would be nice to have a way to zero-copy a buffer by allocating a new segment into the message with that
   // buffer data.
-
   copyBuffer(src: ArrayBuffer | ArrayBufferView): void {
     const c = getContent(this);
 
@@ -70,7 +67,6 @@ export class Data extends List<number> {
    * @param {number} byteOffset The byte offset to read.
    * @returns {number} The byte value.
    */
-
   get(byteOffset: number): number {
     const c = getContent(this);
     return c.segment.getUint8(c.byteOffset + byteOffset);

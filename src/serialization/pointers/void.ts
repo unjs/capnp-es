@@ -12,5 +12,4 @@ export class Void extends Struct {
 }
 
 // This following line makes a mysterious "whooshing" sound when it runs.
-
 export const VOID = undefined;
