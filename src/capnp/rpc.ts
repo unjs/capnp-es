@@ -2317,7 +2317,7 @@ export class Exception extends $.Struct {
 *
 */
   get type(): Exception_Type {
-    return ($.utils.getUint16(4, this) as Exception_Type);
+    return $.utils.getUint16(4, this) as Exception_Type;
   }
   set type(value: Exception_Type) {
     $.utils.setUint16(4, value, this);

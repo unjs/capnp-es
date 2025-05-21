@@ -128,7 +128,7 @@ export class TestAllTypes extends $.Struct {
     $.utils.copyFrom(value, $.utils.getPointer(2, this));
   }
   get enumField(): TestEnum {
-    return ($.utils.getUint16(36, this) as TestEnum);
+    return $.utils.getUint16(36, this) as TestEnum;
   }
   set enumField(value: TestEnum) {
     $.utils.setUint16(36, value, this);
@@ -410,13 +410,13 @@ export class TestAllTypes extends $.Struct {
     return $.utils.disown(this.enumList);
   }
   get enumList(): $.List<TestEnum> {
-    return ($.utils.getList(18, $.Uint16List, this) as $.List<TestEnum>);
+    return $.utils.getList(18, $.Uint16List, this) as $.List<TestEnum>;
   }
   _hasEnumList(): boolean {
     return !$.utils.isNull($.utils.getPointer(18, this));
   }
   _initEnumList(length: number): $.List<TestEnum> {
-    return ($.utils.initList(18, $.Uint16List, length, this) as $.List<TestEnum>);
+    return $.utils.initList(18, $.Uint16List, length, this) as $.List<TestEnum>;
   }
   set enumList(value: $.List<TestEnum>) {
     $.utils.copyFrom(value, $.utils.getPointer(18, this));
@@ -596,7 +596,7 @@ export class TestDefaults extends $.Struct {
     $.utils.copyFrom(value, $.utils.getPointer(2, this));
   }
   get enumField(): TestEnum {
-    return ($.utils.getUint16(36, this, TestDefaults._capnp.defaultEnumField) as TestEnum);
+    return $.utils.getUint16(36, this, TestDefaults._capnp.defaultEnumField) as TestEnum;
   }
   set enumField(value: TestEnum) {
     $.utils.setUint16(36, value, this, TestDefaults._capnp.defaultEnumField);
@@ -878,13 +878,13 @@ export class TestDefaults extends $.Struct {
     return $.utils.disown(this.enumList);
   }
   get enumList(): $.List<TestEnum> {
-    return ($.utils.getList(18, $.Uint16List, this, TestDefaults._capnp.defaultEnumList) as $.List<TestEnum>);
+    return $.utils.getList(18, $.Uint16List, this, TestDefaults._capnp.defaultEnumList) as $.List<TestEnum>;
   }
   _hasEnumList(): boolean {
     return !$.utils.isNull($.utils.getPointer(18, this));
   }
   _initEnumList(length: number): $.List<TestEnum> {
-    return ($.utils.initList(18, $.Uint16List, length, this) as $.List<TestEnum>);
+    return $.utils.initList(18, $.Uint16List, length, this) as $.List<TestEnum>;
   }
   set enumList(value: $.List<TestEnum>) {
     $.utils.copyFrom(value, $.utils.getPointer(18, this));
@@ -2408,13 +2408,13 @@ export class TestNestedTypes_NestedStruct extends $.Struct {
     defaultInnerNestedEnum: $.getUint16Mask(2)
   };
   get outerNestedEnum(): TestNestedTypes_NestedEnum {
-    return ($.utils.getUint16(0, this, TestNestedTypes_NestedStruct._capnp.defaultOuterNestedEnum) as TestNestedTypes_NestedEnum);
+    return $.utils.getUint16(0, this, TestNestedTypes_NestedStruct._capnp.defaultOuterNestedEnum) as TestNestedTypes_NestedEnum;
   }
   set outerNestedEnum(value: TestNestedTypes_NestedEnum) {
     $.utils.setUint16(0, value, this, TestNestedTypes_NestedStruct._capnp.defaultOuterNestedEnum);
   }
   get innerNestedEnum(): TestNestedTypes_NestedStruct_NestedEnum {
-    return ($.utils.getUint16(2, this, TestNestedTypes_NestedStruct._capnp.defaultInnerNestedEnum) as TestNestedTypes_NestedStruct_NestedEnum);
+    return $.utils.getUint16(2, this, TestNestedTypes_NestedStruct._capnp.defaultInnerNestedEnum) as TestNestedTypes_NestedStruct_NestedEnum;
   }
   set innerNestedEnum(value: TestNestedTypes_NestedStruct_NestedEnum) {
     $.utils.setUint16(2, value, this, TestNestedTypes_NestedStruct._capnp.defaultInnerNestedEnum);
@@ -2450,13 +2450,13 @@ export class TestNestedTypes extends $.Struct {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
   get outerNestedEnum(): TestNestedTypes_NestedEnum {
-    return ($.utils.getUint16(0, this, TestNestedTypes._capnp.defaultOuterNestedEnum) as TestNestedTypes_NestedEnum);
+    return $.utils.getUint16(0, this, TestNestedTypes._capnp.defaultOuterNestedEnum) as TestNestedTypes_NestedEnum;
   }
   set outerNestedEnum(value: TestNestedTypes_NestedEnum) {
     $.utils.setUint16(0, value, this, TestNestedTypes._capnp.defaultOuterNestedEnum);
   }
   get innerNestedEnum(): TestNestedTypes_NestedStruct_NestedEnum {
-    return ($.utils.getUint16(2, this, TestNestedTypes._capnp.defaultInnerNestedEnum) as TestNestedTypes_NestedStruct_NestedEnum);
+    return $.utils.getUint16(2, this, TestNestedTypes._capnp.defaultInnerNestedEnum) as TestNestedTypes_NestedStruct_NestedEnum;
   }
   set innerNestedEnum(value: TestNestedTypes_NestedStruct_NestedEnum) {
     $.utils.setUint16(2, value, this, TestNestedTypes._capnp.defaultInnerNestedEnum);
@@ -2472,13 +2472,13 @@ export class TestUsing extends $.Struct {
     defaultInnerNestedEnum: $.getUint16Mask(2)
   };
   get outerNestedEnum(): TestNestedTypes_NestedEnum {
-    return ($.utils.getUint16(2, this, TestUsing._capnp.defaultOuterNestedEnum) as TestNestedTypes_NestedEnum);
+    return $.utils.getUint16(2, this, TestUsing._capnp.defaultOuterNestedEnum) as TestNestedTypes_NestedEnum;
   }
   set outerNestedEnum(value: TestNestedTypes_NestedEnum) {
     $.utils.setUint16(2, value, this, TestUsing._capnp.defaultOuterNestedEnum);
   }
   get innerNestedEnum(): TestNestedTypes_NestedStruct_NestedEnum {
-    return ($.utils.getUint16(0, this, TestUsing._capnp.defaultInnerNestedEnum) as TestNestedTypes_NestedStruct_NestedEnum);
+    return $.utils.getUint16(0, this, TestUsing._capnp.defaultInnerNestedEnum) as TestNestedTypes_NestedStruct_NestedEnum;
   }
   set innerNestedEnum(value: TestNestedTypes_NestedStruct_NestedEnum) {
     $.utils.setUint16(0, value, this, TestUsing._capnp.defaultInnerNestedEnum);
@@ -7605,7 +7605,7 @@ export class TestSturdyRefObjectId extends $.Struct {
     size: new $.ObjectSize(8, 0),
   };
   get tag(): TestSturdyRefObjectId_Tag {
-    return ($.utils.getUint16(0, this) as TestSturdyRefObjectId_Tag);
+    return $.utils.getUint16(0, this) as TestSturdyRefObjectId_Tag;
   }
   set tag(value: TestSturdyRefObjectId_Tag) {
     $.utils.setUint16(0, value, this);
@@ -7792,7 +7792,7 @@ export class TestNameAnnotation extends $.Struct {
     $.utils.setInt8(0, value, this);
   }
   get anotherBadFieldName(): TestNameAnnotation_BadlyNamedEnum {
-    return ($.utils.getUint16(4, this) as TestNameAnnotation_BadlyNamedEnum);
+    return $.utils.getUint16(4, this) as TestNameAnnotation_BadlyNamedEnum;
   }
   set anotherBadFieldName(value: TestNameAnnotation_BadlyNamedEnum) {
     $.utils.setUint16(4, value, this);

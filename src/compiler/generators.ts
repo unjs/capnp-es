@@ -379,7 +379,7 @@ export function generateStructFieldMethods(
       get = `$.utils.${getter}(${byteOffset}, this${hadExplicitDefault ? `, ${fullClassName}._capnp.default${properName}` : ""})`;
       set = `$.utils.${setter}(${byteOffset}, value, this${hadExplicitDefault ? `, ${fullClassName}._capnp.default${properName}` : ""})`;
       if (whichType === schema.Type.ENUM) {
-        get = `(${get} as ${jsType})`;
+        get = `${get} as ${jsType}`;
       }
       break;
     }
@@ -422,8 +422,8 @@ export function generateStructFieldMethods(
       set = `$.utils.copyFrom(value, $.utils.getPointer(${offset}, this))`;
       init = `$.utils.initList(${offset}, ${listClass}, length, this)`;
       if (whichElementType === schema.Type.ENUM) {
-        get = `(${get} as ${jsType})`;
-        init = `(${init} as ${jsType})`;
+        get = `${get} as ${jsType}`;
+        init = `${init} as ${jsType}`;
       }
       break;
     }

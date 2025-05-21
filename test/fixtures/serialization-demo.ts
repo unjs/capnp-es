@@ -21,7 +21,7 @@ export class Person_PhoneNumber extends $.Struct {
     $.utils.setText(0, value, this);
   }
   get type(): Person_PhoneNumber_Type {
-    return ($.utils.getUint16(0, this) as Person_PhoneNumber_Type);
+    return $.utils.getUint16(0, this) as Person_PhoneNumber_Type;
   }
   set type(value: Person_PhoneNumber_Type) {
     $.utils.setUint16(0, value, this);

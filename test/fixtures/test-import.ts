@@ -27,7 +27,7 @@ export class TestImport extends $.Struct {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
   get enumField(): TestEnum {
-    return ($.utils.getUint16(0, this) as TestEnum);
+    return $.utils.getUint16(0, this) as TestEnum;
   }
   set enumField(value: TestEnum) {
     $.utils.setUint16(0, value, this);

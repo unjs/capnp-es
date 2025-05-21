@@ -137,7 +137,7 @@ export class TestImport2 extends $.Struct {
     $.utils.copyFrom(value, $.utils.getPointer(6, this));
   }
   get bep(): ElementSize {
-    return ($.utils.getUint16(0, this) as ElementSize);
+    return $.utils.getUint16(0, this) as ElementSize;
   }
   set bep(value: ElementSize) {
     $.utils.setUint16(0, value, this);

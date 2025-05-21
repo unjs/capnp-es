@@ -13,7 +13,7 @@ export class VatId extends $.Struct {
     size: new $.ObjectSize(8, 0),
   };
   get side(): Side {
-    return ($.utils.getUint16(0, this) as Side);
+    return $.utils.getUint16(0, this) as Side;
   }
   set side(value: Side) {
     $.utils.setUint16(0, value, this);

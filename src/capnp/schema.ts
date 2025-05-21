@@ -165,7 +165,7 @@ export class Node_Struct extends $.Struct {
 *
 */
   get preferredListEncoding(): ElementSize {
-    return ($.utils.getUint16(26, this) as ElementSize);
+    return $.utils.getUint16(26, this) as ElementSize;
   }
   set preferredListEncoding(value: ElementSize) {
     $.utils.setUint16(26, value, this);
