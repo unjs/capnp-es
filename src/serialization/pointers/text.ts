@@ -22,12 +22,13 @@ export class Text extends List<string> {
    * @returns {string} The string value.
    */
   get(index = 0): string {
-    if (isNull(this)) return "";
+    if (isNull(this)) {
+      return "";
+    }
 
     const c = getContent(this);
 
     // Remember to exclude the NUL byte.
-
     return textDecoder.decode(
       new Uint8Array(
         c.segment.buffer,
