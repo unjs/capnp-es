@@ -306,9 +306,6 @@ const listLengthParameterName = "length";
  * @param field - The field to generate methods for
  * @param fieldIndex - Index of the field in the struct's field list (for documentation lookup)
  */
-// TODO:
-// - Factor default code `${hadExplicitDefault ? `, ${fullClassName}._capnp.default${properName}` : ""}`
-// - `$.utils.getPointer` does not seem to handle it, check.
 export function generateStructFieldMethods(
   ctx: CodeGeneratorFileContext,
   members: string[],
@@ -338,9 +335,12 @@ export function generateStructFieldMethods(
   const { discriminantOffset } = node.struct;
   const { name } = field;
   const properName = util.c2t(name);
-  const hadExplicitDefault = field._isSlot && field.slot.hadExplicitDefault;
   const { discriminantValue } = field;
   const fullClassName = getFullClassName(node);
+  const hasExplicitDefault = field._isSlot && field.slot.hadExplicitDefault;
+  const maybeDefaultArg = hasExplicitDefault
+    ? `, ${fullClassName}._capnp.default${properName}`
+    : "";
   const union = discriminantValue !== schema.Field.NO_DISCRIMINANT;
   const offset = (field._isSlot && field.slot.offset) || 0;
 
@@ -356,7 +356,7 @@ export function generateStructFieldMethods(
       adopt = true;
       disown = true;
       has = true;
-      get = `$.utils.getPointer(${offset}, this${hadExplicitDefault ? `, ${fullClassName}._capnp.default${properName}` : ""})`;
+      get = `$.utils.getPointer(${offset}, this${maybeDefaultArg})`;
       set = `$.utils.copyFrom(value, ${get})`;
       break;
     }
@@ -376,8 +376,8 @@ export function generateStructFieldMethods(
       const { byteLength, getter, setter } = Primitives[whichType as number];
       // NOTE: For a BOOL type this is actually a bit offset; `byteLength` will be `1` in that case.
       const byteOffset = offset * byteLength;
-      get = `$.utils.${getter}(${byteOffset}, this${hadExplicitDefault ? `, ${fullClassName}._capnp.default${properName}` : ""})`;
-      set = `$.utils.${setter}(${byteOffset}, value, this${hadExplicitDefault ? `, ${fullClassName}._capnp.default${properName}` : ""})`;
+      get = `$.utils.${getter}(${byteOffset}, this${maybeDefaultArg})`;
+      set = `$.utils.${setter}(${byteOffset}, value, this${maybeDefaultArg})`;
       if (whichType === schema.Type.ENUM) {
         get = `${get} as ${jsType}`;
       }
@@ -388,7 +388,7 @@ export function generateStructFieldMethods(
       adopt = true;
       disown = true;
       has = true;
-      get = `$.utils.getData(${offset}, this${hadExplicitDefault ? `, ${fullClassName}._capnp.default${properName}` : ""})`;
+      get = `$.utils.getData(${offset}, this${maybeDefaultArg})`;
       set = `$.utils.copyFrom(value, $.utils.getPointer(${offset}, this))`;
       init = `$.utils.initData(${offset}, length, this)`;
       break;
@@ -418,7 +418,7 @@ export function generateStructFieldMethods(
       adopt = true;
       disown = true;
       has = true;
-      get = `$.utils.getList(${offset}, ${listClass}, this${hadExplicitDefault ? `, ${fullClassName}._capnp.default${properName}` : ""})`;
+      get = `$.utils.getList(${offset}, ${listClass}, this${maybeDefaultArg})`;
       set = `$.utils.copyFrom(value, $.utils.getPointer(${offset}, this))`;
       init = `$.utils.initList(${offset}, ${listClass}, length, this)`;
       if (whichElementType === schema.Type.ENUM) {
@@ -432,14 +432,14 @@ export function generateStructFieldMethods(
       adopt = true;
       disown = true;
       has = true;
-      get = `$.utils.getStruct(${offset}, ${jsType}, this${hadExplicitDefault ? `, ${fullClassName}._capnp.default${properName}` : ""})`;
+      get = `$.utils.getStruct(${offset}, ${jsType}, this${maybeDefaultArg})`;
       set = `$.utils.copyFrom(value, $.utils.getPointer(${offset}, this))`;
       init = `$.utils.initStructAt(${offset}, ${jsType}, this)`;
       break;
     }
 
     case schema.Type.TEXT: {
-      get = `$.utils.getText(${offset}, this${hadExplicitDefault ? `, ${fullClassName}._capnp.default${properName}` : ""})`;
+      get = `$.utils.getText(${offset}, this${maybeDefaultArg})`;
       set = `$.utils.setText(${offset}, value, this)`;
       break;
     }
@@ -449,7 +449,7 @@ export function generateStructFieldMethods(
     }
 
     case "group": {
-      if (hadExplicitDefault) {
+      if (hasExplicitDefault) {
         throw new Error(format(E.GEN_EXPLICIT_DEFAULT_NON_PRIMITIVE, "group"));
       }
       get = `$.utils.getAs(${jsType}, this)`;
