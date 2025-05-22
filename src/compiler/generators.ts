@@ -334,15 +334,17 @@ export function generateStructFieldMethods(
 
   const { discriminantOffset } = node.struct;
   const { name } = field;
-  const properName = util.c2t(name);
+  // `constructor` is not a valid accessor, use `$constructor` instead
+  const accessorName = name === "constructor" ? "$constructor" : name;
+  const capitalizedName = util.c2t(name);
   const { discriminantValue } = field;
   const fullClassName = getFullClassName(node);
   const hasExplicitDefault = field._isSlot && field.slot.hadExplicitDefault;
   const maybeDefaultArg = hasExplicitDefault
-    ? `, ${fullClassName}._capnp.default${properName}`
+    ? `, ${fullClassName}._capnp.default${capitalizedName}`
     : "";
   const union = discriminantValue !== schema.Field.NO_DISCRIMINANT;
-  const offset = (field._isSlot && field.slot.offset) || 0;
+  const offset = field._isSlot ? field.slot.offset : 0;
 
   let adopt = false;
   let disown = false;
@@ -373,7 +375,7 @@ export function generateStructFieldMethods(
     case schema.Type.UINT32:
     case schema.Type.UINT64:
     case schema.Type.UINT8: {
-      const { byteLength, getter, setter } = Primitives[whichType as number];
+      const { byteLength, getter, setter } = Primitives[whichType];
       // NOTE: For a BOOL type this is actually a bit offset; `byteLength` will be `1` in that case.
       const byteOffset = offset * byteLength;
       get = `$.utils.${getter}(${byteOffset}, this${maybeDefaultArg})`;
@@ -408,7 +410,7 @@ export function generateStructFieldMethods(
         whichElementType === schema.Type.LIST ||
         whichElementType === schema.Type.STRUCT
       ) {
-        listClass = `${fullClassName}._${properName}`;
+        listClass = `${fullClassName}._${capitalizedName}`;
       } else if (listClass === undefined) {
         throw new Error(
           format(E.GEN_UNSUPPORTED_LIST_ELEMENT_TYPE, whichElementType),
@@ -466,7 +468,7 @@ export function generateStructFieldMethods(
 
   if (adopt) {
     members.push(`
-      _adopt${properName}(value: $.Orphan<${jsType}>): void {
+      _adopt${capitalizedName}(value: $.Orphan<${jsType}>): void {
         ${union ? `$.utils.setUint16(${discriminantOffset * 2}, ${discriminantValue}, this);` : ""}
         $.utils.adopt(value, $.utils.getPointer(${offset}, this));
       }
@@ -475,7 +477,7 @@ export function generateStructFieldMethods(
 
   if (disown) {
     members.push(`
-      _disown${properName}(): $.Orphan<${jsType}> {
+      _disown${capitalizedName}(): $.Orphan<${jsType}> {
         return $.utils.disown(this.${name === "constructor" ? `$${name}` : name});
       }
     `);
@@ -488,7 +490,7 @@ export function generateStructFieldMethods(
 
     members.push(`
       ${docComment}
-      get ${name === "constructor" ? `$${name}` : name}(): ${jsType} {
+      get ${accessorName}(): ${jsType} {
         ${union ? `$.utils.testWhich(${JSON.stringify(name)}, $.utils.getUint16(${discriminantOffset * 2}, this), ${discriminantValue}, this);` : ""}
         return ${get};
       }
@@ -497,7 +499,7 @@ export function generateStructFieldMethods(
 
   if (has) {
     members.push(`
-      _has${properName}(): boolean {
+      _has${capitalizedName}(): boolean {
         return !$.utils.isNull($.utils.getPointer(${offset}, this));
       }
     `);
@@ -509,7 +511,7 @@ export function generateStructFieldMethods(
         ? `${listLengthParameterName}: number`
         : "";
     members.push(`
-      _init${properName}(${params}): ${jsType} {
+      _init${capitalizedName}(${params}): ${jsType} {
         ${union ? `$.utils.setUint16(${discriminantOffset * 2}, ${discriminantValue}, this);` : ""}
         return ${init};
       }
@@ -518,7 +520,7 @@ export function generateStructFieldMethods(
 
   if (union) {
     members.push(`
-      get _is${properName}(): boolean {
+      get _is${capitalizedName}(): boolean {
         return $.utils.getUint16(${discriminantOffset * 2}, this) === ${discriminantValue};
       }
     `);
@@ -527,7 +529,7 @@ export function generateStructFieldMethods(
   if (set || union) {
     const param = set ? `value: ${jsType}` : `_: true`;
     members.push(`
-      set ${name === "constructor" ? `$${name}` : name}(${param}) {
+      set ${accessorName}(${param}) {
         ${union ? `$.utils.setUint16(${discriminantOffset * 2}, ${discriminantValue}, this);` : ""}
         ${set ? `${set};` : ""}
       }
