@@ -339,8 +339,8 @@ export function generateStructFieldMethods(
   const capitalizedName = util.c2t(name);
   const { discriminantValue } = field;
   const fullClassName = getFullClassName(node);
-  const hasExplicitDefault = field._isSlot && field.slot.hadExplicitDefault;
-  const maybeDefaultArg = hasExplicitDefault
+  const hadExplicitDefault = field._isSlot && field.slot.hadExplicitDefault;
+  const maybeDefaultArg = hadExplicitDefault
     ? `, ${fullClassName}._capnp.default${capitalizedName}`
     : "";
   const union = discriminantValue !== schema.Field.NO_DISCRIMINANT;
@@ -451,7 +451,7 @@ export function generateStructFieldMethods(
     }
 
     case "group": {
-      if (hasExplicitDefault) {
+      if (hadExplicitDefault) {
         throw new Error(format(E.GEN_EXPLICIT_DEFAULT_NON_PRIMITIVE, "group"));
       }
       get = `$.utils.getAs(${jsType}, this)`;
