@@ -1683,10 +1683,6 @@ export class TestUnion extends $.Struct {
   _initUnion0(): TestUnion_Union0 {
     return $.utils.getAs(TestUnion_Union0, this);
   }
-  /**
-* Pack pathologically bad case.  Each field takes up new space.
-*
-*/
   get bit0(): boolean {
     return $.utils.getBit(128, this);
   }
@@ -1694,8 +1690,9 @@ export class TestUnion extends $.Struct {
     $.utils.setBit(128, value, this);
   }
   /**
-  * Pack pathologically bad case.  Each field takes up new space.
-  * */
+* Pack pathologically bad case.  Each field takes up new space.
+*
+*/
   get union1(): TestUnion_Union1 {
     return $.utils.getAs(TestUnion_Union1, this);
   }
