@@ -125,7 +125,7 @@ export class Message extends $.Struct {
     return $.utils.disown(this.bootstrap);
   }
   /**
-  * Begin a method call.
+  * Request the peer's bootstrap interface.
   * */
   get bootstrap(): Bootstrap {
     $.utils.testWhich("bootstrap", $.utils.getUint16(0, this), 8, this);
@@ -153,7 +153,7 @@ export class Message extends $.Struct {
     return $.utils.disown(this.call);
   }
   /**
-  * Complete a method call.
+  * Begin a method call.
   * */
   get call(): Call {
     $.utils.testWhich("call", $.utils.getUint16(0, this), 2, this);
@@ -181,7 +181,7 @@ export class Message extends $.Struct {
     return $.utils.disown(this.return);
   }
   /**
-  * Release a returned answer / cancel a call.
+  * Complete a method call.
   * */
   get return(): Return {
     $.utils.testWhich("return", $.utils.getUint16(0, this), 3, this);
@@ -209,7 +209,7 @@ export class Message extends $.Struct {
     return $.utils.disown(this.finish);
   }
   /**
-  * Resolve a previously-sent promise.
+  * Release a returned answer / cancel a call.
   * */
   get finish(): Finish {
     $.utils.testWhich("finish", $.utils.getUint16(0, this), 4, this);
@@ -237,7 +237,7 @@ export class Message extends $.Struct {
     return $.utils.disown(this.resolve);
   }
   /**
-  * Release a capability so that the remote object can be deallocated.
+  * Resolve a previously-sent promise.
   * */
   get resolve(): Resolve {
     $.utils.testWhich("resolve", $.utils.getUint16(0, this), 5, this);
@@ -265,9 +265,7 @@ export class Message extends $.Struct {
     return $.utils.disown(this.release);
   }
   /**
-  * Obsolete request to save a capability, resulting in a SturdyRef. This has been replaced
-  * by the `Persistent` interface defined in `persistent.capnp`. This operation was never
-  * implemented.
+  * Release a capability so that the remote object can be deallocated.
   * */
   get release(): Release {
     $.utils.testWhich("release", $.utils.getUint16(0, this), 6, this);
@@ -295,7 +293,7 @@ export class Message extends $.Struct {
     return $.utils.disown(this.disembargo);
   }
   /**
-  * Request the peer's bootstrap interface.
+  * Lift an embargo used to enforce E-order over promise resolution.
   * */
   get disembargo(): Disembargo {
     $.utils.testWhich("disembargo", $.utils.getUint16(0, this), 13, this);
@@ -323,7 +321,9 @@ export class Message extends $.Struct {
     return $.utils.disown(this.obsoleteSave);
   }
   /**
-  * Obsolete way to delete a SturdyRef. This operation was never implemented.
+  * Obsolete request to save a capability, resulting in a SturdyRef. This has been replaced
+  * by the `Persistent` interface defined in `persistent.capnp`. This operation was never
+  * implemented.
   * */
   get obsoleteSave(): $.Pointer {
     $.utils.testWhich("obsoleteSave", $.utils.getUint16(0, this), 7, this);
@@ -347,7 +347,7 @@ export class Message extends $.Struct {
     return $.utils.disown(this.obsoleteDelete);
   }
   /**
-  * Provide a capability to a third party.
+  * Obsolete way to delete a SturdyRef. This operation was never implemented.
   * */
   get obsoleteDelete(): $.Pointer {
     $.utils.testWhich("obsoleteDelete", $.utils.getUint16(0, this), 9, this);
@@ -371,7 +371,7 @@ export class Message extends $.Struct {
     return $.utils.disown(this.provide);
   }
   /**
-  * Accept a capability provided by a third party.
+  * Provide a capability to a third party.
   * */
   get provide(): Provide {
     $.utils.testWhich("provide", $.utils.getUint16(0, this), 10, this);
@@ -399,7 +399,7 @@ export class Message extends $.Struct {
     return $.utils.disown(this.accept);
   }
   /**
-  * Directly connect to the common root of two or more proxied caps.
+  * Accept a capability provided by a third party.
   * */
   get accept(): Accept {
     $.utils.testWhich("accept", $.utils.getUint16(0, this), 11, this);
@@ -427,7 +427,7 @@ export class Message extends $.Struct {
     return $.utils.disown(this.join);
   }
   /**
-  * Lift an embargo used to enforce E-order over promise resolution.
+  * Directly connect to the common root of two or more proxied caps.
   * */
   get join(): Join {
     $.utils.testWhich("join", $.utils.getUint16(0, this), 12, this);
@@ -736,40 +736,15 @@ export class Call extends $.Struct {
     $.utils.setUint16(4, value, this);
   }
   /**
-  * The call parameters.  `params.content` is a struct whose fields correspond to the parameters of
-  * the method.
+  * Indicates whether or not the receiver is allowed to send a `Return` containing
+  * `acceptFromThirdParty`.  Level 3 implementations should set this true.  Otherwise, the callee
+  * will have to proxy the return in the case of a tail call to a third-party vat.
   * */
   get allowThirdPartyTailCall(): boolean {
     return $.utils.getBit(128, this, Call._capnp.defaultAllowThirdPartyTailCall);
   }
   set allowThirdPartyTailCall(value: boolean) {
     $.utils.setBit(128, value, this, Call._capnp.defaultAllowThirdPartyTailCall);
-  }
-  /**
-  * Where should the return message be sent?
-  * */
-  get noPromisePipelining(): boolean {
-    return $.utils.getBit(129, this, Call._capnp.defaultNoPromisePipelining);
-  }
-  set noPromisePipelining(value: boolean) {
-    $.utils.setBit(129, value, this, Call._capnp.defaultNoPromisePipelining);
-  }
-  /**
-  * Indicates whether or not the receiver is allowed to send a `Return` containing
-  * `acceptFromThirdParty`.  Level 3 implementations should set this true.  Otherwise, the callee
-  * will have to proxy the return in the case of a tail call to a third-party vat.
-  * */
-  get onlyPromisePipeline(): boolean {
-    return $.utils.getBit(130, this, Call._capnp.defaultOnlyPromisePipeline);
-  }
-  set onlyPromisePipeline(value: boolean) {
-    $.utils.setBit(130, value, this, Call._capnp.defaultOnlyPromisePipeline);
-  }
-  _adoptParams(value: $.Orphan<Payload>): void {
-    $.utils.adopt(value, $.utils.getPointer(1, this));
-  }
-  _disownParams(): $.Orphan<Payload> {
-    return $.utils.disown(this.params);
   }
   /**
   * If true, the sender promises that it won't make any promise-pipelined calls on the results of
@@ -780,17 +755,11 @@ export class Call extends $.Struct {
   * when no pipelined calls are expected. The sender typically sets this to false when the method's
   * schema does not specify any return capabilities.
   * */
-  get params(): Payload {
-    return $.utils.getStruct(1, Payload, this);
+  get noPromisePipelining(): boolean {
+    return $.utils.getBit(129, this, Call._capnp.defaultNoPromisePipelining);
   }
-  _hasParams(): boolean {
-    return !$.utils.isNull($.utils.getPointer(1, this));
-  }
-  _initParams(): Payload {
-    return $.utils.initStructAt(1, Payload, this);
-  }
-  set params(value: Payload) {
-    $.utils.copyFrom(value, $.utils.getPointer(1, this));
+  set noPromisePipelining(value: boolean) {
+    $.utils.setBit(129, value, this, Call._capnp.defaultNoPromisePipelining);
   }
   /**
   * If true, the sender only plans to use this call to make pipelined calls. The receiver need not
@@ -806,6 +775,37 @@ export class Call extends $.Struct {
   * implementation assumes that the other end is in fact honoring the hint, and the ID counter is
   * allowed to loop around. If a `Return` is ever seen when `onlyPromisePipeline` was set, then
   * the implementation stops using this hint.
+  * */
+  get onlyPromisePipeline(): boolean {
+    return $.utils.getBit(130, this, Call._capnp.defaultOnlyPromisePipeline);
+  }
+  set onlyPromisePipeline(value: boolean) {
+    $.utils.setBit(130, value, this, Call._capnp.defaultOnlyPromisePipeline);
+  }
+  _adoptParams(value: $.Orphan<Payload>): void {
+    $.utils.adopt(value, $.utils.getPointer(1, this));
+  }
+  _disownParams(): $.Orphan<Payload> {
+    return $.utils.disown(this.params);
+  }
+  /**
+  * The call parameters.  `params.content` is a struct whose fields correspond to the parameters of
+  * the method.
+  * */
+  get params(): Payload {
+    return $.utils.getStruct(1, Payload, this);
+  }
+  _hasParams(): boolean {
+    return !$.utils.isNull($.utils.getPointer(1, this));
+  }
+  _initParams(): Payload {
+    return $.utils.initStructAt(1, Payload, this);
+  }
+  set params(value: Payload) {
+    $.utils.copyFrom(value, $.utils.getPointer(1, this));
+  }
+  /**
+  * Where should the return message be sent?
   * */
   get sendResultsTo(): Call_SendResultsTo {
     return $.utils.getAs(Call_SendResultsTo, this);
@@ -871,13 +871,11 @@ export class Return extends $.Struct {
     $.utils.setBit(32, value, this, Return._capnp.defaultReleaseParamCaps);
   }
   /**
-  * The result.
-  *
-  * For regular method calls, `results.content` points to the result struct.
-  *
-  * For a `Return` in response to an `Accept` or `Bootstrap`, `results` contains a single
-  * capability (rather than a struct), and `results.content` is just a capability pointer with
-  * index 0.  A `Finish` is still required in this case.
+  * If true, the sender does not need the receiver to send a `Finish` message; its answer table
+  * entry has already been cleaned up. This implies that the results do not contain any
+  * capabilities, since the `Finish` message would normally release those capabilities from
+  * promise pipelining responsibility. The caller may still send a `Finish` message if it wants,
+  * which will be silently ignored by the callee.
   * */
   get noFinishNeeded(): boolean {
     return $.utils.getBit(33, this, Return._capnp.defaultNoFinishNeeded);
@@ -893,7 +891,13 @@ export class Return extends $.Struct {
     return $.utils.disown(this.results);
   }
   /**
-  * Indicates that the call failed and explains why.
+  * The result.
+  *
+  * For regular method calls, `results.content` points to the result struct.
+  *
+  * For a `Return` in response to an `Accept` or `Bootstrap`, `results` contains a single
+  * capability (rather than a struct), and `results.content` is just a capability pointer with
+  * index 0.  A `Finish` is still required in this case.
   * */
   get results(): Payload {
     $.utils.testWhich("results", $.utils.getUint16(6, this), 0, this);
@@ -921,8 +925,7 @@ export class Return extends $.Struct {
     return $.utils.disown(this.exception);
   }
   /**
-  * Indicates that the call was canceled due to the caller sending a Finish message
-  * before the call had completed.
+  * Indicates that the call failed and explains why.
   * */
   get exception(): Exception {
     $.utils.testWhich("exception", $.utils.getUint16(6, this), 1, this);
@@ -955,11 +958,9 @@ export class Return extends $.Struct {
     $.utils.setUint16(6, 3, this);
   }
   /**
-  * **(level 3)**
-  *
-  * The caller should contact a third-party vat to pick up the results.  An `Accept` message
-  * sent to the vat will return the result.  This pairs with `Call.sendResultsTo.thirdParty`.
-  * It should only be used if the corresponding `Call` had `allowThirdPartyTailCall` set.
+  * The sender has also sent (before this message) a `Call` with the given question ID and with
+  * `sendResultsTo.yourself` set, and the results of that other call should be used as the
+  * results here.  `takeFromOtherQuestion` can only used once per question.
   * */
   get takeFromOtherQuestion(): number {
     $.utils.testWhich("takeFromOtherQuestion", $.utils.getUint16(6, this), 4, this);
@@ -980,11 +981,11 @@ export class Return extends $.Struct {
     return $.utils.disown(this.acceptFromThirdParty);
   }
   /**
-  * If true, the sender does not need the receiver to send a `Finish` message; its answer table
-  * entry has already been cleaned up. This implies that the results do not contain any
-  * capabilities, since the `Finish` message would normally release those capabilities from
-  * promise pipelining responsibility. The caller may still send a `Finish` message if it wants,
-  * which will be silently ignored by the callee.
+  * **(level 3)**
+  *
+  * The caller should contact a third-party vat to pick up the results.  An `Accept` message
+  * sent to the vat will return the result.  This pairs with `Call.sendResultsTo.thirdParty`.
+  * It should only be used if the corresponding `Call` had `allowThirdPartyTailCall` set.
   * */
   get acceptFromThirdParty(): $.Pointer {
     $.utils.testWhich("acceptFromThirdParty", $.utils.getUint16(6, this), 5, this);
@@ -2261,7 +2262,8 @@ export class Exception extends $.Struct {
     $.utils.setText(0, value, this);
   }
   /**
-  * OBSOLETE. Ignore.
+  * The type of the error. The purpose of this enum is not to describe the error itself, but
+  * rather to describe how the client might want to respond to the error.
   * */
   get type(): Exception_Type {
     return $.utils.getUint16(4, this) as Exception_Type;
@@ -2270,7 +2272,7 @@ export class Exception extends $.Struct {
     $.utils.setUint16(4, value, this);
   }
   /**
-  * OBSOLETE. See `type` instead.
+  * OBSOLETE. Ignore.
   * */
   get obsoleteIsCallersFault(): boolean {
     return $.utils.getBit(0, this);
@@ -2279,8 +2281,7 @@ export class Exception extends $.Struct {
     $.utils.setBit(0, value, this);
   }
   /**
-  * The type of the error. The purpose of this enum is not to describe the error itself, but
-  * rather to describe how the client might want to respond to the error.
+  * OBSOLETE. See `type` instead.
   * */
   get obsoleteDurability(): number {
     return $.utils.getUint16(2, this);

@@ -871,8 +871,14 @@ export function generateStructNode(
   const dataByteLength = struct ? dataWordCount * 8 : 0;
   const discriminantCount = struct ? struct.discriminantCount : 0;
   const discriminantOffset = struct ? struct.discriminantOffset : 0;
-  const fields = struct ? struct.fields.toArray().sort(compareCodeOrder) : [];
+  const fields = struct?.fields.toArray() ?? [];
   const pointerCount = struct ? struct.pointerCount : 0;
+
+  // List of field indexes in code order
+  const fieldIndexInCodeOrder = fields
+    .map((field, fieldIndex) => ({ fieldIndex, codeOrder: field.codeOrder }))
+    .sort(compareCodeOrder)
+    .map(({ fieldIndex }) => fieldIndex);
 
   const concreteLists = fields
     .filter((f) => needsConcreteListClass(f))
@@ -922,16 +928,17 @@ export function generateStructNode(
     );
   }
 
-  // eslint-disable-next-line unicorn/no-array-reduce
-  const defaultValues = fields.reduce(
-    (acc, f) =>
-      f._isSlot &&
-      f.slot.hadExplicitDefault &&
-      f.slot.type.which() !== s.Type.VOID
-        ? [...acc, generateDefaultValue(f)]
-        : acc,
-    [] as ts.PropertyAssignment[],
-  );
+  const defaultValues: ts.PropertyAssignment[] = [];
+  for (const index of fieldIndexInCodeOrder) {
+    const field = fields[index];
+    if (
+      field._isSlot &&
+      field.slot.hadExplicitDefault &&
+      field.slot.type.which() !== s.Type.VOID
+    ) {
+      defaultValues.push(generateDefaultValue(field));
+    }
+  }
 
   // static reaodnly _capnp = { displayName: 'MyStruct', id: '4732bab4310f81', size = new undefinedO(8, 8) };
   members.push(
@@ -965,9 +972,9 @@ export function generateStructNode(
   members.push(...concreteLists.map((f) => createConcreteListProperty(ctx, f)));
 
   // get foo() { ... } initFoo() { ... } set foo() { ... }
-  let fieldIndex = 0;
-  for (const f of fields) {
-    generateStructFieldMethods(ctx, members, node, f, fieldIndex++);
+  for (const index of fieldIndexInCodeOrder) {
+    const field = fields[index];
+    generateStructFieldMethods(ctx, members, node, field, index);
   }
 
   // toString(): string { return 'MyStruct_' + super.toString(); }
