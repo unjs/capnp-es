@@ -18,7 +18,6 @@ const enum PackedTag {
    * followed by no bytes and expands to a word full of zeros. After that, the next byte is interpreted as a count of
    * additional words that are also all-zero.
    */
-
   ZERO = 0x00,
 
   /**
@@ -32,14 +31,12 @@ const enum PackedTag {
    * particular, long text blobs. Because of this rule, the worst-case space overhead of packing is 2 bytes per 2 KiB of
    * input (256 words = 2KiB).
    */
-
   SPAN = 0xff,
 
   /**
    * A randomly chosen non-ZERO, non-SPAN tag that proves useful in state initiation.
    *
    */
-
   NONZERO_NONSPAN = 0x77,
 }
 
@@ -52,7 +49,6 @@ const enum PackedTag {
  * @param {number} x A real integer.
  * @returns {number} The hamming weight (integer).
  */
-
 export function getHammingWeight(x: number): number {
   // Thanks, HACKMEM!
 
@@ -76,7 +72,6 @@ export type byte = number;
  * @param {byte} h The eighth byte (phew!).
  * @returns {number} The tag byte.
  */
-
 export function getTagByte(
   a: byte,
   b: byte,

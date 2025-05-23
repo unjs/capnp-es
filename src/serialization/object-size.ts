@@ -1,6 +1,6 @@
 // Based on https://github.com/jdiaz5513/capnp-ts (MIT - Julián Díaz)
 
-import * as _ from "../util";
+import * as util from "../util";
 
 /**
  * A simple object that describes the size of a struct.
@@ -8,23 +8,20 @@ import * as _ from "../util";
  * @export
  * @class ObjectSize
  */
-
 export class ObjectSize {
-  /** The number of bytes required for the data section. */
-
-  readonly dataByteLength: number;
-
-  /** The number of pointers in the object. */
-
-  readonly pointerLength: number;
-
-  constructor(dataByteLength: number, pointerCount: number) {
-    this.dataByteLength = dataByteLength;
-    this.pointerLength = pointerCount;
-  }
+  /**
+   * Creates a new ObjectSize instance.
+   *
+   * @param dataByteLength - The number of bytes in the data section of the struct
+   * @param pointerLength - The number of pointers in the pointer section of the struct
+   */
+  constructor(
+    public readonly dataByteLength: number,
+    public readonly pointerLength: number,
+  ) {}
 
   toString(): string {
-    return _.format(
+    return util.format(
       "ObjectSize_dw:%d,pc:%d",
       getDataWordLength(this),
       this.pointerLength,
@@ -45,5 +42,5 @@ export function getWordLength(o: ObjectSize): number {
 }
 
 export function padToWord(o: ObjectSize): ObjectSize {
-  return new ObjectSize(_.padToWord(o.dataByteLength), o.pointerLength);
+  return new ObjectSize(util.padToWord(o.dataByteLength), o.pointerLength);
 }

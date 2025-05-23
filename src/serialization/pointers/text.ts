@@ -21,14 +21,14 @@ export class Text extends List<string> {
    * @param {number} [index] The index at which to start reading; defaults to zero.
    * @returns {string} The string value.
    */
-
   get(index = 0): string {
-    if (isNull(this)) return "";
+    if (isNull(this)) {
+      return "";
+    }
 
     const c = getContent(this);
 
     // Remember to exclude the NUL byte.
-
     return textDecoder.decode(
       new Uint8Array(
         c.segment.buffer,
@@ -43,7 +43,6 @@ export class Text extends List<string> {
    *
    * @returns {number} The number of bytes allocated for the text.
    */
-
   get length(): number {
     return super.length - 1;
   }
@@ -56,7 +55,6 @@ export class Text extends List<string> {
    * @param {string} value The string value to set.
    * @returns {void}
    */
-
   set(index: number, value: string): void {
     const src = textEncoder.encode(value);
     const dstLength = src.byteLength + index;
@@ -69,31 +67,24 @@ export class Text extends List<string> {
       c = getContent(this);
 
       // Only copy bytes that will remain after copying. Everything after `index` should end up truncated.
-
-      let originalLength = this.length;
-
-      if (originalLength >= index) {
-        originalLength = index;
-      }
+      const originalLength = Math.min(this.length, index);
 
       original = new Uint8Array(
-        c.segment.buffer.slice(
-          c.byteOffset,
-          c.byteOffset + Math.min(originalLength, index),
-        ),
+        c.segment.buffer.slice(c.byteOffset, c.byteOffset + originalLength),
       );
 
       erase(this);
     }
 
     // Always allocate an extra byte for the NUL byte.
-
     initList(ListElementSize.BYTE, dstLength + 1, this);
 
     c = getContent(this);
     const dst = new Uint8Array(c.segment.buffer, c.byteOffset, dstLength);
 
-    if (original) dst.set(original);
+    if (original) {
+      dst.set(original);
+    }
 
     dst.set(src, index);
   }

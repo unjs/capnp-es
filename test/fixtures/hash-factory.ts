@@ -5,17 +5,15 @@ export class HashFactory_NewSha1$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "newSha1$Params",
     id: "82994ca98e892c55",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "HashFactory_NewSha1$Params_" + super.toString();
-  }
+  toString(): string { return "HashFactory_NewSha1$Params_" + super.toString(); }
 }
 export class HashFactory_NewSha1$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "newSha1$Results",
     id: "9ad1223357407533",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get hash(): Hash$Client {
     return new Hash$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -23,9 +21,7 @@ export class HashFactory_NewSha1$Results extends $.Struct {
   set hash(value: Hash$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "HashFactory_NewSha1$Results_" + super.toString();
-  }
+  toString(): string { return "HashFactory_NewSha1$Results_" + super.toString(); }
 }
 export class HashFactory_NewSha1$Results$Promise {
   pipeline: $.Pipeline<any, any, HashFactory_NewSha1$Results>;
@@ -81,7 +77,9 @@ export class HashFactory$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): HashFactory$Client { return new HashFactory$Client(this); }
+  client(): HashFactory$Client {
+    return new HashFactory$Client(this);
+  }
 }
 export class HashFactory extends $.Interface {
   static readonly Client = HashFactory$Client;
@@ -89,17 +87,15 @@ export class HashFactory extends $.Interface {
   static readonly _capnp = {
     displayName: "HashFactory",
     id: "cb1e6205ea21d707",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "HashFactory_" + super.toString();
-  }
+  toString(): string { return "HashFactory_" + super.toString(); }
 }
 export class Hash_Write$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "write$Params",
     id: "f65501e064be5175",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   _adoptData(value: $.Orphan<$.Data>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -119,19 +115,15 @@ export class Hash_Write$Params extends $.Struct {
   set data(value: $.Data) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Hash_Write$Params_" + super.toString();
-  }
+  toString(): string { return "Hash_Write$Params_" + super.toString(); }
 }
 export class Hash_Write$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "write$Results",
     id: "dffb54fe160f874c",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "Hash_Write$Results_" + super.toString();
-  }
+  toString(): string { return "Hash_Write$Results_" + super.toString(); }
 }
 export class Hash_Write$Results$Promise {
   pipeline: $.Pipeline<any, any, Hash_Write$Results>;
@@ -146,17 +138,15 @@ export class Hash_Sum$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "sum$Params",
     id: "b494960a8116663b",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "Hash_Sum$Params_" + super.toString();
-  }
+  toString(): string { return "Hash_Sum$Params_" + super.toString(); }
 }
 export class Hash_Sum$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "sum$Results",
     id: "e9098d3e3e6517b0",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   _adoptHash(value: $.Orphan<$.Data>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -176,9 +166,7 @@ export class Hash_Sum$Results extends $.Struct {
   set hash(value: $.Data) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "Hash_Sum$Results_" + super.toString();
-  }
+  toString(): string { return "Hash_Sum$Results_" + super.toString(); }
 }
 export class Hash_Sum$Results$Promise {
   pipeline: $.Pipeline<any, any, Hash_Sum$Results>;
@@ -253,7 +241,9 @@ export class Hash$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): Hash$Client { return new Hash$Client(this); }
+  client(): Hash$Client {
+    return new Hash$Client(this);
+  }
 }
 export class Hash extends $.Interface {
   static readonly Client = Hash$Client;
@@ -261,9 +251,7 @@ export class Hash extends $.Interface {
   static readonly _capnp = {
     displayName: "Hash",
     id: "e9620cda4245af9a",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "Hash_" + super.toString();
-  }
+  toString(): string { return "Hash_" + super.toString(); }
 }

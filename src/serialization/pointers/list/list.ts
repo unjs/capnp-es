@@ -62,7 +62,9 @@ export class List<T> extends Pointer implements Array<T> {
   static #proxyHandler: ProxyHandler<List<any>> = {
     get(target, prop, receiver) {
       const val = Reflect.get(target, prop, receiver);
-      if (val !== undefined) return val;
+      if (val !== undefined) {
+        return val;
+      }
       if (typeof prop === "string") {
         return target.get(+prop);
       }
@@ -74,7 +76,7 @@ export class List<T> extends Pointer implements Array<T> {
   }
 
   toArray(): T[] {
-    const length = this.length;
+    const { length } = this;
     const res = Array.from({ length }) as T[];
     for (let i = 0; i < length; i++) {
       res[i] = this.at(i);
@@ -91,15 +93,11 @@ export class List<T> extends Pointer implements Array<T> {
   }
 
   at(index: number): T {
-    if (index < 0) {
-      const length = this.length;
-      index += length;
-    }
-    return this.get(index);
+    return this.get(index < 0 ? this.length + index : index);
   }
 
   concat(other: T[]): T[] {
-    const length = this.length;
+    const { length } = this;
     const otherLength = other.length;
     const res = Array.from({ length: length + otherLength }) as T[];
     for (let i = 0; i < length; i++) res[i] = this.at(i);
@@ -108,8 +106,7 @@ export class List<T> extends Pointer implements Array<T> {
   }
 
   some(cb: ArrayCb<T>, _this?: any): boolean {
-    const length = this.length;
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.length; i++) {
       if (cb.call(_this, this.at(i), i, this as unknown as T[])) {
         return true;
       }
@@ -118,9 +115,8 @@ export class List<T> extends Pointer implements Array<T> {
   }
 
   filter(cb: ArrayCb<T>, _this?: any): T[] {
-    const length = this.length;
     const res: T[] = [];
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.length; i++) {
       const value = this.at(i);
       if (cb.call(_this, value, i, this as unknown as T[])) {
         res.push(value);
@@ -130,8 +126,7 @@ export class List<T> extends Pointer implements Array<T> {
   }
 
   find(cb: ArrayCb<T>, _this?: any): T | undefined {
-    const length = this.length;
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.length; i++) {
       const value = this.at(i);
       if (cb.call(_this, value, i, this as unknown as T[])) {
         return value;
@@ -141,8 +136,7 @@ export class List<T> extends Pointer implements Array<T> {
   }
 
   findIndex(cb: (v: T, i: number, arr: T[]) => boolean, _this?: any): number {
-    const length = this.length;
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.length; i++) {
       const value = this.at(i);
       if (cb.call(_this, value, i, this as unknown as T[])) {
         return i;
@@ -152,14 +146,13 @@ export class List<T> extends Pointer implements Array<T> {
   }
 
   forEach(cb: ArrayCb<T, void>, _this?: any): void {
-    const length = this.length;
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.length; i++) {
       cb.call(_this, this.at(i), i, this as unknown as T[]);
     }
   }
 
   map<U>(cb: ArrayCb<T, U>, _this?: any): U[] {
-    const length = this.length;
+    const { length } = this;
     const res = Array.from({ length }) as U[];
     for (let i = 0; i < length; i++) {
       res[i] = cb.call(_this, this.at(i), i, this as unknown as T[]);
@@ -168,9 +161,8 @@ export class List<T> extends Pointer implements Array<T> {
   }
 
   flatMap<U>(cb: ArrayCb<T, U | U[]>, _this?: any): U[] {
-    const length = this.length;
     const res: U[] = [];
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.length; i++) {
       const r = cb.call(_this, this.at(i), i, this as unknown as T[]);
       res.push(...(Array.isArray(r) ? r : [r]));
     }
@@ -179,8 +171,7 @@ export class List<T> extends Pointer implements Array<T> {
 
   every<S extends T>(cb: (v: T, i: number) => v is S, t?: any): this is S[];
   every(cb: ArrayCb<T, unknown>, _this?: any): boolean {
-    const length = this.length;
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < this.length; i++) {
       if (!cb.call(_this, this.at(i), i, this as unknown as T[])) {
         return false;
       }
@@ -221,7 +212,9 @@ export class List<T> extends Pointer implements Array<T> {
   slice(start = 0, end?: number): T[] {
     const length = end ? Math.min(this.length, end) : this.length;
     const res = Array.from({ length: length - start }) as T[];
-    for (let i = start; i < length; i++) res[i] = this.at(i);
+    for (let i = start; i < length; i++) {
+      res[i] = this.at(i);
+    }
     return res;
   }
 
@@ -242,7 +235,7 @@ export class List<T> extends Pointer implements Array<T> {
   }
 
   fill(value: T, start?: number, end?: number): this {
-    const length = this.length;
+    const { length } = this;
     const s = Math.max(start ?? 0, 0);
     const e = Math.min(end ?? length, length);
     for (let i = s; i < e; i++) {
@@ -252,7 +245,7 @@ export class List<T> extends Pointer implements Array<T> {
   }
 
   copyWithin(target: number, start: number, end?: number): this {
-    const length = this.length;
+    const { length } = this;
     const e = end ?? length;
     const s = start < 0 ? Math.max(length + start, 0) : start;
     const t = target < 0 ? Math.max(length + target, 0) : target;
@@ -264,38 +257,15 @@ export class List<T> extends Pointer implements Array<T> {
   }
 
   keys(): ArrayIterator<number> {
-    const length = this.length;
-    return Array.from({ length }, (_, i) => i)[Symbol.iterator]();
+    return Array.from({ length: this.length }, (_, i) => i)[Symbol.iterator]();
   }
 
   values(): ArrayIterator<T> {
     return this.toArray().values();
-    // const length = this.length;
-    // let i = 0;
-    // return {
-    //   [Symbol.iterator]: () => this.values(),
-    //   next: () => {
-    //     if (i < length) {
-    //       return { value: this.at(i++), done: false };
-    //     }
-    //     return { value: undefined, done: true };
-    //   },
-    // };
   }
 
   entries(): ArrayIterator<[number, T]> {
     return this.toArray().entries();
-    // const length = this.length;
-    // let i = 0;
-    // return {
-    //   [Symbol.iterator]: () => this.entries(),
-    //   next: () => {
-    //     if (i < length) {
-    //       return { value: [i, this.at(i++)], done: false };
-    //     }
-    //     return { value: undefined, done: true };
-    //   },
-    // };
   }
 
   flat<A, D extends number = 1>(this: A, depth?: D): FlatArray<A, D>[] {
@@ -389,24 +359,22 @@ export class List<T> extends Pointer implements Array<T> {
  *
  * @param {ListElementSize} elementSize The size of each element in the list.
  * @param {number} length The number of elements in the list.
- * @param {List<T>} l The list to initialize.
+ * @param {List<T>} list The list to initialize.
  * @param {ObjectSize} [compositeSize] The size of each element in a composite list. This value is required for
  * composite lists.
  * @returns {void}
  */
-
 export function initList<T>(
   elementSize: ListElementSize,
   length: number,
-  l: List<T>,
+  list: List<T>,
   compositeSize?: ObjectSize,
 ): void {
   let c: Pointer;
 
   switch (elementSize) {
     case ListElementSize.BIT: {
-      c = l.segment.allocate(Math.ceil(length / 8));
-
+      c = list.segment.allocate(Math.ceil(length / 8));
       break;
     }
 
@@ -415,8 +383,7 @@ export function initList<T>(
     case ListElementSize.BYTE_4:
     case ListElementSize.BYTE_8:
     case ListElementSize.POINTER: {
-      c = l.segment.allocate(length * getListElementByteLength(elementSize));
-
+      c = list.segment.allocate(length * getListElementByteLength(elementSize));
       break;
     }
 
@@ -424,26 +391,19 @@ export function initList<T>(
       if (compositeSize === undefined) {
         throw new Error(format(PTR_COMPOSITE_SIZE_UNDEFINED));
       }
-
       compositeSize = padToWord(compositeSize);
-
       const byteLength = getByteLength(compositeSize) * length;
 
       // We need to allocate an extra 8 bytes for the tag word, then make sure we write the length to it. We advance
       // the content pointer by 8 bytes so that it then points to the first list element as intended. Everything
       // starts off zeroed out so these nested structs don't need to be initialized in any way.
-
-      c = l.segment.allocate(byteLength + 8);
-
+      c = list.segment.allocate(byteLength + 8);
       setStructPointer(length, compositeSize, c);
-
       break;
     }
     case ListElementSize.VOID: {
       // No need to allocate anything, we can write the list pointer right here.
-
-      setListPointer(0, elementSize, length, l);
-
+      setListPointer(0, elementSize, length, list);
       return;
     }
 
@@ -452,7 +412,7 @@ export function initList<T>(
     }
   }
 
-  const res = initPointer(c.segment, c.byteOffset, l);
+  const res = initPointer(c.segment, c.byteOffset, list);
 
   setListPointer(
     res.offsetWords,

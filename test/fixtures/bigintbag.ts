@@ -33,7 +33,5 @@ export class BigIntBag extends $.Struct {
   set defaultUnsigned(value: bigint) {
     $.utils.setUint64(24, value, this, BigIntBag._capnp.defaultDefaultUnsigned);
   }
-  toString(): string {
-    return "BigIntBag_" + super.toString();
-  }
+  toString(): string { return "BigIntBag_" + super.toString(); }
 }

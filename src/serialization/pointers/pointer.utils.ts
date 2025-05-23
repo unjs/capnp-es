@@ -366,12 +366,13 @@ export function followFar(p: Pointer): Pointer {
  * @param {Pointer} p The pointer to read from.
  * @returns {Pointer} A new pointer representing the target location, or `p` if it is not a far pointer.
  */
-
 export function followFars(p: Pointer): Pointer {
   if (getPointerType(p) === PointerType.FAR) {
     const landingPad = followFar(p);
 
-    if (isDoubleFar(p)) landingPad.byteOffset += 8;
+    if (isDoubleFar(p)) {
+      landingPad.byteOffset += 8;
+    }
 
     return landingPad;
   }
@@ -399,7 +400,6 @@ function isCompositeList(p: Pointer): boolean {
  * instead return a pointer to the parent list's contents (also the beginning of the first struct).
  * @returns {Pointer} A pointer to the beginning of the pointer's content.
  */
-
 export function getContent(
   p: Pointer,
   ignoreCompositeIndex?: boolean,
@@ -420,7 +420,9 @@ export function getContent(
     );
   }
 
-  if (isCompositeList(p)) c.byteOffset += 8;
+  if (isCompositeList(p)) {
+    c.byteOffset += 8;
+  }
 
   if (!ignoreCompositeIndex && p._capnp.compositeIndex !== undefined) {
     // Seek backwards by one word so we can read the struct size off the tag word.
@@ -444,7 +446,6 @@ export function getContent(
  * @param {Pointer} p The pointer to read from.
  * @returns {number} The target segment ID.
  */
-
 export function getFarSegmentId(p: Pointer): number {
   return p.segment.getUint32(p.byteOffset + 4);
 }
@@ -455,7 +456,6 @@ export function getFarSegmentId(p: Pointer): number {
  * @param {Pointer} p The pointer to read from.
  * @returns {ListElementSize} The size of the list's elements.
  */
-
 export function getListElementSize(p: Pointer): ListElementSize {
   return p.segment.getUint32(p.byteOffset + 4) & LIST_SIZE_MASK;
 }
@@ -470,7 +470,6 @@ export function getListElementSize(p: Pointer): ListElementSize {
  * @param {Pointer} p The pointer to read from.
  * @returns {number} The length of the list, or total number of words for composite lists.
  */
-
 export function getListLength(p: Pointer): number {
   return p.segment.getUint32(p.byteOffset + 4) >>> 3;
 }
@@ -483,7 +482,6 @@ export function getListLength(p: Pointer): number {
  * @param {Pointer} p The pointer to read from.
  * @returns {number} The offset, in words, from the end of the pointer to the start of the data section.
  */
-
 export function getOffsetWords(p: Pointer): number {
   const o = p.segment.getInt32(p.byteOffset);
 
@@ -497,7 +495,6 @@ export function getOffsetWords(p: Pointer): number {
  * @param {Pointer} p The pointer to read from.
  * @returns {PointerType} The type of pointer.
  */
-
 export function getPointerType(p: Pointer): PointerType {
   return p.segment.getUint32(p.byteOffset) & POINTER_TYPE_MASK;
 }
@@ -508,7 +505,6 @@ export function getPointerType(p: Pointer): PointerType {
  * @param {Pointer} p The pointer to read from.
  * @returns {number} The number of data words in the struct.
  */
-
 export function getStructDataWords(p: Pointer): number {
   return p.segment.getUint16(p.byteOffset + 4);
 }
@@ -519,7 +515,6 @@ export function getStructDataWords(p: Pointer): number {
  * @param {Pointer} p The pointer to read from.
  * @returns {number} The number of pointers in this struct.
  */
-
 export function getStructPointerLength(p: Pointer): number {
   return p.segment.getUint16(p.byteOffset + 6);
 }
@@ -530,7 +525,6 @@ export function getStructPointerLength(p: Pointer): number {
  * @param {Pointer} p The pointer to read from.
  * @returns {ObjectSize} The size of the struct.
  */
-
 export function getStructSize(p: Pointer): ObjectSize {
   return new ObjectSize(getStructDataWords(p) * 8, getStructPointerLength(p));
 }
@@ -541,7 +535,6 @@ export function getStructSize(p: Pointer): ObjectSize {
  * @param {Pointer} p The pointer to read from.
  * @returns {Pointer} A pointer to the list's composite tag word.
  */
-
 export function getTargetCompositeListTag(p: Pointer): Pointer {
   const c = getContent(p);
 
@@ -558,7 +551,6 @@ export function getTargetCompositeListTag(p: Pointer): Pointer {
  * @param {Pointer} p The pointer to read from.
  * @returns {ObjectSize} An object describing the size of each struct in the list.
  */
-
 export function getTargetCompositeListSize(p: Pointer): ObjectSize {
   return getStructSize(getTargetCompositeListTag(p));
 }
@@ -569,7 +561,6 @@ export function getTargetCompositeListSize(p: Pointer): ObjectSize {
  * @param {Pointer} p The pointer to read from.
  * @returns {ListElementSize} The size of the elements in the list.
  */
-
 export function getTargetListElementSize(p: Pointer): ListElementSize {
   return getListElementSize(followFars(p));
 }
@@ -581,7 +572,6 @@ export function getTargetListElementSize(p: Pointer): ListElementSize {
  * @param {Pointer} p The pointer to read from.
  * @returns {number} The number of elements in the list.
  */
-
 export function getTargetListLength(p: Pointer): number {
   const t = followFars(p);
 
@@ -604,7 +594,6 @@ export function getTargetListLength(p: Pointer): number {
  * @param {Pointer} p The pointer to read from.
  * @returns {PointerType} The type of pointer referenced by this pointer.
  */
-
 export function getTargetPointerType(p: Pointer): PointerType {
   const t = getPointerType(followFars(p));
 
@@ -619,7 +608,6 @@ export function getTargetPointerType(p: Pointer): PointerType {
  * @param {Pointer} p The pointer to read from.
  * @returns {ObjectSize} The size of the struct referenced by this pointer.
  */
-
 export function getTargetStructSize(p: Pointer): ObjectSize {
   return getStructSize(followFars(p));
 }
@@ -637,7 +625,6 @@ export function getTargetStructSize(p: Pointer): ObjectSize {
  * @returns {PointerAllocationResult} An object containing a pointer (where the pointer data should be written), and
  * the value to use as the offset for that pointer.
  */
-
 export function initPointer(
   contentSegment: Segment,
   contentOffset: number,
@@ -684,7 +671,6 @@ export function initPointer(
  * @param {Pointer} p The pointer to read from.
  * @returns {boolean} `true` if it is a double-far pointer, `false` otherwise.
  */
-
 export function isDoubleFar(p: Pointer): boolean {
   return (
     getPointerType(p) === PointerType.FAR &&
@@ -699,7 +685,6 @@ export function isDoubleFar(p: Pointer): boolean {
  * @param {Pointer} p The pointer to read from.
  * @returns {boolean} `true` if the pointer is "null".
  */
-
 export function isNull(p: Pointer): boolean {
   return p.segment.isWordZero(p.byteOffset);
 }
@@ -714,7 +699,6 @@ export function isNull(p: Pointer): boolean {
  * @param {Pointer} src The pointer to relocate.
  * @returns {void}
  */
-
 export function relocateTo(dst: Pointer, src: Pointer): void {
   const t = followFars(src);
   const lo = t.segment.getUint8(t.byteOffset) & 0x03; // discard the offset
@@ -749,7 +733,6 @@ export function relocateTo(dst: Pointer, src: Pointer): void {
  * @param {Pointer} p The pointer to write to.
  * @returns {void}
  */
-
 export function setFarPointer(
   doubleFar: boolean,
   offsetWords: number,
@@ -772,7 +755,6 @@ export function setFarPointer(
  * @param {Pointer} p The pointer to write to.
  * @returns {void}
  */
-
 export function setInterfacePointer(capId: number, p: Pointer): void {
   p.segment.setUint32(p.byteOffset, PointerType.OTHER);
   p.segment.setUint32(p.byteOffset + 4, capId);
@@ -799,7 +781,6 @@ export function getInterfacePointer(p: Pointer): number {
  * is required for composite lists.
  * @returns {void}
  */
-
 export function setListPointer(
   offsetWords: number,
   size: ListElementSize,
@@ -833,7 +814,6 @@ export function setListPointer(
  * @param {Pointer} p The pointer to write to.
  * @returns {void}
  */
-
 export function setStructPointer(
   offsetWords: number,
   size: ObjectSize,
@@ -858,13 +838,14 @@ export function setStructPointer(
  * undefined for struct pointers.
  * @returns {void}
  */
-
 export function validate(
   pointerType: PointerType,
   p: Pointer,
   elementSize?: ListElementSize,
 ): void {
-  if (isNull(p)) return;
+  if (isNull(p)) {
+    return;
+  }
 
   const t = followFars(p);
 
@@ -914,7 +895,9 @@ export function copyFromInterface(src: Pointer, dst: Pointer): void {
 }
 
 export function copyFromList(src: Pointer, dst: Pointer): void {
-  if (dst._capnp.depthLimit <= 0) throw new Error(PTR_DEPTH_LIMIT_EXCEEDED);
+  if (dst._capnp.depthLimit <= 0) {
+    throw new Error(PTR_DEPTH_LIMIT_EXCEEDED);
+  }
 
   const srcContent = getContent(src);
   const srcElementSize = getTargetListElementSize(src);
@@ -927,7 +910,6 @@ export function copyFromList(src: Pointer, dst: Pointer): void {
     dstContent = dst.segment.allocate(srcLength << 3);
 
     // Recursively copy each pointer in the list.
-
     for (let i = 0; i < srcLength; i++) {
       const srcPtr = new Pointer(
         srcContent.segment,
@@ -974,7 +956,6 @@ export function copyFromList(src: Pointer, dst: Pointer): void {
     }
 
     // Recursively copy all the pointers in each struct.
-
     for (let i = 0; i < srcLength; i++) {
       for (let j = 0; j < srcCompositeSize.pointerLength; j++) {
         const offset =
@@ -1005,7 +986,6 @@ export function copyFromList(src: Pointer, dst: Pointer): void {
     dstContent = dst.segment.allocate(byteLength);
 
     // Copy all of the list contents word-by-word.
-
     dstContent.segment.copyWords(
       dstContent.byteOffset,
       srcContent.segment,
@@ -1015,7 +995,6 @@ export function copyFromList(src: Pointer, dst: Pointer): void {
   }
 
   // Initialize the list pointer.
-
   const res = initPointer(dstContent.segment, dstContent.byteOffset, dst);
   setListPointer(
     res.offsetWords,
@@ -1027,18 +1006,18 @@ export function copyFromList(src: Pointer, dst: Pointer): void {
 }
 
 export function copyFromStruct(src: Pointer, dst: Pointer): void {
-  if (dst._capnp.depthLimit <= 0) throw new Error(PTR_DEPTH_LIMIT_EXCEEDED);
+  if (dst._capnp.depthLimit <= 0) {
+    throw new Error(PTR_DEPTH_LIMIT_EXCEEDED);
+  }
 
   const srcContent = getContent(src);
   const srcSize = getTargetStructSize(src);
   const srcDataWordLength = getDataWordLength(srcSize);
 
   // Allocate space for the destination content.
-
   const dstContent = dst.segment.allocate(getByteLength(srcSize));
 
   // Copy the data section.
-
   dstContent.segment.copyWords(
     dstContent.byteOffset,
     srcContent.segment,
@@ -1047,7 +1026,6 @@ export function copyFromStruct(src: Pointer, dst: Pointer): void {
   );
 
   // Copy the pointer section.
-
   for (let i = 0; i < srcSize.pointerLength; i++) {
     const offset = srcSize.dataByteLength + i * 8;
 
@@ -1067,11 +1045,11 @@ export function copyFromStruct(src: Pointer, dst: Pointer): void {
 
   // Don't touch dst if it's already initialized as a composite list pointer. With composite struct pointers there's
   // no pointer to copy here and we've already copied the contents.
-
-  if (dst._capnp.compositeList) return;
+  if (dst._capnp.compositeList) {
+    return;
+  }
 
   // Initialize the struct pointer.
-
   const res = initPointer(dstContent.segment, dstContent.byteOffset, dst);
   setStructPointer(res.offsetWords, srcSize, res.pointer);
 }
@@ -1104,14 +1082,9 @@ export function trackPointerAllocation(message: Message, p: Pointer): void {
  * @export
  * @class PointerAllocationResult
  */
-
 export class PointerAllocationResult {
-  readonly offsetWords: number;
-
-  readonly pointer: Pointer;
-
-  constructor(pointer: Pointer, offsetWords: number) {
-    this.pointer = pointer;
-    this.offsetWords = offsetWords;
-  }
+  constructor(
+    public readonly pointer: Pointer,
+    public readonly offsetWords: number,
+  ) {}
 }

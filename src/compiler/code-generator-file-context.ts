@@ -1,35 +1,28 @@
 // Based on https://github.com/jdiaz5513/capnp-ts (MIT - Julián Díaz)
 
-import ts from "typescript";
-import * as s from "../capnp/schema";
+import * as schema from "../capnp/schema";
 
 export class CodeGeneratorFileContext {
-  concreteLists: Array<[string, s.Field]>;
-  file: s.CodeGeneratorRequest_RequestedFile;
-  generatedNodeIds: string[];
-  generatedResultsPromiseIds: Set<bigint>;
-  imports: s.CodeGeneratorRequest_RequestedFile_Import[];
-  nodes: s.Node[];
-  req: s.CodeGeneratorRequest;
-  statements: ts.Statement[];
-  tsPath: string;
+  // inputs
+  readonly nodes: schema.Node[];
+  readonly imports: schema.CodeGeneratorRequest_RequestedFile_Import[];
+
+  // outputs
+  concreteLists: Array<[string, schema.Field]> = [];
+  generatedNodeIds = new Set<string>();
+  generatedResultsPromiseIds = new Set<bigint>();
+  tsPath = "";
+  codeParts: string[] = [];
 
   constructor(
-    req: s.CodeGeneratorRequest,
-    file: s.CodeGeneratorRequest_RequestedFile,
+    public readonly req: schema.CodeGeneratorRequest,
+    public readonly file: schema.CodeGeneratorRequest_RequestedFile,
   ) {
-    this.req = req;
-    this.file = file;
     this.nodes = req.nodes.toArray();
-    this.concreteLists = [];
-    this.generatedNodeIds = [];
-    this.generatedResultsPromiseIds = new Set();
-    this.statements = [];
-    this.tsPath = "";
     this.imports = file.imports.toArray();
   }
 
   toString(): string {
-    return this.file ? this.file.filename : "CodeGeneratorFileContext()";
+    return this.file?.filename ?? "CodeGeneratorFileContext()";
   }
 }

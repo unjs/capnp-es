@@ -43,7 +43,6 @@ export class Struct extends Pointer<_Struct> {
    * the list. It is not valid to call `initStruct()` on a composite struct – the struct contents are initialized when
    * the list pointer is initialized.
    */
-
   constructor(
     segment: Segment,
     byteOffset: number,

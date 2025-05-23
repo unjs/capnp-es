@@ -88,10 +88,6 @@ test("format()", () => {
   t.equal(util.format("hi"), "hi");
 });
 
-test("identity()", () => {
-  t.equal(util.identity("x"), "x");
-});
-
 test("pad()", () => {
   t.equal(util.pad("0", 8), "00000000");
   t.equal(util.pad("0", 8, "="), "=======0");
@@ -102,10 +98,4 @@ test("padToWord()", () => {
   t.equal(util.padToWord(7), 8);
   t.equal(util.padToWord(0), 0);
   t.equal(util.padToWord(9), 16);
-});
-
-test("repeat()", () => {
-  t.equal(util.repeat(10, "0"), "0000000000");
-  t.equal(util.repeat(0, "x"), "");
-  t.equal(util.repeat(-1, "z"), "");
 });

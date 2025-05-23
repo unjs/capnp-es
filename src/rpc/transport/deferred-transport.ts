@@ -17,8 +17,12 @@ export abstract class DeferredTransport implements Transport {
   }
 
   recvMessage(): Promise<RPCMessage> {
-    if (this.closed) return Promise.reject();
-    if (this.d) this.d.reject();
+    if (this.closed) {
+      return Promise.reject();
+    }
+    if (this.d) {
+      this.d.reject();
+    }
     this.d = new Deferred();
     return this.d.promise;
   }

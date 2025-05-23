@@ -77,7 +77,9 @@ export class Message {
   ) {
     this._capnp = initMessage(src, packed, singleSegment);
 
-    if (src /** && !isAnyArena(src) */) preallocateSegments(this);
+    if (src) {
+      preallocateSegments(this);
+    }
   }
 
   allocateSegment(byteLength: number): Segment {
@@ -100,7 +102,6 @@ export class Message {
    *
    * @returns {string} A big steaming pile of pretty hex digits.
    */
-
   dump(): string {
     return dump(this);
   }
@@ -113,7 +114,6 @@ export class Message {
    * @param {StructCtor<T>} RootStruct The struct type to use as the root.
    * @returns {T} A struct representing the root of the message.
    */
-
   getRoot<T extends Struct>(RootStruct: StructCtor<T>): T {
     return getRoot(RootStruct, this);
   }
@@ -138,7 +138,6 @@ export class Message {
    * @param {StructCtor<T>} RootStruct The struct type to use as the root.
    * @returns {T} An initialized struct pointing to the root of the message.
    */
-
   initRoot<T extends Struct>(RootStruct: StructCtor<T>): T {
     return initRoot(RootStruct, this);
   }
@@ -150,7 +149,6 @@ export class Message {
    * @param {Pointer} src The source pointer to copy.
    * @returns {void}
    */
-
   setRoot(src: Pointer): void {
     setRoot(src, this);
   }
@@ -161,7 +159,6 @@ export class Message {
    *
    * @returns {ArrayBuffer} An ArrayBuffer with the contents of this message.
    */
-
   toArrayBuffer(): ArrayBuffer {
     return toArrayBuffer(this);
   }
@@ -172,7 +169,6 @@ export class Message {
    *
    * @returns {ArrayBuffer} A packed message.
    */
-
   toPackedArrayBuffer(): ArrayBuffer {
     return toPackedArrayBuffer(this);
   }
@@ -222,7 +218,9 @@ export function initMessage(
     ) as ArrayBuffer;
   }
 
-  if (packed) buf = unpack(buf);
+  if (packed) {
+    buf = unpack(buf);
+  }
 
   if (singleSegment) {
     return {
@@ -249,7 +247,6 @@ export function initMessage(
  * @param {ArrayBuffer} message An unpacked message with a framing header.
  * @returns {ArrayBuffer[]} An array of buffers containing the segment data.
  */
-
 export function getFramedSegments(message: ArrayBuffer): ArrayBuffer[] {
   const dv = new DataView(message);
 
@@ -289,7 +286,6 @@ export function getFramedSegments(message: ArrayBuffer): ArrayBuffer[] {
  * @param {Message} m The message to allocate.
  * @returns {void}
  */
-
 export function preallocateSegments(m: Message): void {
   const numSegments = Arena.getNumSegments(m._capnp.arena);
 
@@ -374,7 +370,6 @@ export function getRoot<T extends Struct>(
 
   // Make sure the underlying pointer is actually big enough to hold the data and pointers as specified in the schema.
   // If not a shallow copy of the struct contents needs to be made before returning.
-
   if (
     ts.dataByteLength < RootStruct._capnp.size.dataByteLength ||
     ts.pointerLength < RootStruct._capnp.size.pointerLength
@@ -446,7 +441,6 @@ export function initRoot<T extends Struct>(
  * @param {ArrayBuffer} data The raw data to read.
  * @returns {Pointer} A root pointer.
  */
-
 export function readRawPointer(data: ArrayBuffer): Pointer {
   return new Pointer(new Message(data).getSegment(0), 0);
 }
@@ -460,9 +454,11 @@ export function toArrayBuffer(m: Message): ArrayBuffer {
 
   // Make sure the first segment is allocated.
 
-  if (m._capnp.segments.length === 0) getSegment(0, m);
+  if (m._capnp.segments.length === 0) {
+    getSegment(0, m);
+  }
 
-  const segments = m._capnp.segments;
+  const { segments } = m._capnp;
 
   // Add space for the stream framing.
 
@@ -489,7 +485,9 @@ export function toPackedArrayBuffer(m: Message): ArrayBuffer {
 
   // Make sure the first segment is allocated.
 
-  if (m._capnp.segments.length === 0) m.getSegment(0);
+  if (m._capnp.segments.length === 0) {
+    m.getSegment(0);
+  }
 
   // NOTE: A copy operation can be avoided here if we capture the intermediate array and use that directly in the copy
   // loop below, rather than have `pack()` copy it to an ArrayBuffer just to have to copy it again later. If the
@@ -515,7 +513,7 @@ export function toPackedArrayBuffer(m: Message): ArrayBuffer {
 }
 
 export function getStreamFrame(m: Message): ArrayBuffer {
-  const length = m._capnp.segments.length;
+  const { length } = m._capnp.segments;
 
   if (length === 0) {
     // Don't bother allocating the first segment, just return a single zero word for the frame header.

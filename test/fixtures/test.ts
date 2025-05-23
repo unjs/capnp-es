@@ -16,7 +16,7 @@ export class TestAllTypes extends $.Struct {
   static readonly _capnp = {
     displayName: "TestAllTypes",
     id: "a0a8f314b80b63fd",
-    size: new $.ObjectSize(48, 20)
+    size: new $.ObjectSize(48, 20),
   };
   static _StructList: $.ListCtor<TestAllTypes>;
   get boolField(): boolean {
@@ -428,8 +428,9 @@ export class TestAllTypes extends $.Struct {
     return $.utils.disown(this.interfaceList);
   }
   /**
-  * TODO
-  * */
+* TODO
+*
+*/
   get interfaceList(): $.List<$.Void> {
     return $.utils.getList(19, $.VoidList, this);
   }
@@ -442,9 +443,7 @@ export class TestAllTypes extends $.Struct {
   set interfaceList(value: $.List<$.Void>) {
     $.utils.copyFrom(value, $.utils.getPointer(19, this));
   }
-  toString(): string {
-    return "TestAllTypes_" + super.toString();
-  }
+  toString(): string { return "TestAllTypes_" + super.toString(); }
 }
 export class TestDefaults extends $.Struct {
   static readonly _capnp = {
@@ -463,25 +462,25 @@ export class TestDefaults extends $.Struct {
     defaultFloat32Field: $.getFloat32Mask(1234.5),
     defaultFloat64Field: $.getFloat64Mask(-1.23e+47),
     defaultTextField: "foo",
-    defaultDataField: $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x1a, 0x07, 0x62, 0x61, 0x72]).buffer),
-    defaultStructField: $.readRawPointer(new Uint8Array([0x10, 0xd0, 0x50, 0x06, 0x14, 0xff, 0x01, 0xf4, 0x80, 0x0d, 0x0e, 0x10, 0x4c, 0xfb, 0x00, 0x3f, 0x4e, 0x73, 0xe8, 0x38, 0xa6, 0x33, 0xfd, 0x5a, 0xd2, 0x04, 0x14, 0x88, 0x62, 0x03, 0xff, 0xd2, 0x0a, 0x6f, 0x12, 0x21, 0x19, 0xcc, 0x04, 0x00, 0x1f, 0x5f, 0x70, 0x09, 0xaf, 0x02, 0xe0, 0x90, 0x75, 0x40, 0x11, 0x4d, 0x22, 0x11, 0x4d, 0x1a, 0x51, 0x4c, 0x06, 0x14, 0x13, 0x25, 0x01, 0x18, 0x13, 0x21, 0x01, 0x29, 0x13, 0x21, 0x01, 0x22, 0x13, 0x21, 0x01, 0x23, 0x13, 0x21, 0x01, 0x24, 0x13, 0x25, 0x01, 0x25, 0x13, 0x31, 0x01, 0x22, 0x13, 0x31, 0x01, 0x23, 0x13, 0x31, 0x01, 0x24, 0x13, 0x35, 0x01, 0x25, 0x13, 0x41, 0x01, 0x34, 0x13, 0x49, 0x01, 0x35, 0x13, 0x5d, 0x01, 0x1e, 0x13, 0x71, 0x01, 0x1e, 0x33, 0x85, 0x01, 0x77, 0x02, 0x13, 0xd5, 0x02, 0x1b, 0x00, 0x00, 0x07, 0x62, 0x61, 0x7a, 0x07, 0x71, 0x75, 0x78, 0x00, 0x05, 0x11, 0x4d, 0x3a, 0x00, 0x00, 0x51, 0x48, 0x06, 0x14, 0x00, 0x10, 0x3f, 0x6e, 0x65, 0x73, 0x74, 0x65, 0x64, 0x00, 0x05, 0x11, 0x4d, 0x72, 0x00, 0x12, 0xff, 0x72, 0x65, 0x61, 0x6c, 0x6c, 0x79, 0x20, 0x6e, 0x00, 0x1f, 0x65, 0x73, 0x74, 0x65, 0x64, 0x01, 0x1a, 0x0f, 0x0c, 0xde, 0x80, 0x7f, 0xef, 0xd2, 0x04, 0xd2, 0xe9, 0x80, 0xff, 0x7f, 0xf7, 0x4e, 0x61, 0xbc, 0x40, 0xd3, 0xa0, 0xfa, 0xf8, 0x80, 0xff, 0xff, 0xff, 0x7f, 0x3f, 0x79, 0xdf, 0x0d, 0x86, 0x48, 0x70, 0xff, 0x2e, 0x75, 0x13, 0xfd, 0x8a, 0x96, 0xfd, 0xff, 0x00, 0x80, 0x80, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0x00, 0x0b, 0x0c, 0x22, 0xff, 0xcf, 0xd2, 0x04, 0x2e, 0x16, 0xff, 0xff, 0xf7, 0x4e, 0x61, 0xbc, 0xc0, 0x2c, 0x5f, 0x05, 0xf0, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x79, 0xdf, 0x0d, 0x86, 0x48, 0x70, 0x7f, 0xd2, 0x8a, 0xec, 0x02, 0x75, 0x69, 0x02, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0xf0, 0x38, 0xb4, 0x96, 0x49, 0xff, 0xc2, 0xbd, 0xf0, 0x7c, 0xc2, 0xbd, 0xf0, 0xfc, 0x01, 0xea, 0x1c, 0x08, 0x02, 0xea, 0x1c, 0x08, 0x82, 0x00, 0x00, 0xff, 0x40, 0xde, 0x77, 0x83, 0x21, 0x12, 0xdc, 0x42, 0x04, 0x29, 0x90, 0x23, 0xca, 0xe5, 0xc8, 0x76, 0x7f, 0x29, 0x90, 0x23, 0xca, 0xe5, 0xc8, 0x76, 0xff, 0x91, 0xf7, 0x50, 0x37, 0x9e, 0x78, 0x66, 0x00, 0x91, 0xf7, 0x50, 0x37, 0x9e, 0x78, 0x66, 0x80, 0x11, 0x09, 0x2a, 0x11, 0x09, 0x32, 0x11, 0x09, 0x3a, 0x0f, 0x71, 0x75, 0x75, 0x78, 0x1f, 0x63, 0x6f, 0x72, 0x67, 0x65, 0x3f, 0x67, 0x72, 0x61, 0x75, 0x6c, 0x74, 0x11, 0x09, 0x32, 0x11, 0x09, 0x2a, 0x11, 0x09, 0x22, 0x3f, 0x67, 0x61, 0x72, 0x70, 0x6c, 0x79, 0x1f, 0x77, 0x61, 0x6c, 0x64, 0x6f, 0x0f, 0x66, 0x72, 0x65, 0x64, 0x51, 0x0c, 0x06, 0x14, 0x00, 0x05, 0x13, 0x1d, 0x01, 0x7a, 0x00, 0x18, 0x11, 0xbd, 0x7a, 0x00, 0x18, 0x11, 0x5d, 0x7a, 0x00, 0x12, 0xff, 0x78, 0x20, 0x73, 0x74, 0x72, 0x75, 0x63, 0x74, 0x00, 0x3f, 0x6c, 0x69, 0x73, 0x74, 0x20, 0x31, 0xff, 0x78, 0x20, 0x73, 0x74, 0x72, 0x75, 0x63, 0x74, 0x00, 0x3f, 0x6c, 0x69, 0x73, 0x74, 0x20, 0x32, 0xff, 0x78, 0x20, 0x73, 0x74, 0x72, 0x75, 0x63, 0x74, 0x00, 0x3f, 0x6c, 0x69, 0x73, 0x74, 0x20, 0x33, 0x15, 0x03, 0x01, 0x06]).buffer),
+    defaultDataField: $.readRawPointer(new Uint8Array([16, 2, 17, 1, 26, 7, 98, 97, 114]).buffer),
+    defaultStructField: $.readRawPointer(new Uint8Array([16, 208, 80, 6, 20, 255, 1, 244, 128, 13, 14, 16, 76, 251, 0, 63, 78, 115, 232, 56, 166, 51, 253, 90, 210, 4, 20, 136, 98, 3, 255, 210, 10, 111, 18, 33, 25, 204, 4, 0, 31, 95, 112, 9, 175, 2, 224, 144, 117, 64, 17, 77, 34, 17, 77, 26, 81, 76, 6, 20, 19, 37, 1, 24, 19, 33, 1, 41, 19, 33, 1, 34, 19, 33, 1, 35, 19, 33, 1, 36, 19, 37, 1, 37, 19, 49, 1, 34, 19, 49, 1, 35, 19, 49, 1, 36, 19, 53, 1, 37, 19, 65, 1, 52, 19, 73, 1, 53, 19, 93, 1, 30, 19, 113, 1, 30, 51, 133, 1, 119, 2, 19, 213, 2, 27, 0, 0, 7, 98, 97, 122, 7, 113, 117, 120, 0, 5, 17, 77, 58, 0, 0, 81, 72, 6, 20, 0, 16, 63, 110, 101, 115, 116, 101, 100, 0, 5, 17, 77, 114, 0, 18, 255, 114, 101, 97, 108, 108, 121, 32, 110, 0, 31, 101, 115, 116, 101, 100, 1, 26, 15, 12, 222, 128, 127, 239, 210, 4, 210, 233, 128, 255, 127, 247, 78, 97, 188, 64, 211, 160, 250, 248, 128, 255, 255, 255, 127, 63, 121, 223, 13, 134, 72, 112, 255, 46, 117, 19, 253, 138, 150, 253, 255, 0, 128, 128, 255, 255, 255, 255, 255, 255, 255, 255, 127, 0, 11, 12, 34, 255, 207, 210, 4, 46, 22, 255, 255, 247, 78, 97, 188, 192, 44, 95, 5, 240, 255, 255, 255, 255, 63, 121, 223, 13, 134, 72, 112, 127, 210, 138, 236, 2, 117, 105, 2, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 240, 56, 180, 150, 73, 255, 194, 189, 240, 124, 194, 189, 240, 252, 1, 234, 28, 8, 2, 234, 28, 8, 130, 0, 0, 255, 64, 222, 119, 131, 33, 18, 220, 66, 4, 41, 144, 35, 202, 229, 200, 118, 127, 41, 144, 35, 202, 229, 200, 118, 255, 145, 247, 80, 55, 158, 120, 102, 0, 145, 247, 80, 55, 158, 120, 102, 128, 17, 9, 42, 17, 9, 50, 17, 9, 58, 15, 113, 117, 117, 120, 31, 99, 111, 114, 103, 101, 63, 103, 114, 97, 117, 108, 116, 17, 9, 50, 17, 9, 42, 17, 9, 34, 63, 103, 97, 114, 112, 108, 121, 31, 119, 97, 108, 100, 111, 15, 102, 114, 101, 100, 81, 12, 6, 20, 0, 5, 19, 29, 1, 122, 0, 24, 17, 189, 122, 0, 24, 17, 93, 122, 0, 18, 255, 120, 32, 115, 116, 114, 117, 99, 116, 0, 63, 108, 105, 115, 116, 32, 49, 255, 120, 32, 115, 116, 114, 117, 99, 116, 0, 63, 108, 105, 115, 116, 32, 50, 255, 120, 32, 115, 116, 114, 117, 99, 116, 0, 63, 108, 105, 115, 116, 32, 51, 21, 3, 1, 6]).buffer),
     defaultEnumField: $.getUint16Mask(5),
-    defaultVoidList: $.readRawPointer(new Uint8Array([0x10, 0x01, 0x11, 0x01, 0x30]).buffer),
-    defaultBoolList: $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x21, 0x01, 0x09]).buffer),
-    defaultInt8List: $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x12, 0x03, 0x6f, 0x91]).buffer),
-    defaultInt16List: $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x13, 0x0f, 0x67, 0x2b, 0x99, 0xd4]).buffer),
-    defaultInt32List: $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x14, 0xff, 0xc7, 0x6b, 0x9f, 0x06, 0x39, 0x94, 0x60, 0xf9, 0x00]).buffer),
-    defaultInt64List: $.readRawPointer(new Uint8Array([0x10, 0x03, 0x11, 0x01, 0x15, 0xff, 0xc7, 0x71, 0xc4, 0x2b, 0xab, 0x75, 0x6b, 0x0f, 0x01, 0x39, 0x8e, 0x3b, 0xd4, 0x54, 0x8a, 0x94, 0xf0]).buffer),
-    defaultUInt8List: $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x12, 0x03, 0x6f, 0xde]).buffer),
-    defaultUInt16List: $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x13, 0x0f, 0x35, 0x82, 0x9c, 0xad]).buffer),
-    defaultUInt32List: $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x0c, 0x0f, 0x55, 0xa1, 0xae, 0xc6]).buffer),
-    defaultUInt64List: $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x0d, 0xff, 0xc7, 0x71, 0xac, 0xb5, 0xaf, 0x98, 0x32, 0x9a, 0x00]).buffer),
-    defaultFloat32List: $.readRawPointer(new Uint8Array([0x10, 0x03, 0x11, 0x01, 0x24, 0xce, 0x9c, 0xad, 0x45, 0x80, 0x7f, 0xcc, 0x80, 0xff, 0xc0, 0x7f]).buffer),
-    defaultFloat64List: $.readRawPointer(new Uint8Array([0x10, 0x05, 0x11, 0x01, 0x25, 0xf0, 0xc0, 0x61, 0xbe, 0x40, 0xc0, 0xf0, 0x7f, 0xc0, 0xf0, 0xff, 0xc0, 0xf8, 0x7f]).buffer),
-    defaultTextList: $.readRawPointer(new Uint8Array([0x10, 0x07, 0x11, 0x01, 0x1e, 0x11, 0x09, 0x32, 0x11, 0x09, 0x32, 0x11, 0x09, 0x2a, 0x1f, 0x70, 0x6c, 0x75, 0x67, 0x68, 0x1f, 0x78, 0x79, 0x7a, 0x7a, 0x79, 0x0f, 0x74, 0x68, 0x75, 0x64]).buffer),
-    defaultDataList: $.readRawPointer(new Uint8Array([0x10, 0x08, 0x11, 0x01, 0x1e, 0x11, 0x09, 0x22, 0x11, 0x09, 0x4a, 0x11, 0x0d, 0x3a, 0x0f, 0x6f, 0x6f, 0x70, 0x73, 0xff, 0x65, 0x78, 0x68, 0x61, 0x75, 0x73, 0x74, 0x65, 0x00, 0x01, 0x64, 0x7f, 0x72, 0x66, 0x63, 0x33, 0x30, 0x39, 0x32]).buffer),
-    defaultStructList: $.readRawPointer(new Uint8Array([0x10, 0x56, 0x31, 0x01, 0x77, 0x02, 0x51, 0x0c, 0x06, 0x14, 0x00, 0x05, 0x13, 0x1d, 0x01, 0x6a, 0x00, 0x18, 0x11, 0xbd, 0x6a, 0x00, 0x18, 0x11, 0x5d, 0x6a, 0x00, 0x12, 0xff, 0x73, 0x74, 0x72, 0x75, 0x63, 0x74, 0x6c, 0x69, 0x00, 0x0f, 0x73, 0x74, 0x20, 0x31, 0xff, 0x73, 0x74, 0x72, 0x75, 0x63, 0x74, 0x6c, 0x69, 0x00, 0x0f, 0x73, 0x74, 0x20, 0x32, 0xff, 0x73, 0x74, 0x72, 0x75, 0x63, 0x74, 0x6c, 0x69, 0x00, 0x0f, 0x73, 0x74, 0x20, 0x33]).buffer),
-    defaultEnumList: $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x13, 0x04, 0x07]).buffer)
+    defaultVoidList: $.readRawPointer(new Uint8Array([16, 1, 17, 1, 48]).buffer),
+    defaultBoolList: $.readRawPointer(new Uint8Array([16, 2, 17, 1, 33, 1, 9]).buffer),
+    defaultInt8List: $.readRawPointer(new Uint8Array([16, 2, 17, 1, 18, 3, 111, 145]).buffer),
+    defaultInt16List: $.readRawPointer(new Uint8Array([16, 2, 17, 1, 19, 15, 103, 43, 153, 212]).buffer),
+    defaultInt32List: $.readRawPointer(new Uint8Array([16, 2, 17, 1, 20, 255, 199, 107, 159, 6, 57, 148, 96, 249, 0]).buffer),
+    defaultInt64List: $.readRawPointer(new Uint8Array([16, 3, 17, 1, 21, 255, 199, 113, 196, 43, 171, 117, 107, 15, 1, 57, 142, 59, 212, 84, 138, 148, 240]).buffer),
+    defaultUInt8List: $.readRawPointer(new Uint8Array([16, 2, 17, 1, 18, 3, 111, 222]).buffer),
+    defaultUInt16List: $.readRawPointer(new Uint8Array([16, 2, 17, 1, 19, 15, 53, 130, 156, 173]).buffer),
+    defaultUInt32List: $.readRawPointer(new Uint8Array([16, 2, 17, 1, 12, 15, 85, 161, 174, 198]).buffer),
+    defaultUInt64List: $.readRawPointer(new Uint8Array([16, 2, 17, 1, 13, 255, 199, 113, 172, 181, 175, 152, 50, 154, 0]).buffer),
+    defaultFloat32List: $.readRawPointer(new Uint8Array([16, 3, 17, 1, 36, 206, 156, 173, 69, 128, 127, 204, 128, 255, 192, 127]).buffer),
+    defaultFloat64List: $.readRawPointer(new Uint8Array([16, 5, 17, 1, 37, 240, 192, 97, 190, 64, 192, 240, 127, 192, 240, 255, 192, 248, 127]).buffer),
+    defaultTextList: $.readRawPointer(new Uint8Array([16, 7, 17, 1, 30, 17, 9, 50, 17, 9, 50, 17, 9, 42, 31, 112, 108, 117, 103, 104, 31, 120, 121, 122, 122, 121, 15, 116, 104, 117, 100]).buffer),
+    defaultDataList: $.readRawPointer(new Uint8Array([16, 8, 17, 1, 30, 17, 9, 34, 17, 9, 74, 17, 13, 58, 15, 111, 111, 112, 115, 255, 101, 120, 104, 97, 117, 115, 116, 101, 0, 1, 100, 127, 114, 102, 99, 51, 48, 57, 50]).buffer),
+    defaultStructList: $.readRawPointer(new Uint8Array([16, 86, 49, 1, 119, 2, 81, 12, 6, 20, 0, 5, 19, 29, 1, 106, 0, 24, 17, 189, 106, 0, 24, 17, 93, 106, 0, 18, 255, 115, 116, 114, 117, 99, 116, 108, 105, 0, 15, 115, 116, 32, 49, 255, 115, 116, 114, 117, 99, 116, 108, 105, 0, 15, 115, 116, 32, 50, 255, 115, 116, 114, 117, 99, 116, 108, 105, 0, 15, 115, 116, 32, 51]).buffer),
+    defaultEnumList: $.readRawPointer(new Uint8Array([16, 2, 17, 1, 19, 4, 7]).buffer)
   };
   static _StructList: $.ListCtor<TestAllTypes>;
   get boolField(): boolean {
@@ -563,8 +562,9 @@ export class TestDefaults extends $.Struct {
     return $.utils.disown(this.dataField);
   }
   /**
-  * "bar"
-  * */
+* "bar"
+*
+*/
   get dataField(): $.Data {
     return $.utils.getData(1, this, TestDefaults._capnp.defaultDataField);
   }
@@ -896,8 +896,9 @@ export class TestDefaults extends $.Struct {
     return $.utils.disown(this.interfaceList);
   }
   /**
-  * TODO
-  * */
+* TODO
+*
+*/
   get interfaceList(): $.List<$.Void> {
     return $.utils.getList(19, $.VoidList, this);
   }
@@ -910,15 +911,13 @@ export class TestDefaults extends $.Struct {
   set interfaceList(value: $.List<$.Void>) {
     $.utils.copyFrom(value, $.utils.getPointer(19, this));
   }
-  toString(): string {
-    return "TestDefaults_" + super.toString();
-  }
+  toString(): string { return "TestDefaults_" + super.toString(); }
 }
 export class TestAnyPointer extends $.Struct {
   static readonly _capnp = {
     displayName: "TestAnyPointer",
     id: "e3da5a2ccd28c0d8",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   _adoptAnyPointerField(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -935,15 +934,13 @@ export class TestAnyPointer extends $.Struct {
   set anyPointerField(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestAnyPointer_" + super.toString();
-  }
+  toString(): string { return "TestAnyPointer_" + super.toString(); }
 }
 export class TestAnyOthers extends $.Struct {
   static readonly _capnp = {
     displayName: "TestAnyOthers",
     id: "f49850f63c2bfa59",
-    size: new $.ObjectSize(0, 3)
+    size: new $.ObjectSize(0, 3),
   };
   _adoptAnyStructField(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -990,15 +987,13 @@ export class TestAnyOthers extends $.Struct {
   set capabilityField(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(2, this));
   }
-  toString(): string {
-    return "TestAnyOthers_" + super.toString();
-  }
+  toString(): string { return "TestAnyOthers_" + super.toString(); }
 }
 export class TestOutOfOrder extends $.Struct {
   static readonly _capnp = {
     displayName: "TestOutOfOrder",
     id: "a9d5f8efe770022b",
-    size: new $.ObjectSize(0, 9)
+    size: new $.ObjectSize(0, 9),
   };
   get foo(): string {
     return $.utils.getText(3, this);
@@ -1054,9 +1049,7 @@ export class TestOutOfOrder extends $.Struct {
   set waldo(value: string) {
     $.utils.setText(5, value, this);
   }
-  toString(): string {
-    return "TestOutOfOrder_" + super.toString();
-  }
+  toString(): string { return "TestOutOfOrder_" + super.toString(); }
 }
 export const TestUnion_Union0_Which = {
   U0F0S0: 0,
@@ -1077,7 +1070,8 @@ export const TestUnion_Union0_Which = {
 export type TestUnion_Union0_Which = (typeof TestUnion_Union0_Which)[keyof typeof TestUnion_Union0_Which];
 /**
 * Pack union 0 under ideal conditions: there is no unused padding space prior to it.
-* */
+*
+*/
 export class TestUnion_Union0 extends $.Struct {
   static readonly U0F0S0 = TestUnion_Union0_Which.U0F0S0;
   static readonly U0F0S1 = TestUnion_Union0_Which.U0F0S1;
@@ -1096,7 +1090,7 @@ export class TestUnion_Union0 extends $.Struct {
   static readonly _capnp = {
     displayName: "union0",
     id: "fc76a82eecb7a718",
-    size: new $.ObjectSize(64, 2)
+    size: new $.ObjectSize(64, 2),
   };
   get _isU0f0s0(): boolean {
     return $.utils.getUint16(0, this) === 0;
@@ -1242,9 +1236,7 @@ export class TestUnion_Union0 extends $.Struct {
     $.utils.setUint16(0, 13, this);
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestUnion_Union0_" + super.toString();
-  }
+  toString(): string { return "TestUnion_Union0_" + super.toString(); }
   which(): TestUnion_Union0_Which {
     return $.utils.getUint16(0, this) as TestUnion_Union0_Which;
   }
@@ -1274,7 +1266,8 @@ export const TestUnion_Union1_Which = {
 export type TestUnion_Union1_Which = (typeof TestUnion_Union1_Which)[keyof typeof TestUnion_Union1_Which];
 /**
 * Pack pathologically bad case.  Each field takes up new space.
-* */
+*
+*/
 export class TestUnion_Union1 extends $.Struct {
   static readonly U1F0S0 = TestUnion_Union1_Which.U1F0S0;
   static readonly U1F0S1 = TestUnion_Union1_Which.U1F0S1;
@@ -1299,7 +1292,7 @@ export class TestUnion_Union1 extends $.Struct {
   static readonly _capnp = {
     displayName: "union1",
     id: "ee0a6b99b7dc7ab2",
-    size: new $.ObjectSize(64, 2)
+    size: new $.ObjectSize(64, 2),
   };
   get _isU1f0s0(): boolean {
     return $.utils.getUint16(2, this) === 0;
@@ -1511,9 +1504,7 @@ export class TestUnion_Union1 extends $.Struct {
     $.utils.setUint16(2, 19, this);
     $.utils.setText(1, value, this);
   }
-  toString(): string {
-    return "TestUnion_Union1_" + super.toString();
-  }
+  toString(): string { return "TestUnion_Union1_" + super.toString(); }
   which(): TestUnion_Union1_Which {
     return $.utils.getUint16(2, this) as TestUnion_Union1_Which;
   }
@@ -1535,7 +1526,7 @@ export class TestUnion_Union2 extends $.Struct {
   static readonly _capnp = {
     displayName: "union2",
     id: "afc5fd419f0d66d4",
-    size: new $.ObjectSize(64, 2)
+    size: new $.ObjectSize(64, 2),
   };
   get u2f0s64(): bigint {
     $.utils.testWhich("u2f0s64", $.utils.getUint16(4, this), 4, this);
@@ -1592,9 +1583,7 @@ export class TestUnion_Union2 extends $.Struct {
     $.utils.setUint16(4, 0, this);
     $.utils.setBit(256, value, this);
   }
-  toString(): string {
-    return "TestUnion_Union2_" + super.toString();
-  }
+  toString(): string { return "TestUnion_Union2_" + super.toString(); }
   which(): TestUnion_Union2_Which {
     return $.utils.getUint16(4, this) as TestUnion_Union2_Which;
   }
@@ -1616,7 +1605,7 @@ export class TestUnion_Union3 extends $.Struct {
   static readonly _capnp = {
     displayName: "union3",
     id: "a2fb022ec7f30053",
-    size: new $.ObjectSize(64, 2)
+    size: new $.ObjectSize(64, 2),
   };
   get u3f0s64(): bigint {
     $.utils.testWhich("u3f0s64", $.utils.getUint16(6, this), 4, this);
@@ -1673,9 +1662,7 @@ export class TestUnion_Union3 extends $.Struct {
     $.utils.setUint16(6, 0, this);
     $.utils.setBit(257, value, this);
   }
-  toString(): string {
-    return "TestUnion_Union3_" + super.toString();
-  }
+  toString(): string { return "TestUnion_Union3_" + super.toString(); }
   which(): TestUnion_Union3_Which {
     return $.utils.getUint16(6, this) as TestUnion_Union3_Which;
   }
@@ -1684,11 +1671,12 @@ export class TestUnion extends $.Struct {
   static readonly _capnp = {
     displayName: "TestUnion",
     id: "f47697362233ce52",
-    size: new $.ObjectSize(64, 2)
+    size: new $.ObjectSize(64, 2),
   };
   /**
-  * Pack union 0 under ideal conditions: there is no unused padding space prior to it.
-  * */
+* Pack union 0 under ideal conditions: there is no unused padding space prior to it.
+*
+*/
   get union0(): TestUnion_Union0 {
     return $.utils.getAs(TestUnion_Union0, this);
   }
@@ -1702,8 +1690,9 @@ export class TestUnion extends $.Struct {
     $.utils.setBit(128, value, this);
   }
   /**
-  * Pack pathologically bad case.  Each field takes up new space.
-  * */
+* Pack pathologically bad case.  Each field takes up new space.
+*
+*/
   get union1(): TestUnion_Union1 {
     return $.utils.getAs(TestUnion_Union1, this);
   }
@@ -1764,9 +1753,7 @@ export class TestUnion extends $.Struct {
   set byte0(value: number) {
     $.utils.setUint8(35, value, this);
   }
-  toString(): string {
-    return "TestUnion_" + super.toString();
-  }
+  toString(): string { return "TestUnion_" + super.toString(); }
 }
 export const TestUnnamedUnion_Which = {
   FOO: 0,
@@ -1779,7 +1766,7 @@ export class TestUnnamedUnion extends $.Struct {
   static readonly _capnp = {
     displayName: "TestUnnamedUnion",
     id: "9e2e784c915329b6",
-    size: new $.ObjectSize(16, 2)
+    size: new $.ObjectSize(16, 2),
   };
   get before(): string {
     return $.utils.getText(0, this);
@@ -1821,9 +1808,7 @@ export class TestUnnamedUnion extends $.Struct {
   set after(value: string) {
     $.utils.setText(1, value, this);
   }
-  toString(): string {
-    return "TestUnnamedUnion_" + super.toString();
-  }
+  toString(): string { return "TestUnnamedUnion_" + super.toString(); }
   which(): TestUnnamedUnion_Which {
     return $.utils.getUint16(4, this) as TestUnnamedUnion_Which;
   }
@@ -1839,7 +1824,7 @@ export class TestUnionInUnion_Outer_Inner extends $.Struct {
   static readonly _capnp = {
     displayName: "inner",
     id: "ff9ce111c6f8e5db",
-    size: new $.ObjectSize(16, 0)
+    size: new $.ObjectSize(16, 0),
   };
   get foo(): number {
     $.utils.testWhich("foo", $.utils.getUint16(4, this), 0, this);
@@ -1863,9 +1848,7 @@ export class TestUnionInUnion_Outer_Inner extends $.Struct {
     $.utils.setUint16(4, 1, this);
     $.utils.setInt32(0, value, this);
   }
-  toString(): string {
-    return "TestUnionInUnion_Outer_Inner_" + super.toString();
-  }
+  toString(): string { return "TestUnionInUnion_Outer_Inner_" + super.toString(); }
   which(): TestUnionInUnion_Outer_Inner_Which {
     return $.utils.getUint16(4, this) as TestUnionInUnion_Outer_Inner_Which;
   }
@@ -1881,7 +1864,7 @@ export class TestUnionInUnion_Outer extends $.Struct {
   static readonly _capnp = {
     displayName: "outer",
     id: "d005f6c63707670c",
-    size: new $.ObjectSize(16, 0)
+    size: new $.ObjectSize(16, 0),
   };
   get inner(): TestUnionInUnion_Outer_Inner {
     $.utils.testWhich("inner", $.utils.getUint16(8, this), 0, this);
@@ -1908,21 +1891,20 @@ export class TestUnionInUnion_Outer extends $.Struct {
     $.utils.setUint16(8, 1, this);
     $.utils.setInt32(0, value, this);
   }
-  toString(): string {
-    return "TestUnionInUnion_Outer_" + super.toString();
-  }
+  toString(): string { return "TestUnionInUnion_Outer_" + super.toString(); }
   which(): TestUnionInUnion_Outer_Which {
     return $.utils.getUint16(8, this) as TestUnionInUnion_Outer_Which;
   }
 }
 /**
 * There is no reason to ever do this.
-* */
+*
+*/
 export class TestUnionInUnion extends $.Struct {
   static readonly _capnp = {
     displayName: "TestUnionInUnion",
     id: "89a9494f1b900f22",
-    size: new $.ObjectSize(16, 0)
+    size: new $.ObjectSize(16, 0),
   };
   get outer(): TestUnionInUnion_Outer {
     return $.utils.getAs(TestUnionInUnion_Outer, this);
@@ -1930,15 +1912,13 @@ export class TestUnionInUnion extends $.Struct {
   _initOuter(): TestUnionInUnion_Outer {
     return $.utils.getAs(TestUnionInUnion_Outer, this);
   }
-  toString(): string {
-    return "TestUnionInUnion_" + super.toString();
-  }
+  toString(): string { return "TestUnionInUnion_" + super.toString(); }
 }
 export class TestGroups_Groups_Foo extends $.Struct {
   static readonly _capnp = {
     displayName: "foo",
     id: "f5fcba89c0c1196f",
-    size: new $.ObjectSize(16, 2)
+    size: new $.ObjectSize(16, 2),
   };
   get corge(): number {
     return $.utils.getInt32(0, this);
@@ -1958,15 +1938,13 @@ export class TestGroups_Groups_Foo extends $.Struct {
   set garply(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestGroups_Groups_Foo_" + super.toString();
-  }
+  toString(): string { return "TestGroups_Groups_Foo_" + super.toString(); }
 }
 export class TestGroups_Groups_Baz extends $.Struct {
   static readonly _capnp = {
     displayName: "baz",
     id: "f0fa30304066a4b3",
-    size: new $.ObjectSize(16, 2)
+    size: new $.ObjectSize(16, 2),
   };
   get corge(): number {
     return $.utils.getInt32(0, this);
@@ -1986,15 +1964,13 @@ export class TestGroups_Groups_Baz extends $.Struct {
   set garply(value: string) {
     $.utils.setText(1, value, this);
   }
-  toString(): string {
-    return "TestGroups_Groups_Baz_" + super.toString();
-  }
+  toString(): string { return "TestGroups_Groups_Baz_" + super.toString(); }
 }
 export class TestGroups_Groups_Bar extends $.Struct {
   static readonly _capnp = {
     displayName: "bar",
     id: "b727c0d0091a001d",
-    size: new $.ObjectSize(16, 2)
+    size: new $.ObjectSize(16, 2),
   };
   get corge(): number {
     return $.utils.getInt32(0, this);
@@ -2014,9 +1990,7 @@ export class TestGroups_Groups_Bar extends $.Struct {
   set garply(value: bigint) {
     $.utils.setInt64(8, value, this);
   }
-  toString(): string {
-    return "TestGroups_Groups_Bar_" + super.toString();
-  }
+  toString(): string { return "TestGroups_Groups_Bar_" + super.toString(); }
 }
 export const TestGroups_Groups_Which = {
   FOO: 0,
@@ -2031,7 +2005,7 @@ export class TestGroups_Groups extends $.Struct {
   static readonly _capnp = {
     displayName: "groups",
     id: "e22ae74ff9113268",
-    size: new $.ObjectSize(16, 2)
+    size: new $.ObjectSize(16, 2),
   };
   get foo(): TestGroups_Groups_Foo {
     $.utils.testWhich("foo", $.utils.getUint16(4, this), 0, this);
@@ -2075,9 +2049,7 @@ export class TestGroups_Groups extends $.Struct {
   set baz(_: true) {
     $.utils.setUint16(4, 1, this);
   }
-  toString(): string {
-    return "TestGroups_Groups_" + super.toString();
-  }
+  toString(): string { return "TestGroups_Groups_" + super.toString(); }
   which(): TestGroups_Groups_Which {
     return $.utils.getUint16(4, this) as TestGroups_Groups_Which;
   }
@@ -2086,7 +2058,7 @@ export class TestGroups extends $.Struct {
   static readonly _capnp = {
     displayName: "TestGroups",
     id: "dc841556134c3103",
-    size: new $.ObjectSize(16, 2)
+    size: new $.ObjectSize(16, 2),
   };
   get groups(): TestGroups_Groups {
     return $.utils.getAs(TestGroups_Groups, this);
@@ -2094,15 +2066,13 @@ export class TestGroups extends $.Struct {
   _initGroups(): TestGroups_Groups {
     return $.utils.getAs(TestGroups_Groups, this);
   }
-  toString(): string {
-    return "TestGroups_" + super.toString();
-  }
+  toString(): string { return "TestGroups_" + super.toString(); }
 }
 export class TestInterleavedGroups_Group1_Corge extends $.Struct {
   static readonly _capnp = {
     displayName: "corge",
     id: "db0afd413f4a313a",
-    size: new $.ObjectSize(48, 6)
+    size: new $.ObjectSize(48, 6),
   };
   get grault(): bigint {
     return $.utils.getUint64(32, this);
@@ -2128,9 +2098,7 @@ export class TestInterleavedGroups_Group1_Corge extends $.Struct {
   set xyzzy(value: string) {
     $.utils.setText(4, value, this);
   }
-  toString(): string {
-    return "TestInterleavedGroups_Group1_Corge_" + super.toString();
-  }
+  toString(): string { return "TestInterleavedGroups_Group1_Corge_" + super.toString(); }
 }
 export const TestInterleavedGroups_Group1_Which = {
   QUX: 0,
@@ -2145,7 +2113,7 @@ export class TestInterleavedGroups_Group1 extends $.Struct {
   static readonly _capnp = {
     displayName: "group1",
     id: "c7485a3516c7d3c8",
-    size: new $.ObjectSize(48, 6)
+    size: new $.ObjectSize(48, 6),
   };
   get foo(): number {
     return $.utils.getUint32(0, this);
@@ -2201,9 +2169,7 @@ export class TestInterleavedGroups_Group1 extends $.Struct {
   set waldo(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestInterleavedGroups_Group1_" + super.toString();
-  }
+  toString(): string { return "TestInterleavedGroups_Group1_" + super.toString(); }
   which(): TestInterleavedGroups_Group1_Which {
     return $.utils.getUint16(28, this) as TestInterleavedGroups_Group1_Which;
   }
@@ -2212,7 +2178,7 @@ export class TestInterleavedGroups_Group2_Corge extends $.Struct {
   static readonly _capnp = {
     displayName: "corge",
     id: "a017f0366827ee37",
-    size: new $.ObjectSize(48, 6)
+    size: new $.ObjectSize(48, 6),
   };
   get grault(): bigint {
     return $.utils.getUint64(40, this);
@@ -2238,9 +2204,7 @@ export class TestInterleavedGroups_Group2_Corge extends $.Struct {
   set xyzzy(value: string) {
     $.utils.setText(5, value, this);
   }
-  toString(): string {
-    return "TestInterleavedGroups_Group2_Corge_" + super.toString();
-  }
+  toString(): string { return "TestInterleavedGroups_Group2_Corge_" + super.toString(); }
 }
 export const TestInterleavedGroups_Group2_Which = {
   QUX: 0,
@@ -2255,7 +2219,7 @@ export class TestInterleavedGroups_Group2 extends $.Struct {
   static readonly _capnp = {
     displayName: "group2",
     id: "cc85a335569990e9",
-    size: new $.ObjectSize(48, 6)
+    size: new $.ObjectSize(48, 6),
   };
   get foo(): number {
     return $.utils.getUint32(4, this);
@@ -2311,9 +2275,7 @@ export class TestInterleavedGroups_Group2 extends $.Struct {
   set waldo(value: string) {
     $.utils.setText(1, value, this);
   }
-  toString(): string {
-    return "TestInterleavedGroups_Group2_" + super.toString();
-  }
+  toString(): string { return "TestInterleavedGroups_Group2_" + super.toString(); }
   which(): TestInterleavedGroups_Group2_Which {
     return $.utils.getUint16(30, this) as TestInterleavedGroups_Group2_Which;
   }
@@ -2322,7 +2284,7 @@ export class TestInterleavedGroups extends $.Struct {
   static readonly _capnp = {
     displayName: "TestInterleavedGroups",
     id: "f77ed6f7454eec40",
-    size: new $.ObjectSize(48, 6)
+    size: new $.ObjectSize(48, 6),
   };
   get group1(): TestInterleavedGroups_Group1 {
     return $.utils.getAs(TestInterleavedGroups_Group1, this);
@@ -2336,19 +2298,17 @@ export class TestInterleavedGroups extends $.Struct {
   _initGroup2(): TestInterleavedGroups_Group2 {
     return $.utils.getAs(TestInterleavedGroups_Group2, this);
   }
-  toString(): string {
-    return "TestInterleavedGroups_" + super.toString();
-  }
+  toString(): string { return "TestInterleavedGroups_" + super.toString(); }
 }
 export class TestUnionDefaults extends $.Struct {
   static readonly _capnp = {
     displayName: "TestUnionDefaults",
     id: "94f7e0b103b4b718",
     size: new $.ObjectSize(0, 4),
-    defaultS16s8s64s8Set: $.readRawPointer(new Uint8Array([0x10, 0x0b, 0x50, 0x08, 0x02, 0x55, 0x03, 0x03, 0x04, 0x01, 0x03, 0x41, 0x01, 0x02, 0x7b, 0x00, 0x00, 0x04, 0x37, 0x00, 0x00, 0x7f, 0x87, 0x4b, 0x6b, 0x5d, 0x54, 0xdc, 0x2b, 0x00, 0x02]).buffer),
-    defaultS0sps1s32Set: $.readRawPointer(new Uint8Array([0x10, 0x0c, 0x50, 0x08, 0x02, 0x45, 0x07, 0x0b, 0x03, 0x00, 0x02, 0x01, 0x01, 0x70, 0x4e, 0x61, 0xbc, 0x00, 0x02, 0x11, 0x01, 0x22, 0x07, 0x66, 0x6f, 0x6f]).buffer),
-    defaultUnnamed1: $.readRawPointer(new Uint8Array([0x10, 0x05, 0x50, 0x02, 0x02, 0x01, 0x7b, 0x00, 0x02]).buffer),
-    defaultUnnamed2: $.readRawPointer(new Uint8Array([0x10, 0x07, 0x50, 0x02, 0x02, 0x10, 0x01, 0x03, 0x41, 0x01, 0x11, 0x05, 0x22, 0x11, 0x05, 0x22, 0x07, 0x66, 0x6f, 0x6f, 0x07, 0x62, 0x61, 0x72]).buffer)
+    defaultS16s8s64s8Set: $.readRawPointer(new Uint8Array([16, 11, 80, 8, 2, 85, 3, 3, 4, 1, 3, 65, 1, 2, 123, 0, 0, 4, 55, 0, 0, 127, 135, 75, 107, 93, 84, 220, 43, 0, 2]).buffer),
+    defaultS0sps1s32Set: $.readRawPointer(new Uint8Array([16, 12, 80, 8, 2, 69, 7, 11, 3, 0, 2, 1, 1, 112, 78, 97, 188, 0, 2, 17, 1, 34, 7, 102, 111, 111]).buffer),
+    defaultUnnamed1: $.readRawPointer(new Uint8Array([16, 5, 80, 2, 2, 1, 123, 0, 2]).buffer),
+    defaultUnnamed2: $.readRawPointer(new Uint8Array([16, 7, 80, 2, 2, 16, 1, 3, 65, 1, 17, 5, 34, 17, 5, 34, 7, 102, 111, 111, 7, 98, 97, 114]).buffer)
   };
   _adoptS16s8s64s8Set(value: $.Orphan<TestUnion>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -2422,9 +2382,7 @@ export class TestUnionDefaults extends $.Struct {
   set unnamed2(value: TestUnnamedUnion) {
     $.utils.copyFrom(value, $.utils.getPointer(3, this));
   }
-  toString(): string {
-    return "TestUnionDefaults_" + super.toString();
-  }
+  toString(): string { return "TestUnionDefaults_" + super.toString(); }
 }
 export const TestNestedTypes_NestedEnum = {
   FOO: 0,
@@ -2458,9 +2416,7 @@ export class TestNestedTypes_NestedStruct extends $.Struct {
   set innerNestedEnum(value: TestNestedTypes_NestedStruct_NestedEnum) {
     $.utils.setUint16(2, value, this, TestNestedTypes_NestedStruct._capnp.defaultInnerNestedEnum);
   }
-  toString(): string {
-    return "TestNestedTypes_NestedStruct_" + super.toString();
-  }
+  toString(): string { return "TestNestedTypes_NestedStruct_" + super.toString(); }
 }
 export class TestNestedTypes extends $.Struct {
   static readonly NestedEnum = TestNestedTypes_NestedEnum;
@@ -2502,9 +2458,7 @@ export class TestNestedTypes extends $.Struct {
   set innerNestedEnum(value: TestNestedTypes_NestedStruct_NestedEnum) {
     $.utils.setUint16(2, value, this, TestNestedTypes._capnp.defaultInnerNestedEnum);
   }
-  toString(): string {
-    return "TestNestedTypes_" + super.toString();
-  }
+  toString(): string { return "TestNestedTypes_" + super.toString(); }
 }
 export class TestUsing extends $.Struct {
   static readonly _capnp = {
@@ -2526,25 +2480,21 @@ export class TestUsing extends $.Struct {
   set innerNestedEnum(value: TestNestedTypes_NestedStruct_NestedEnum) {
     $.utils.setUint16(0, value, this, TestUsing._capnp.defaultInnerNestedEnum);
   }
-  toString(): string {
-    return "TestUsing_" + super.toString();
-  }
+  toString(): string { return "TestUsing_" + super.toString(); }
 }
 export class TestLists_Struct0 extends $.Struct {
   static readonly _capnp = {
     displayName: "Struct0",
     id: "8412c03b75b2cfee",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestLists_Struct0_" + super.toString();
-  }
+  toString(): string { return "TestLists_Struct0_" + super.toString(); }
 }
 export class TestLists_Struct1 extends $.Struct {
   static readonly _capnp = {
     displayName: "Struct1",
     id: "e0fe5870b141ad69",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   get f(): boolean {
     return $.utils.getBit(0, this);
@@ -2552,15 +2502,13 @@ export class TestLists_Struct1 extends $.Struct {
   set f(value: boolean) {
     $.utils.setBit(0, value, this);
   }
-  toString(): string {
-    return "TestLists_Struct1_" + super.toString();
-  }
+  toString(): string { return "TestLists_Struct1_" + super.toString(); }
 }
 export class TestLists_Struct8 extends $.Struct {
   static readonly _capnp = {
     displayName: "Struct8",
     id: "a6411a353090145b",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   get f(): number {
     return $.utils.getUint8(0, this);
@@ -2568,15 +2516,13 @@ export class TestLists_Struct8 extends $.Struct {
   set f(value: number) {
     $.utils.setUint8(0, value, this);
   }
-  toString(): string {
-    return "TestLists_Struct8_" + super.toString();
-  }
+  toString(): string { return "TestLists_Struct8_" + super.toString(); }
 }
 export class TestLists_Struct16 extends $.Struct {
   static readonly _capnp = {
     displayName: "Struct16",
     id: "a8abf7a82928986c",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   get f(): number {
     return $.utils.getUint16(0, this);
@@ -2584,15 +2530,13 @@ export class TestLists_Struct16 extends $.Struct {
   set f(value: number) {
     $.utils.setUint16(0, value, this);
   }
-  toString(): string {
-    return "TestLists_Struct16_" + super.toString();
-  }
+  toString(): string { return "TestLists_Struct16_" + super.toString(); }
 }
 export class TestLists_Struct32 extends $.Struct {
   static readonly _capnp = {
     displayName: "Struct32",
     id: "ad7beedc4ed30742",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   get f(): number {
     return $.utils.getUint32(0, this);
@@ -2600,15 +2544,13 @@ export class TestLists_Struct32 extends $.Struct {
   set f(value: number) {
     $.utils.setUint32(0, value, this);
   }
-  toString(): string {
-    return "TestLists_Struct32_" + super.toString();
-  }
+  toString(): string { return "TestLists_Struct32_" + super.toString(); }
 }
 export class TestLists_Struct64 extends $.Struct {
   static readonly _capnp = {
     displayName: "Struct64",
     id: "ef9a34f2ff7cc646",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   get f(): bigint {
     return $.utils.getUint64(0, this);
@@ -2616,15 +2558,13 @@ export class TestLists_Struct64 extends $.Struct {
   set f(value: bigint) {
     $.utils.setUint64(0, value, this);
   }
-  toString(): string {
-    return "TestLists_Struct64_" + super.toString();
-  }
+  toString(): string { return "TestLists_Struct64_" + super.toString(); }
 }
 export class TestLists_StructP extends $.Struct {
   static readonly _capnp = {
     displayName: "StructP",
     id: "c6abf1b0329e6227",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get f(): string {
     return $.utils.getText(0, this);
@@ -2632,15 +2572,13 @@ export class TestLists_StructP extends $.Struct {
   set f(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestLists_StructP_" + super.toString();
-  }
+  toString(): string { return "TestLists_StructP_" + super.toString(); }
 }
 export class TestLists_Struct0c extends $.Struct {
   static readonly _capnp = {
     displayName: "Struct0c",
     id: "943a234ca336b16a",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get pad(): string {
     return $.utils.getText(0, this);
@@ -2648,15 +2586,13 @@ export class TestLists_Struct0c extends $.Struct {
   set pad(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestLists_Struct0c_" + super.toString();
-  }
+  toString(): string { return "TestLists_Struct0c_" + super.toString(); }
 }
 export class TestLists_Struct1c extends $.Struct {
   static readonly _capnp = {
     displayName: "Struct1c",
     id: "8991bc0e74a594cd",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get f(): boolean {
     return $.utils.getBit(0, this);
@@ -2670,15 +2606,13 @@ export class TestLists_Struct1c extends $.Struct {
   set pad(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestLists_Struct1c_" + super.toString();
-  }
+  toString(): string { return "TestLists_Struct1c_" + super.toString(); }
 }
 export class TestLists_Struct8c extends $.Struct {
   static readonly _capnp = {
     displayName: "Struct8c",
     id: "ed267416528c7a24",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get f(): number {
     return $.utils.getUint8(0, this);
@@ -2692,15 +2626,13 @@ export class TestLists_Struct8c extends $.Struct {
   set pad(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestLists_Struct8c_" + super.toString();
-  }
+  toString(): string { return "TestLists_Struct8c_" + super.toString(); }
 }
 export class TestLists_Struct16c extends $.Struct {
   static readonly _capnp = {
     displayName: "Struct16c",
     id: "9978837b037d58e6",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get f(): number {
     return $.utils.getUint16(0, this);
@@ -2714,15 +2646,13 @@ export class TestLists_Struct16c extends $.Struct {
   set pad(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestLists_Struct16c_" + super.toString();
-  }
+  toString(): string { return "TestLists_Struct16c_" + super.toString(); }
 }
 export class TestLists_Struct32c extends $.Struct {
   static readonly _capnp = {
     displayName: "Struct32c",
     id: "ed5fa940f54a7904",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get f(): number {
     return $.utils.getUint32(0, this);
@@ -2736,15 +2666,13 @@ export class TestLists_Struct32c extends $.Struct {
   set pad(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestLists_Struct32c_" + super.toString();
-  }
+  toString(): string { return "TestLists_Struct32c_" + super.toString(); }
 }
 export class TestLists_Struct64c extends $.Struct {
   static readonly _capnp = {
     displayName: "Struct64c",
     id: "bc743778f2597c7d",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get f(): bigint {
     return $.utils.getUint64(0, this);
@@ -2758,15 +2686,13 @@ export class TestLists_Struct64c extends $.Struct {
   set pad(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestLists_Struct64c_" + super.toString();
-  }
+  toString(): string { return "TestLists_Struct64c_" + super.toString(); }
 }
 export class TestLists_StructPc extends $.Struct {
   static readonly _capnp = {
     displayName: "StructPc",
     id: "c2e364a40182013d",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get f(): string {
     return $.utils.getText(0, this);
@@ -2780,14 +2706,13 @@ export class TestLists_StructPc extends $.Struct {
   set pad(value: bigint) {
     $.utils.setUint64(0, value, this);
   }
-  toString(): string {
-    return "TestLists_StructPc_" + super.toString();
-  }
+  toString(): string { return "TestLists_StructPc_" + super.toString(); }
 }
 /**
 * Small structs, when encoded as list, will be encoded as primitive lists rather than struct
 * lists, to save space.
-* */
+*
+*/
 export class TestLists extends $.Struct {
   static readonly Struct0 = TestLists_Struct0;
   static readonly Struct1 = TestLists_Struct1;
@@ -2806,7 +2731,7 @@ export class TestLists extends $.Struct {
   static readonly _capnp = {
     displayName: "TestLists",
     id: "e41885c94393277e",
-    size: new $.ObjectSize(0, 10)
+    size: new $.ObjectSize(0, 10),
   };
   static _List0: $.ListCtor<TestLists_Struct0>;
   static _List1: $.ListCtor<TestLists_Struct1>;
@@ -2998,9 +2923,7 @@ export class TestLists extends $.Struct {
   set structListList(value: $.List<$.List<TestAllTypes>>) {
     $.utils.copyFrom(value, $.utils.getPointer(9, this));
   }
-  toString(): string {
-    return "TestLists_" + super.toString();
-  }
+  toString(): string { return "TestLists_" + super.toString(); }
 }
 export class TestFieldZeroIsBit extends $.Struct {
   static readonly _capnp = {
@@ -3028,16 +2951,14 @@ export class TestFieldZeroIsBit extends $.Struct {
   set thirdField(value: number) {
     $.utils.setUint8(1, value, this, TestFieldZeroIsBit._capnp.defaultThirdField);
   }
-  toString(): string {
-    return "TestFieldZeroIsBit_" + super.toString();
-  }
+  toString(): string { return "TestFieldZeroIsBit_" + super.toString(); }
 }
 export class TestListDefaults extends $.Struct {
   static readonly _capnp = {
     displayName: "TestListDefaults",
     id: "a851ad32cbc2ffea",
     size: new $.ObjectSize(0, 1),
-    defaultLists: $.readRawPointer(new Uint8Array([0x10, 0x88, 0x40, 0x0a, 0x11, 0x25, 0x07, 0x11, 0x25, 0x27, 0x11, 0x35, 0x17, 0x11, 0x3d, 0x17, 0x11, 0x45, 0x17, 0x11, 0x4d, 0x17, 0x11, 0x55, 0x17, 0x11, 0x65, 0x1e, 0x11, 0x7d, 0x1e, 0x11, 0xad, 0x16, 0x01, 0x08, 0x11, 0x10, 0x01, 0x01, 0x01, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x11, 0x08, 0x01, 0x01, 0x7b, 0x01, 0x2d, 0x11, 0x08, 0x01, 0x03, 0x39, 0x30, 0x03, 0x85, 0x1a, 0x11, 0x08, 0x01, 0x0f, 0x15, 0xcd, 0x5b, 0x07, 0x0f, 0xd2, 0x38, 0xfb, 0x0d, 0x11, 0x08, 0x01, 0x7f, 0xc0, 0xba, 0x8a, 0x3c, 0xd5, 0x62, 0x04, 0x7f, 0x87, 0x4b, 0xaa, 0xed, 0x61, 0x55, 0x08, 0x41, 0x08, 0x01, 0x11, 0x05, 0x22, 0x11, 0x05, 0x22, 0x07, 0x66, 0x6f, 0x6f, 0x07, 0x62, 0x61, 0x72, 0x11, 0x09, 0x1c, 0x11, 0x0d, 0x14, 0x11, 0x0d, 0x0c, 0x11, 0x01, 0x02, 0x01, 0x03, 0x11, 0x04, 0x05, 0x07, 0xf2, 0x4f, 0xbc, 0x11, 0x09, 0x16, 0x11, 0x15, 0x0e, 0x11, 0x19, 0x16, 0x11, 0x05, 0x22, 0x11, 0x05, 0x22, 0x07, 0x66, 0x6f, 0x6f, 0x07, 0x62, 0x61, 0x72, 0x11, 0x01, 0x22, 0x07, 0x62, 0x61, 0x7a, 0x11, 0x05, 0x22, 0x11, 0x05, 0x32, 0x07, 0x71, 0x75, 0x78, 0x1f, 0x63, 0x6f, 0x72, 0x67, 0x65, 0x31, 0x05, 0xa7, 0x01, 0x11, 0xd5, 0xd7, 0x51, 0x08, 0x06, 0x14, 0x10, 0x7b, 0x00, 0x18, 0x30, 0xc8, 0x01, 0x00, 0x18, 0x51, 0x04, 0x06, 0x14, 0x30, 0x15, 0x03, 0x00, 0x18]).buffer)
+    defaultLists: $.readRawPointer(new Uint8Array([16, 136, 64, 10, 17, 37, 7, 17, 37, 39, 17, 53, 23, 17, 61, 23, 17, 69, 23, 17, 77, 23, 17, 85, 23, 17, 101, 30, 17, 125, 30, 17, 173, 22, 1, 8, 17, 16, 1, 1, 1, 0, 0, 1, 1, 1, 1, 17, 8, 1, 1, 123, 1, 45, 17, 8, 1, 3, 57, 48, 3, 133, 26, 17, 8, 1, 15, 21, 205, 91, 7, 15, 210, 56, 251, 13, 17, 8, 1, 127, 192, 186, 138, 60, 213, 98, 4, 127, 135, 75, 170, 237, 97, 85, 8, 65, 8, 1, 17, 5, 34, 17, 5, 34, 7, 102, 111, 111, 7, 98, 97, 114, 17, 9, 28, 17, 13, 20, 17, 13, 12, 17, 1, 2, 1, 3, 17, 4, 5, 7, 242, 79, 188, 17, 9, 22, 17, 21, 14, 17, 25, 22, 17, 5, 34, 17, 5, 34, 7, 102, 111, 111, 7, 98, 97, 114, 17, 1, 34, 7, 98, 97, 122, 17, 5, 34, 17, 5, 50, 7, 113, 117, 120, 31, 99, 111, 114, 103, 101, 49, 5, 167, 1, 17, 213, 215, 81, 8, 6, 20, 16, 123, 0, 24, 48, 200, 1, 0, 24, 81, 4, 6, 20, 48, 21, 3, 0, 24]).buffer)
   };
   _adoptLists(value: $.Orphan<TestLists>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -3057,9 +2978,7 @@ export class TestListDefaults extends $.Struct {
   set lists(value: TestLists) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestListDefaults_" + super.toString();
-  }
+  toString(): string { return "TestListDefaults_" + super.toString(); }
 }
 export const TestLateUnion_TheUnion_Which = {
   QUX: 0,
@@ -3074,7 +2993,7 @@ export class TestLateUnion_TheUnion extends $.Struct {
   static readonly _capnp = {
     displayName: "theUnion",
     id: "807280a2901aa079",
-    size: new $.ObjectSize(24, 3)
+    size: new $.ObjectSize(24, 3),
   };
   get qux(): string {
     $.utils.testWhich("qux", $.utils.getUint16(6, this), 0, this);
@@ -3123,9 +3042,7 @@ export class TestLateUnion_TheUnion extends $.Struct {
     $.utils.setUint16(6, 2, this);
     $.utils.setFloat32(8, value, this);
   }
-  toString(): string {
-    return "TestLateUnion_TheUnion_" + super.toString();
-  }
+  toString(): string { return "TestLateUnion_TheUnion_" + super.toString(); }
   which(): TestLateUnion_TheUnion_Which {
     return $.utils.getUint16(6, this) as TestLateUnion_TheUnion_Which;
   }
@@ -3143,7 +3060,7 @@ export class TestLateUnion_AnotherUnion extends $.Struct {
   static readonly _capnp = {
     displayName: "anotherUnion",
     id: "c1973984dee98e3a",
-    size: new $.ObjectSize(24, 3)
+    size: new $.ObjectSize(24, 3),
   };
   get qux(): string {
     $.utils.testWhich("qux", $.utils.getUint16(12, this), 0, this);
@@ -3192,9 +3109,7 @@ export class TestLateUnion_AnotherUnion extends $.Struct {
     $.utils.setUint16(12, 2, this);
     $.utils.setFloat32(16, value, this);
   }
-  toString(): string {
-    return "TestLateUnion_AnotherUnion_" + super.toString();
-  }
+  toString(): string { return "TestLateUnion_AnotherUnion_" + super.toString(); }
   which(): TestLateUnion_AnotherUnion_Which {
     return $.utils.getUint16(12, this) as TestLateUnion_AnotherUnion_Which;
   }
@@ -3202,12 +3117,13 @@ export class TestLateUnion_AnotherUnion extends $.Struct {
 /**
 * Test what happens if the unions are not the first ordinals in the struct.  At one point this
 * was broken for the dynamic API.
-* */
+*
+*/
 export class TestLateUnion extends $.Struct {
   static readonly _capnp = {
     displayName: "TestLateUnion",
     id: "a76e3c9bb7fd56d3",
-    size: new $.ObjectSize(24, 3)
+    size: new $.ObjectSize(24, 3),
   };
   get foo(): number {
     return $.utils.getInt32(0, this);
@@ -3239,18 +3155,17 @@ export class TestLateUnion extends $.Struct {
   _initAnotherUnion(): TestLateUnion_AnotherUnion {
     return $.utils.getAs(TestLateUnion_AnotherUnion, this);
   }
-  toString(): string {
-    return "TestLateUnion_" + super.toString();
-  }
+  toString(): string { return "TestLateUnion_" + super.toString(); }
 }
 /**
 * A subset of TestNewVersion.
-* */
+*
+*/
 export class TestOldVersion extends $.Struct {
   static readonly _capnp = {
     displayName: "TestOldVersion",
     id: "95b30dd14e01dda8",
-    size: new $.ObjectSize(8, 2)
+    size: new $.ObjectSize(8, 2),
   };
   get old1(): bigint {
     return $.utils.getInt64(0, this);
@@ -3282,13 +3197,12 @@ export class TestOldVersion extends $.Struct {
   set old3(value: TestOldVersion) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "TestOldVersion_" + super.toString();
-  }
+  toString(): string { return "TestOldVersion_" + super.toString(); }
 }
 /**
 * A superset of TestOldVersion.
-* */
+*
+*/
 export class TestNewVersion extends $.Struct {
   static readonly _capnp = {
     displayName: "TestNewVersion",
@@ -3339,9 +3253,7 @@ export class TestNewVersion extends $.Struct {
   set new2(value: string) {
     $.utils.setText(2, value, this);
   }
-  toString(): string {
-    return "TestNewVersion_" + super.toString();
-  }
+  toString(): string { return "TestNewVersion_" + super.toString(); }
 }
 export const TestOldUnionVersion_Which = {
   A: 0,
@@ -3354,7 +3266,7 @@ export class TestOldUnionVersion extends $.Struct {
   static readonly _capnp = {
     displayName: "TestOldUnionVersion",
     id: "bd5fe16e5170c492",
-    size: new $.ObjectSize(16, 0)
+    size: new $.ObjectSize(16, 0),
   };
   get _isA(): boolean {
     return $.utils.getUint16(0, this) === 0;
@@ -3373,9 +3285,7 @@ export class TestOldUnionVersion extends $.Struct {
     $.utils.setUint16(0, 1, this);
     $.utils.setUint64(8, value, this);
   }
-  toString(): string {
-    return "TestOldUnionVersion_" + super.toString();
-  }
+  toString(): string { return "TestOldUnionVersion_" + super.toString(); }
   which(): TestOldUnionVersion_Which {
     return $.utils.getUint16(0, this) as TestOldUnionVersion_Which;
   }
@@ -3391,7 +3301,7 @@ export class TestNewUnionVersion_A extends $.Struct {
   static readonly _capnp = {
     displayName: "a",
     id: "86232c1de4513e84",
-    size: new $.ObjectSize(24, 0)
+    size: new $.ObjectSize(24, 0),
   };
   get _isA0(): boolean {
     return $.utils.getUint16(8, this) === 0;
@@ -3410,9 +3320,7 @@ export class TestNewUnionVersion_A extends $.Struct {
     $.utils.setUint16(8, 1, this);
     $.utils.setUint64(16, value, this);
   }
-  toString(): string {
-    return "TestNewUnionVersion_A_" + super.toString();
-  }
+  toString(): string { return "TestNewUnionVersion_A_" + super.toString(); }
   which(): TestNewUnionVersion_A_Which {
     return $.utils.getUint16(8, this) as TestNewUnionVersion_A_Which;
   }
@@ -3428,7 +3336,7 @@ export class TestNewUnionVersion extends $.Struct {
   static readonly _capnp = {
     displayName: "TestNewUnionVersion",
     id: "c7e4c513a975492b",
-    size: new $.ObjectSize(24, 0)
+    size: new $.ObjectSize(24, 0),
   };
   get a(): TestNewUnionVersion_A {
     $.utils.testWhich("a", $.utils.getUint16(0, this), 0, this);
@@ -3455,9 +3363,7 @@ export class TestNewUnionVersion extends $.Struct {
     $.utils.setUint16(0, 1, this);
     $.utils.setUint64(8, value, this);
   }
-  toString(): string {
-    return "TestNewUnionVersion_" + super.toString();
-  }
+  toString(): string { return "TestNewUnionVersion_" + super.toString(); }
   which(): TestNewUnionVersion_Which {
     return $.utils.getUint16(0, this) as TestNewUnionVersion_Which;
   }
@@ -3466,7 +3372,7 @@ export class TestStructUnion_SomeStruct extends $.Struct {
   static readonly _capnp = {
     displayName: "SomeStruct",
     id: "9daec9823f171085",
-    size: new $.ObjectSize(0, 2)
+    size: new $.ObjectSize(0, 2),
   };
   get someText(): string {
     return $.utils.getText(0, this);
@@ -3480,9 +3386,7 @@ export class TestStructUnion_SomeStruct extends $.Struct {
   set moreText(value: string) {
     $.utils.setText(1, value, this);
   }
-  toString(): string {
-    return "TestStructUnion_SomeStruct_" + super.toString();
-  }
+  toString(): string { return "TestStructUnion_SomeStruct_" + super.toString(); }
 }
 export const TestStructUnion_Un_Which = {
   STRUCT: 0,
@@ -3495,7 +3399,7 @@ export class TestStructUnion_Un extends $.Struct {
   static readonly _capnp = {
     displayName: "un",
     id: "992edc677bef5a3c",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   _adoptStruct(value: $.Orphan<TestStructUnion_SomeStruct>): void {
     $.utils.setUint16(0, 0, this);
@@ -3547,9 +3451,7 @@ export class TestStructUnion_Un extends $.Struct {
     $.utils.setUint16(0, 1, this);
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestStructUnion_Un_" + super.toString();
-  }
+  toString(): string { return "TestStructUnion_Un_" + super.toString(); }
   which(): TestStructUnion_Un_Which {
     return $.utils.getUint16(0, this) as TestStructUnion_Un_Which;
   }
@@ -3559,7 +3461,7 @@ export class TestStructUnion extends $.Struct {
   static readonly _capnp = {
     displayName: "TestStructUnion",
     id: "faf781ef89a00e39",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get un(): TestStructUnion_Un {
     return $.utils.getAs(TestStructUnion_Un, this);
@@ -3567,15 +3469,13 @@ export class TestStructUnion extends $.Struct {
   _initUn(): TestStructUnion_Un {
     return $.utils.getAs(TestStructUnion_Un, this);
   }
-  toString(): string {
-    return "TestStructUnion_" + super.toString();
-  }
+  toString(): string { return "TestStructUnion_" + super.toString(); }
 }
 export class TestPrintInlineStructs_InlineStruct extends $.Struct {
   static readonly _capnp = {
     displayName: "InlineStruct",
     id: "8e4936003708dac2",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get int32Field(): number {
     return $.utils.getInt32(0, this);
@@ -3589,16 +3489,14 @@ export class TestPrintInlineStructs_InlineStruct extends $.Struct {
   set textField(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestPrintInlineStructs_InlineStruct_" + super.toString();
-  }
+  toString(): string { return "TestPrintInlineStructs_InlineStruct_" + super.toString(); }
 }
 export class TestPrintInlineStructs extends $.Struct {
   static readonly InlineStruct = TestPrintInlineStructs_InlineStruct;
   static readonly _capnp = {
     displayName: "TestPrintInlineStructs",
     id: "dec497819d097c3c",
-    size: new $.ObjectSize(0, 2)
+    size: new $.ObjectSize(0, 2),
   };
   static _StructList: $.ListCtor<TestPrintInlineStructs_InlineStruct>;
   get someText(): string {
@@ -3625,14 +3523,13 @@ export class TestPrintInlineStructs extends $.Struct {
   set structList(value: $.List<TestPrintInlineStructs_InlineStruct>) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "TestPrintInlineStructs_" + super.toString();
-  }
+  toString(): string { return "TestPrintInlineStructs_" + super.toString(); }
 }
 /**
 * At one point, these failed to compile in C++ because it would produce literals like "123f",
 * which is not valid; it needs to be "123.0f".
-* */
+*
+*/
 export class TestWholeFloatDefault extends $.Struct {
   static readonly CONSTANT = 456;
   static readonly BIG_CONSTANT = 4.000000060189865e+30;
@@ -3655,15 +3552,13 @@ export class TestWholeFloatDefault extends $.Struct {
   set bigField(value: number) {
     $.utils.setFloat32(4, value, this, TestWholeFloatDefault._capnp.defaultBigField);
   }
-  toString(): string {
-    return "TestWholeFloatDefault_" + super.toString();
-  }
+  toString(): string { return "TestWholeFloatDefault_" + super.toString(); }
 }
 export class TestGenerics_Inner extends $.Struct {
   static readonly _capnp = {
     displayName: "Inner",
     id: "f6a841117e19ac73",
-    size: new $.ObjectSize(0, 2)
+    size: new $.ObjectSize(0, 2),
   };
   _adoptFoo(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -3695,29 +3590,23 @@ export class TestGenerics_Inner extends $.Struct {
   set bar(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "TestGenerics_Inner_" + super.toString();
-  }
+  toString(): string { return "TestGenerics_Inner_" + super.toString(); }
 }
 export class TestGenerics_Inner2_DeepNest_DeepNestInterface_Call$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "call$Params",
     id: "b84eecc799437049",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestGenerics_Inner2_DeepNest_DeepNestInterface_Call$Params_" + super.toString();
-  }
+  toString(): string { return "TestGenerics_Inner2_DeepNest_DeepNestInterface_Call$Params_" + super.toString(); }
 }
 export class TestGenerics_Inner2_DeepNest_DeepNestInterface_Call$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "call$Results",
     id: "e080f0fc54614f6f",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestGenerics_Inner2_DeepNest_DeepNestInterface_Call$Results_" + super.toString();
-  }
+  toString(): string { return "TestGenerics_Inner2_DeepNest_DeepNestInterface_Call$Results_" + super.toString(); }
 }
 export class TestGenerics_Inner2_DeepNest_DeepNestInterface_Call$Results$Promise {
   pipeline: $.Pipeline<any, any, TestGenerics_Inner2_DeepNest_DeepNestInterface_Call$Results>;
@@ -3770,29 +3659,30 @@ export class TestGenerics_Inner2_DeepNest_DeepNestInterface$Server extends $.Ser
     ]);
     this.target = target;
   }
-  client(): TestGenerics_Inner2_DeepNest_DeepNestInterface$Client { return new TestGenerics_Inner2_DeepNest_DeepNestInterface$Client(this); }
+  client(): TestGenerics_Inner2_DeepNest_DeepNestInterface$Client {
+    return new TestGenerics_Inner2_DeepNest_DeepNestInterface$Client(this);
+  }
 }
 /**
 * At one time this failed to compile.
-* */
+*
+*/
 export class TestGenerics_Inner2_DeepNest_DeepNestInterface extends $.Interface {
   static readonly Client = TestGenerics_Inner2_DeepNest_DeepNestInterface$Client;
   static readonly Server = TestGenerics_Inner2_DeepNest_DeepNestInterface$Server;
   static readonly _capnp = {
     displayName: "DeepNestInterface",
     id: "8839ed86c9794287",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestGenerics_Inner2_DeepNest_DeepNestInterface_" + super.toString();
-  }
+  toString(): string { return "TestGenerics_Inner2_DeepNest_DeepNestInterface_" + super.toString(); }
 }
 export class TestGenerics_Inner2_DeepNest extends $.Struct {
   static readonly DeepNestInterface = TestGenerics_Inner2_DeepNest_DeepNestInterface;
   static readonly _capnp = {
     displayName: "DeepNest",
     id: "b6a0829c762b06f3",
-    size: new $.ObjectSize(0, 4)
+    size: new $.ObjectSize(0, 4),
   };
   _adoptFoo(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -3854,16 +3744,14 @@ export class TestGenerics_Inner2_DeepNest extends $.Struct {
   set qux(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(3, this));
   }
-  toString(): string {
-    return "TestGenerics_Inner2_DeepNest_" + super.toString();
-  }
+  toString(): string { return "TestGenerics_Inner2_DeepNest_" + super.toString(); }
 }
 export class TestGenerics_Inner2 extends $.Struct {
   static readonly DeepNest = TestGenerics_Inner2_DeepNest;
   static readonly _capnp = {
     displayName: "Inner2",
     id: "a9ab42b118d6d435",
-    size: new $.ObjectSize(0, 4)
+    size: new $.ObjectSize(0, 4),
   };
   _adoptBar(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -3931,15 +3819,13 @@ export class TestGenerics_Inner2 extends $.Struct {
   set innerUnbound(value: TestGenerics_Inner) {
     $.utils.copyFrom(value, $.utils.getPointer(3, this));
   }
-  toString(): string {
-    return "TestGenerics_Inner2_" + super.toString();
-  }
+  toString(): string { return "TestGenerics_Inner2_" + super.toString(); }
 }
 export class TestGenerics_Interface_Call$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "call$Results",
     id: "a5b46224e33581ad",
-    size: new $.ObjectSize(0, 2)
+    size: new $.ObjectSize(0, 2),
   };
   _adoptQux(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -3974,9 +3860,7 @@ export class TestGenerics_Interface_Call$Results extends $.Struct {
   set gen(value: TestGenerics) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "TestGenerics_Interface_Call$Results_" + super.toString();
-  }
+  toString(): string { return "TestGenerics_Interface_Call$Results_" + super.toString(); }
 }
 export class TestGenerics_Interface_Call$Results$Promise {
   pipeline: $.Pipeline<any, any, TestGenerics_Interface_Call$Results>;
@@ -4029,7 +3913,9 @@ export class TestGenerics_Interface$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): TestGenerics_Interface$Client { return new TestGenerics_Interface$Client(this); }
+  client(): TestGenerics_Interface$Client {
+    return new TestGenerics_Interface$Client(this);
+  }
 }
 export class TestGenerics_Interface extends $.Interface {
   static readonly Client = TestGenerics_Interface$Client;
@@ -4037,17 +3923,15 @@ export class TestGenerics_Interface extends $.Interface {
   static readonly _capnp = {
     displayName: "Interface",
     id: "c9e749e8dd54da5c",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestGenerics_Interface_" + super.toString();
-  }
+  toString(): string { return "TestGenerics_Interface_" + super.toString(); }
 }
 export class TestGenerics_UseAliases extends $.Struct {
   static readonly _capnp = {
     displayName: "UseAliases",
     id: "8e656edfb45ba6cf",
-    size: new $.ObjectSize(0, 6)
+    size: new $.ObjectSize(0, 6),
   };
   _adoptFoo(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -4151,15 +4035,13 @@ export class TestGenerics_UseAliases extends $.Struct {
   set revFoo(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(5, this));
   }
-  toString(): string {
-    return "TestGenerics_UseAliases_" + super.toString();
-  }
+  toString(): string { return "TestGenerics_UseAliases_" + super.toString(); }
 }
 export class TestGenerics_Ug extends $.Struct {
   static readonly _capnp = {
     displayName: "ug",
     id: "b46a779beaf3384e",
-    size: new $.ObjectSize(8, 2)
+    size: new $.ObjectSize(8, 2),
   };
   get ugfoo(): number {
     return $.utils.getInt32(4, this);
@@ -4167,9 +4049,7 @@ export class TestGenerics_Ug extends $.Struct {
   set ugfoo(value: number) {
     $.utils.setInt32(4, value, this);
   }
-  toString(): string {
-    return "TestGenerics_Ug_" + super.toString();
-  }
+  toString(): string { return "TestGenerics_Ug_" + super.toString(); }
 }
 export const TestGenerics_Which = {
   UV: 0,
@@ -4186,7 +4066,7 @@ export class TestGenerics extends $.Struct {
   static readonly _capnp = {
     displayName: "TestGenerics",
     id: "9d5b8cd8de9922eb",
-    size: new $.ObjectSize(8, 2)
+    size: new $.ObjectSize(8, 2),
   };
   _adoptFoo(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -4241,9 +4121,7 @@ export class TestGenerics extends $.Struct {
   set ug(_: true) {
     $.utils.setUint16(0, 1, this);
   }
-  toString(): string {
-    return "TestGenerics_" + super.toString();
-  }
+  toString(): string { return "TestGenerics_" + super.toString(); }
   which(): TestGenerics_Which {
     return $.utils.getUint16(0, this) as TestGenerics_Which;
   }
@@ -4252,7 +4130,7 @@ export class TestGenericsWrapper extends $.Struct {
   static readonly _capnp = {
     displayName: "TestGenericsWrapper",
     id: "a9b2b1f52dde845d",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   _adoptValue(value: $.Orphan<TestGenerics>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -4272,15 +4150,13 @@ export class TestGenericsWrapper extends $.Struct {
   set value(value: TestGenerics) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestGenericsWrapper_" + super.toString();
-  }
+  toString(): string { return "TestGenericsWrapper_" + super.toString(); }
 }
 export class TestGenericsWrapper2 extends $.Struct {
   static readonly _capnp = {
     displayName: "TestGenericsWrapper2",
     id: "f28f83667a557a04",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   _adoptValue(value: $.Orphan<TestGenericsWrapper>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -4300,15 +4176,13 @@ export class TestGenericsWrapper2 extends $.Struct {
   set value(value: TestGenericsWrapper) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestGenericsWrapper2_" + super.toString();
-  }
+  toString(): string { return "TestGenericsWrapper2_" + super.toString(); }
 }
 export class TestImplicitMethodParams_Call$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "call$Params",
     id: "f83f8caf54bdc486",
-    size: new $.ObjectSize(0, 2)
+    size: new $.ObjectSize(0, 2),
   };
   _adoptFoo(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -4340,9 +4214,7 @@ export class TestImplicitMethodParams_Call$Params extends $.Struct {
   set bar(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "TestImplicitMethodParams_Call$Params_" + super.toString();
-  }
+  toString(): string { return "TestImplicitMethodParams_Call$Params_" + super.toString(); }
 }
 export class TestGenerics$Promise {
   pipeline: $.Pipeline<any, any, TestGenerics>;
@@ -4395,7 +4267,9 @@ export class TestImplicitMethodParams$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): TestImplicitMethodParams$Client { return new TestImplicitMethodParams$Client(this); }
+  client(): TestImplicitMethodParams$Client {
+    return new TestImplicitMethodParams$Client(this);
+  }
 }
 export class TestImplicitMethodParams extends $.Interface {
   static readonly Client = TestImplicitMethodParams$Client;
@@ -4403,17 +4277,15 @@ export class TestImplicitMethodParams extends $.Interface {
   static readonly _capnp = {
     displayName: "TestImplicitMethodParams",
     id: "8b9717a3f8d85a9a",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestImplicitMethodParams_" + super.toString();
-  }
+  toString(): string { return "TestImplicitMethodParams_" + super.toString(); }
 }
 export class TestImplicitMethodParamsInGeneric_Call$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "call$Params",
     id: "9aab8e25c808d71e",
-    size: new $.ObjectSize(0, 2)
+    size: new $.ObjectSize(0, 2),
   };
   _adoptFoo(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -4445,9 +4317,7 @@ export class TestImplicitMethodParamsInGeneric_Call$Params extends $.Struct {
   set bar(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "TestImplicitMethodParamsInGeneric_Call$Params_" + super.toString();
-  }
+  toString(): string { return "TestImplicitMethodParamsInGeneric_Call$Params_" + super.toString(); }
 }
 export class TestImplicitMethodParamsInGeneric$Client {
   client: $.Client;
@@ -4491,7 +4361,9 @@ export class TestImplicitMethodParamsInGeneric$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): TestImplicitMethodParamsInGeneric$Client { return new TestImplicitMethodParamsInGeneric$Client(this); }
+  client(): TestImplicitMethodParamsInGeneric$Client {
+    return new TestImplicitMethodParamsInGeneric$Client(this);
+  }
 }
 export class TestImplicitMethodParamsInGeneric extends $.Interface {
   static readonly Client = TestImplicitMethodParamsInGeneric$Client;
@@ -4499,11 +4371,9 @@ export class TestImplicitMethodParamsInGeneric extends $.Interface {
   static readonly _capnp = {
     displayName: "TestImplicitMethodParamsInGeneric",
     id: "df9ccdeb81a704c9",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestImplicitMethodParamsInGeneric_" + super.toString();
-  }
+  toString(): string { return "TestImplicitMethodParamsInGeneric_" + super.toString(); }
 }
 export const TestGenericsUnion_Which = {
   FOO: 0,
@@ -4512,14 +4382,15 @@ export const TestGenericsUnion_Which = {
 export type TestGenericsUnion_Which = (typeof TestGenericsUnion_Which)[keyof typeof TestGenericsUnion_Which];
 /**
 * At one point this failed to compile.
-* */
+*
+*/
 export class TestGenericsUnion extends $.Struct {
   static readonly FOO = TestGenericsUnion_Which.FOO;
   static readonly BAR = TestGenericsUnion_Which.BAR;
   static readonly _capnp = {
     displayName: "TestGenericsUnion",
     id: "a54870440e919063",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   _adoptFoo(value: $.Orphan<$.Pointer>): void {
     $.utils.setUint16(0, 0, this);
@@ -4563,9 +4434,7 @@ export class TestGenericsUnion extends $.Struct {
     $.utils.setUint16(0, 1, this);
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestGenericsUnion_" + super.toString();
-  }
+  toString(): string { return "TestGenericsUnion_" + super.toString(); }
   which(): TestGenericsUnion_Which {
     return $.utils.getUint16(0, this) as TestGenericsUnion_Which;
   }
@@ -4575,18 +4444,18 @@ export class TestUseGenerics extends $.Struct {
     displayName: "TestUseGenerics",
     id: "9427b2a71030338f",
     size: new $.ObjectSize(0, 20),
-    defaultDefault: $.readRawPointer(new Uint8Array([0x10, 0x3f, 0x50, 0x01, 0x02, 0x00, 0x00, 0x51, 0x04, 0x06, 0x14, 0x51, 0x68, 0x01, 0x02, 0x04, 0x7b, 0x00, 0x19, 0x11, 0x05, 0x2a, 0x51, 0x04, 0x01, 0x02, 0x0f, 0x74, 0x65, 0x78, 0x74, 0x00, 0x00, 0x51, 0x04, 0x06, 0x14, 0x00, 0x00, 0x0c, 0x41, 0x01, 0x00, 0x18]).buffer),
-    defaultDefaultInner: $.readRawPointer(new Uint8Array([0x10, 0x1e, 0x40, 0x02, 0x51, 0x04, 0x06, 0x14, 0x11, 0x69, 0x2a, 0x04, 0x7b, 0x00, 0x18, 0x0f, 0x74, 0x65, 0x78, 0x74]).buffer),
-    defaultDefaultUser: $.readRawPointer(new Uint8Array([0x10, 0x32, 0x40, 0x14, 0x51, 0x4c, 0x01, 0x02, 0x00, 0x13, 0x51, 0x04, 0x06, 0x14, 0x00, 0x00, 0x04, 0x7b, 0x00, 0x18]).buffer),
-    defaultDefaultWrapper: $.readRawPointer(new Uint8Array([0x10, 0x23, 0x40, 0x01, 0x50, 0x01, 0x02, 0x00, 0x00, 0x11, 0x05, 0x2a, 0x51, 0x04, 0x01, 0x02, 0x0f, 0x74, 0x65, 0x78, 0x74, 0x00, 0x00, 0x51, 0x04, 0x06, 0x14, 0x00, 0x00, 0x0c, 0x41, 0x01, 0x00, 0x18]).buffer),
-    defaultDefaultWrapper2: $.readRawPointer(new Uint8Array([0x10, 0x24, 0x40, 0x01, 0x40, 0x01, 0x50, 0x01, 0x02, 0x00, 0x00, 0x11, 0x05, 0x2a, 0x51, 0x04, 0x01, 0x02, 0x0f, 0x74, 0x65, 0x78, 0x74, 0x00, 0x00, 0x51, 0x04, 0x06, 0x14, 0x00, 0x00, 0x0c, 0x41, 0x01, 0x00, 0x18]).buffer),
-    defaultAliasFoo: $.readRawPointer(new Uint8Array([0x10, 0x1b, 0x50, 0x06, 0x14, 0x04, 0x7b, 0x00, 0x18]).buffer),
-    defaultAliasInner: $.readRawPointer(new Uint8Array([0x10, 0x1d, 0x40, 0x02, 0x51, 0x04, 0x06, 0x14, 0x00, 0x00, 0x04, 0x7b, 0x00, 0x18]).buffer),
-    defaultAliasInner2: $.readRawPointer(new Uint8Array([0x10, 0x21, 0x40, 0x04, 0x00, 0x01, 0x41, 0x04, 0x02, 0x00, 0x00, 0x51, 0x04, 0x06, 0x14, 0x00, 0x00, 0x04, 0x7b, 0x00, 0x18]).buffer),
-    defaultAliasInner2Bind: $.readRawPointer(new Uint8Array([0x10, 0x22, 0x40, 0x04, 0x00, 0x00, 0x11, 0x09, 0x14, 0x41, 0x08, 0x02, 0x00, 0x00, 0x11, 0x0c, 0x22, 0x51, 0x04, 0x06, 0x14, 0x00, 0x00, 0x04, 0x7b, 0x00, 0x18]).buffer),
-    defaultAliasInner2Text: $.readRawPointer(new Uint8Array([0x10, 0x22, 0x40, 0x04, 0x00, 0x00, 0x11, 0x09, 0x2a, 0x41, 0x08, 0x02, 0x00, 0x00, 0x0f, 0x74, 0x65, 0x78, 0x74, 0x51, 0x04, 0x06, 0x14, 0x00, 0x00, 0x04, 0x7b, 0x00, 0x18]).buffer),
+    defaultDefault: $.readRawPointer(new Uint8Array([16, 63, 80, 1, 2, 0, 0, 81, 4, 6, 20, 81, 104, 1, 2, 4, 123, 0, 25, 17, 5, 42, 81, 4, 1, 2, 15, 116, 101, 120, 116, 0, 0, 81, 4, 6, 20, 0, 0, 12, 65, 1, 0, 24]).buffer),
+    defaultDefaultInner: $.readRawPointer(new Uint8Array([16, 30, 64, 2, 81, 4, 6, 20, 17, 105, 42, 4, 123, 0, 24, 15, 116, 101, 120, 116]).buffer),
+    defaultDefaultUser: $.readRawPointer(new Uint8Array([16, 50, 64, 20, 81, 76, 1, 2, 0, 19, 81, 4, 6, 20, 0, 0, 4, 123, 0, 24]).buffer),
+    defaultDefaultWrapper: $.readRawPointer(new Uint8Array([16, 35, 64, 1, 80, 1, 2, 0, 0, 17, 5, 42, 81, 4, 1, 2, 15, 116, 101, 120, 116, 0, 0, 81, 4, 6, 20, 0, 0, 12, 65, 1, 0, 24]).buffer),
+    defaultDefaultWrapper2: $.readRawPointer(new Uint8Array([16, 36, 64, 1, 64, 1, 80, 1, 2, 0, 0, 17, 5, 42, 81, 4, 1, 2, 15, 116, 101, 120, 116, 0, 0, 81, 4, 6, 20, 0, 0, 12, 65, 1, 0, 24]).buffer),
+    defaultAliasFoo: $.readRawPointer(new Uint8Array([16, 27, 80, 6, 20, 4, 123, 0, 24]).buffer),
+    defaultAliasInner: $.readRawPointer(new Uint8Array([16, 29, 64, 2, 81, 4, 6, 20, 0, 0, 4, 123, 0, 24]).buffer),
+    defaultAliasInner2: $.readRawPointer(new Uint8Array([16, 33, 64, 4, 0, 1, 65, 4, 2, 0, 0, 81, 4, 6, 20, 0, 0, 4, 123, 0, 24]).buffer),
+    defaultAliasInner2Bind: $.readRawPointer(new Uint8Array([16, 34, 64, 4, 0, 0, 17, 9, 20, 65, 8, 2, 0, 0, 17, 12, 34, 81, 4, 6, 20, 0, 0, 4, 123, 0, 24]).buffer),
+    defaultAliasInner2Text: $.readRawPointer(new Uint8Array([16, 34, 64, 4, 0, 0, 17, 9, 42, 65, 8, 2, 0, 0, 15, 116, 101, 120, 116, 81, 4, 6, 20, 0, 0, 4, 123, 0, 24]).buffer),
     defaultAliasRev: "text",
-    defaultUseAliases: $.readRawPointer(new Uint8Array([0x10, 0xa1, 0x40, 0x06, 0x51, 0x14, 0x06, 0x14, 0x41, 0x78, 0x02, 0x41, 0xe4, 0x04, 0x43, 0x60, 0x01, 0x04, 0x43, 0xe0, 0x01, 0x04, 0x13, 0x61, 0x02, 0x1c, 0x04, 0x7b, 0x00, 0x18, 0x51, 0x04, 0x06, 0x14, 0x00, 0x00, 0x04, 0x7b, 0x00, 0x1a, 0x41, 0x04, 0x02, 0x00, 0x00, 0x51, 0x04, 0x06, 0x14, 0x00, 0x00, 0x04, 0x7b, 0x00, 0x19, 0x11, 0x09, 0x2a, 0x41, 0x08, 0x02, 0x00, 0x00, 0x0f, 0x74, 0x65, 0x78, 0x74, 0x51, 0x04, 0x06, 0x14, 0x00, 0x00, 0x04, 0x7b, 0x00, 0x19, 0x11, 0x09, 0x2a, 0x41, 0x08, 0x02, 0x00, 0x00, 0x0f, 0x74, 0x65, 0x78, 0x74, 0x51, 0x04, 0x06, 0x14, 0x00, 0x00, 0x04, 0x7b, 0x00, 0x18, 0x11, 0x0c, 0x22, 0x01, 0x38]).buffer)
+    defaultUseAliases: $.readRawPointer(new Uint8Array([16, 161, 64, 6, 81, 20, 6, 20, 65, 120, 2, 65, 228, 4, 67, 96, 1, 4, 67, 224, 1, 4, 19, 97, 2, 28, 4, 123, 0, 24, 81, 4, 6, 20, 0, 0, 4, 123, 0, 26, 65, 4, 2, 0, 0, 81, 4, 6, 20, 0, 0, 4, 123, 0, 25, 17, 9, 42, 65, 8, 2, 0, 0, 15, 116, 101, 120, 116, 81, 4, 6, 20, 0, 0, 4, 123, 0, 25, 17, 9, 42, 65, 8, 2, 0, 0, 15, 116, 101, 120, 116, 81, 4, 6, 20, 0, 0, 4, 123, 0, 24, 17, 12, 34, 1, 56]).buffer)
   };
   _adoptBasic(value: $.Orphan<TestGenerics>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -4924,19 +4793,15 @@ export class TestUseGenerics extends $.Struct {
   set useAliases(value: TestGenerics_UseAliases) {
     $.utils.copyFrom(value, $.utils.getPointer(17, this));
   }
-  toString(): string {
-    return "TestUseGenerics_" + super.toString();
-  }
+  toString(): string { return "TestUseGenerics_" + super.toString(); }
 }
 export class TestEmptyStruct extends $.Struct {
   static readonly _capnp = {
     displayName: "TestEmptyStruct",
     id: "c5598844441096dc",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestEmptyStruct_" + super.toString();
-  }
+  toString(): string { return "TestEmptyStruct_" + super.toString(); }
 }
 export class TestConstants extends $.Struct {
   static readonly VOID_CONST = undefined;
@@ -4952,39 +4817,37 @@ export class TestConstants extends $.Struct {
   static readonly FLOAT32CONST = 1234.5;
   static readonly FLOAT64CONST = -1.23e+47;
   static readonly TEXT_CONST = "foo";
-  static readonly DATA_CONST = $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x1a, 0x07, 0x62, 0x61, 0x72]).buffer);
-  static readonly STRUCT_CONST = $.readRawPointer(new Uint8Array([0x10, 0xd0, 0x50, 0x06, 0x14, 0xff, 0x01, 0xf4, 0x80, 0x0d, 0x0e, 0x10, 0x4c, 0xfb, 0x00, 0x3f, 0x4e, 0x73, 0xe8, 0x38, 0xa6, 0x33, 0xfd, 0x5a, 0xd2, 0x04, 0x14, 0x88, 0x62, 0x03, 0xff, 0xd2, 0x0a, 0x6f, 0x12, 0x21, 0x19, 0xcc, 0x04, 0x00, 0x1f, 0x5f, 0x70, 0x09, 0xaf, 0x02, 0xe0, 0x90, 0x75, 0x40, 0x11, 0x4d, 0x22, 0x11, 0x4d, 0x1a, 0x51, 0x4c, 0x06, 0x14, 0x13, 0x25, 0x01, 0x18, 0x13, 0x21, 0x01, 0x29, 0x13, 0x21, 0x01, 0x22, 0x13, 0x21, 0x01, 0x23, 0x13, 0x21, 0x01, 0x24, 0x13, 0x25, 0x01, 0x25, 0x13, 0x31, 0x01, 0x22, 0x13, 0x31, 0x01, 0x23, 0x13, 0x31, 0x01, 0x24, 0x13, 0x35, 0x01, 0x25, 0x13, 0x41, 0x01, 0x34, 0x13, 0x49, 0x01, 0x35, 0x13, 0x5d, 0x01, 0x1e, 0x13, 0x71, 0x01, 0x1e, 0x33, 0x85, 0x01, 0x77, 0x02, 0x13, 0xd5, 0x02, 0x1b, 0x00, 0x00, 0x07, 0x62, 0x61, 0x7a, 0x07, 0x71, 0x75, 0x78, 0x00, 0x05, 0x11, 0x4d, 0x3a, 0x00, 0x00, 0x51, 0x48, 0x06, 0x14, 0x00, 0x10, 0x3f, 0x6e, 0x65, 0x73, 0x74, 0x65, 0x64, 0x00, 0x05, 0x11, 0x4d, 0x72, 0x00, 0x12, 0xff, 0x72, 0x65, 0x61, 0x6c, 0x6c, 0x79, 0x20, 0x6e, 0x00, 0x1f, 0x65, 0x73, 0x74, 0x65, 0x64, 0x01, 0x1a, 0x0f, 0x0c, 0xde, 0x80, 0x7f, 0xef, 0xd2, 0x04, 0xd2, 0xe9, 0x80, 0xff, 0x7f, 0xf7, 0x4e, 0x61, 0xbc, 0x40, 0xd3, 0xa0, 0xfa, 0xf8, 0x80, 0xff, 0xff, 0xff, 0x7f, 0x3f, 0x79, 0xdf, 0x0d, 0x86, 0x48, 0x70, 0xff, 0x2e, 0x75, 0x13, 0xfd, 0x8a, 0x96, 0xfd, 0xff, 0x00, 0x80, 0x80, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f, 0x00, 0x0b, 0x0c, 0x22, 0xff, 0xcf, 0xd2, 0x04, 0x2e, 0x16, 0xff, 0xff, 0xf7, 0x4e, 0x61, 0xbc, 0xc0, 0x2c, 0x5f, 0x05, 0xf0, 0xff, 0xff, 0xff, 0xff, 0x3f, 0x79, 0xdf, 0x0d, 0x86, 0x48, 0x70, 0x7f, 0xd2, 0x8a, 0xec, 0x02, 0x75, 0x69, 0x02, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0xf0, 0x38, 0xb4, 0x96, 0x49, 0xff, 0xc2, 0xbd, 0xf0, 0x7c, 0xc2, 0xbd, 0xf0, 0xfc, 0x01, 0xea, 0x1c, 0x08, 0x02, 0xea, 0x1c, 0x08, 0x82, 0x00, 0x00, 0xff, 0x40, 0xde, 0x77, 0x83, 0x21, 0x12, 0xdc, 0x42, 0x04, 0x29, 0x90, 0x23, 0xca, 0xe5, 0xc8, 0x76, 0x7f, 0x29, 0x90, 0x23, 0xca, 0xe5, 0xc8, 0x76, 0xff, 0x91, 0xf7, 0x50, 0x37, 0x9e, 0x78, 0x66, 0x00, 0x91, 0xf7, 0x50, 0x37, 0x9e, 0x78, 0x66, 0x80, 0x11, 0x09, 0x2a, 0x11, 0x09, 0x32, 0x11, 0x09, 0x3a, 0x0f, 0x71, 0x75, 0x75, 0x78, 0x1f, 0x63, 0x6f, 0x72, 0x67, 0x65, 0x3f, 0x67, 0x72, 0x61, 0x75, 0x6c, 0x74, 0x11, 0x09, 0x32, 0x11, 0x09, 0x2a, 0x11, 0x09, 0x22, 0x3f, 0x67, 0x61, 0x72, 0x70, 0x6c, 0x79, 0x1f, 0x77, 0x61, 0x6c, 0x64, 0x6f, 0x0f, 0x66, 0x72, 0x65, 0x64, 0x51, 0x0c, 0x06, 0x14, 0x00, 0x05, 0x13, 0x1d, 0x01, 0x7a, 0x00, 0x18, 0x11, 0xbd, 0x7a, 0x00, 0x18, 0x11, 0x5d, 0x7a, 0x00, 0x12, 0xff, 0x78, 0x20, 0x73, 0x74, 0x72, 0x75, 0x63, 0x74, 0x00, 0x3f, 0x6c, 0x69, 0x73, 0x74, 0x20, 0x31, 0xff, 0x78, 0x20, 0x73, 0x74, 0x72, 0x75, 0x63, 0x74, 0x00, 0x3f, 0x6c, 0x69, 0x73, 0x74, 0x20, 0x32, 0xff, 0x78, 0x20, 0x73, 0x74, 0x72, 0x75, 0x63, 0x74, 0x00, 0x3f, 0x6c, 0x69, 0x73, 0x74, 0x20, 0x33, 0x15, 0x03, 0x01, 0x06]).buffer);
+  static readonly DATA_CONST = $.readRawPointer(new Uint8Array([16, 2, 17, 1, 26, 7, 98, 97, 114]).buffer);
+  static readonly STRUCT_CONST = $.readRawPointer(new Uint8Array([16, 208, 80, 6, 20, 255, 1, 244, 128, 13, 14, 16, 76, 251, 0, 63, 78, 115, 232, 56, 166, 51, 253, 90, 210, 4, 20, 136, 98, 3, 255, 210, 10, 111, 18, 33, 25, 204, 4, 0, 31, 95, 112, 9, 175, 2, 224, 144, 117, 64, 17, 77, 34, 17, 77, 26, 81, 76, 6, 20, 19, 37, 1, 24, 19, 33, 1, 41, 19, 33, 1, 34, 19, 33, 1, 35, 19, 33, 1, 36, 19, 37, 1, 37, 19, 49, 1, 34, 19, 49, 1, 35, 19, 49, 1, 36, 19, 53, 1, 37, 19, 65, 1, 52, 19, 73, 1, 53, 19, 93, 1, 30, 19, 113, 1, 30, 51, 133, 1, 119, 2, 19, 213, 2, 27, 0, 0, 7, 98, 97, 122, 7, 113, 117, 120, 0, 5, 17, 77, 58, 0, 0, 81, 72, 6, 20, 0, 16, 63, 110, 101, 115, 116, 101, 100, 0, 5, 17, 77, 114, 0, 18, 255, 114, 101, 97, 108, 108, 121, 32, 110, 0, 31, 101, 115, 116, 101, 100, 1, 26, 15, 12, 222, 128, 127, 239, 210, 4, 210, 233, 128, 255, 127, 247, 78, 97, 188, 64, 211, 160, 250, 248, 128, 255, 255, 255, 127, 63, 121, 223, 13, 134, 72, 112, 255, 46, 117, 19, 253, 138, 150, 253, 255, 0, 128, 128, 255, 255, 255, 255, 255, 255, 255, 255, 127, 0, 11, 12, 34, 255, 207, 210, 4, 46, 22, 255, 255, 247, 78, 97, 188, 192, 44, 95, 5, 240, 255, 255, 255, 255, 63, 121, 223, 13, 134, 72, 112, 127, 210, 138, 236, 2, 117, 105, 2, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 240, 56, 180, 150, 73, 255, 194, 189, 240, 124, 194, 189, 240, 252, 1, 234, 28, 8, 2, 234, 28, 8, 130, 0, 0, 255, 64, 222, 119, 131, 33, 18, 220, 66, 4, 41, 144, 35, 202, 229, 200, 118, 127, 41, 144, 35, 202, 229, 200, 118, 255, 145, 247, 80, 55, 158, 120, 102, 0, 145, 247, 80, 55, 158, 120, 102, 128, 17, 9, 42, 17, 9, 50, 17, 9, 58, 15, 113, 117, 117, 120, 31, 99, 111, 114, 103, 101, 63, 103, 114, 97, 117, 108, 116, 17, 9, 50, 17, 9, 42, 17, 9, 34, 63, 103, 97, 114, 112, 108, 121, 31, 119, 97, 108, 100, 111, 15, 102, 114, 101, 100, 81, 12, 6, 20, 0, 5, 19, 29, 1, 122, 0, 24, 17, 189, 122, 0, 24, 17, 93, 122, 0, 18, 255, 120, 32, 115, 116, 114, 117, 99, 116, 0, 63, 108, 105, 115, 116, 32, 49, 255, 120, 32, 115, 116, 114, 117, 99, 116, 0, 63, 108, 105, 115, 116, 32, 50, 255, 120, 32, 115, 116, 114, 117, 99, 116, 0, 63, 108, 105, 115, 116, 32, 51, 21, 3, 1, 6]).buffer);
   static readonly ENUM_CONST = 5;
-  static readonly VOID_LIST_CONST = $.readRawPointer(new Uint8Array([0x10, 0x01, 0x11, 0x01, 0x30]).buffer);
-  static readonly BOOL_LIST_CONST = $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x21, 0x01, 0x09]).buffer);
-  static readonly INT8LIST_CONST = $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x12, 0x03, 0x6f, 0x91]).buffer);
-  static readonly INT16LIST_CONST = $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x13, 0x0f, 0x67, 0x2b, 0x99, 0xd4]).buffer);
-  static readonly INT32LIST_CONST = $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x14, 0xff, 0xc7, 0x6b, 0x9f, 0x06, 0x39, 0x94, 0x60, 0xf9, 0x00]).buffer);
-  static readonly INT64LIST_CONST = $.readRawPointer(new Uint8Array([0x10, 0x03, 0x11, 0x01, 0x15, 0xff, 0xc7, 0x71, 0xc4, 0x2b, 0xab, 0x75, 0x6b, 0x0f, 0x01, 0x39, 0x8e, 0x3b, 0xd4, 0x54, 0x8a, 0x94, 0xf0]).buffer);
-  static readonly UINT8LIST_CONST = $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x12, 0x03, 0x6f, 0xde]).buffer);
-  static readonly UINT16LIST_CONST = $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x13, 0x0f, 0x35, 0x82, 0x9c, 0xad]).buffer);
-  static readonly UINT32LIST_CONST = $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x0c, 0x0f, 0x55, 0xa1, 0xae, 0xc6]).buffer);
-  static readonly UINT64LIST_CONST = $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x0d, 0xff, 0xc7, 0x71, 0xac, 0xb5, 0xaf, 0x98, 0x32, 0x9a, 0x00]).buffer);
-  static readonly FLOAT32LIST_CONST = $.readRawPointer(new Uint8Array([0x10, 0x03, 0x11, 0x01, 0x24, 0xce, 0x9c, 0xad, 0x45, 0x80, 0x7f, 0xcc, 0x80, 0xff, 0xc0, 0x7f]).buffer);
-  static readonly FLOAT64LIST_CONST = $.readRawPointer(new Uint8Array([0x10, 0x05, 0x11, 0x01, 0x25, 0xf0, 0xc0, 0x61, 0xbe, 0x40, 0xc0, 0xf0, 0x7f, 0xc0, 0xf0, 0xff, 0xc0, 0xf8, 0x7f]).buffer);
-  static readonly TEXT_LIST_CONST = $.readRawPointer(new Uint8Array([0x10, 0x07, 0x11, 0x01, 0x1e, 0x11, 0x09, 0x32, 0x11, 0x09, 0x32, 0x11, 0x09, 0x2a, 0x1f, 0x70, 0x6c, 0x75, 0x67, 0x68, 0x1f, 0x78, 0x79, 0x7a, 0x7a, 0x79, 0x0f, 0x74, 0x68, 0x75, 0x64]).buffer);
-  static readonly DATA_LIST_CONST = $.readRawPointer(new Uint8Array([0x10, 0x08, 0x11, 0x01, 0x1e, 0x11, 0x09, 0x22, 0x11, 0x09, 0x4a, 0x11, 0x0d, 0x3a, 0x0f, 0x6f, 0x6f, 0x70, 0x73, 0xff, 0x65, 0x78, 0x68, 0x61, 0x75, 0x73, 0x74, 0x65, 0x00, 0x01, 0x64, 0x7f, 0x72, 0x66, 0x63, 0x33, 0x30, 0x39, 0x32]).buffer);
-  static readonly STRUCT_LIST_CONST = $.readRawPointer(new Uint8Array([0x10, 0x56, 0x31, 0x01, 0x77, 0x02, 0x51, 0x0c, 0x06, 0x14, 0x00, 0x05, 0x13, 0x1d, 0x01, 0x6a, 0x00, 0x18, 0x11, 0xbd, 0x6a, 0x00, 0x18, 0x11, 0x5d, 0x6a, 0x00, 0x12, 0xff, 0x73, 0x74, 0x72, 0x75, 0x63, 0x74, 0x6c, 0x69, 0x00, 0x0f, 0x73, 0x74, 0x20, 0x31, 0xff, 0x73, 0x74, 0x72, 0x75, 0x63, 0x74, 0x6c, 0x69, 0x00, 0x0f, 0x73, 0x74, 0x20, 0x32, 0xff, 0x73, 0x74, 0x72, 0x75, 0x63, 0x74, 0x6c, 0x69, 0x00, 0x0f, 0x73, 0x74, 0x20, 0x33]).buffer);
-  static readonly ENUM_LIST_CONST = $.readRawPointer(new Uint8Array([0x10, 0x02, 0x11, 0x01, 0x13, 0x04, 0x07]).buffer);
+  static readonly VOID_LIST_CONST = $.readRawPointer(new Uint8Array([16, 1, 17, 1, 48]).buffer);
+  static readonly BOOL_LIST_CONST = $.readRawPointer(new Uint8Array([16, 2, 17, 1, 33, 1, 9]).buffer);
+  static readonly INT8LIST_CONST = $.readRawPointer(new Uint8Array([16, 2, 17, 1, 18, 3, 111, 145]).buffer);
+  static readonly INT16LIST_CONST = $.readRawPointer(new Uint8Array([16, 2, 17, 1, 19, 15, 103, 43, 153, 212]).buffer);
+  static readonly INT32LIST_CONST = $.readRawPointer(new Uint8Array([16, 2, 17, 1, 20, 255, 199, 107, 159, 6, 57, 148, 96, 249, 0]).buffer);
+  static readonly INT64LIST_CONST = $.readRawPointer(new Uint8Array([16, 3, 17, 1, 21, 255, 199, 113, 196, 43, 171, 117, 107, 15, 1, 57, 142, 59, 212, 84, 138, 148, 240]).buffer);
+  static readonly UINT8LIST_CONST = $.readRawPointer(new Uint8Array([16, 2, 17, 1, 18, 3, 111, 222]).buffer);
+  static readonly UINT16LIST_CONST = $.readRawPointer(new Uint8Array([16, 2, 17, 1, 19, 15, 53, 130, 156, 173]).buffer);
+  static readonly UINT32LIST_CONST = $.readRawPointer(new Uint8Array([16, 2, 17, 1, 12, 15, 85, 161, 174, 198]).buffer);
+  static readonly UINT64LIST_CONST = $.readRawPointer(new Uint8Array([16, 2, 17, 1, 13, 255, 199, 113, 172, 181, 175, 152, 50, 154, 0]).buffer);
+  static readonly FLOAT32LIST_CONST = $.readRawPointer(new Uint8Array([16, 3, 17, 1, 36, 206, 156, 173, 69, 128, 127, 204, 128, 255, 192, 127]).buffer);
+  static readonly FLOAT64LIST_CONST = $.readRawPointer(new Uint8Array([16, 5, 17, 1, 37, 240, 192, 97, 190, 64, 192, 240, 127, 192, 240, 255, 192, 248, 127]).buffer);
+  static readonly TEXT_LIST_CONST = $.readRawPointer(new Uint8Array([16, 7, 17, 1, 30, 17, 9, 50, 17, 9, 50, 17, 9, 42, 31, 112, 108, 117, 103, 104, 31, 120, 121, 122, 122, 121, 15, 116, 104, 117, 100]).buffer);
+  static readonly DATA_LIST_CONST = $.readRawPointer(new Uint8Array([16, 8, 17, 1, 30, 17, 9, 34, 17, 9, 74, 17, 13, 58, 15, 111, 111, 112, 115, 255, 101, 120, 104, 97, 117, 115, 116, 101, 0, 1, 100, 127, 114, 102, 99, 51, 48, 57, 50]).buffer);
+  static readonly STRUCT_LIST_CONST = $.readRawPointer(new Uint8Array([16, 86, 49, 1, 119, 2, 81, 12, 6, 20, 0, 5, 19, 29, 1, 106, 0, 24, 17, 189, 106, 0, 24, 17, 93, 106, 0, 18, 255, 115, 116, 114, 117, 99, 116, 108, 105, 0, 15, 115, 116, 32, 49, 255, 115, 116, 114, 117, 99, 116, 108, 105, 0, 15, 115, 116, 32, 50, 255, 115, 116, 114, 117, 99, 116, 108, 105, 0, 15, 115, 116, 32, 51]).buffer);
+  static readonly ENUM_LIST_CONST = $.readRawPointer(new Uint8Array([16, 2, 17, 1, 19, 4, 7]).buffer);
   static readonly _capnp = {
     displayName: "TestConstants",
     id: "abed745cd8c92095",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestConstants_" + super.toString();
-  }
+  toString(): string { return "TestConstants_" + super.toString(); }
 }
 export class TestAnyPointerConstants extends $.Struct {
   static readonly _capnp = {
     displayName: "TestAnyPointerConstants",
     id: "ddc280dbee9c99b3",
-    size: new $.ObjectSize(0, 4)
+    size: new $.ObjectSize(0, 4),
   };
   _adoptAnyKindAsStruct(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -5046,15 +4909,13 @@ export class TestAnyPointerConstants extends $.Struct {
   set anyListAsList(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(3, this));
   }
-  toString(): string {
-    return "TestAnyPointerConstants_" + super.toString();
-  }
+  toString(): string { return "TestAnyPointerConstants_" + super.toString(); }
 }
 export class TestInterface_Foo$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "foo$Params",
     id: "b874edc0d559b391",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   get i(): number {
     return $.utils.getUint32(0, this);
@@ -5068,15 +4929,13 @@ export class TestInterface_Foo$Params extends $.Struct {
   set j(value: boolean) {
     $.utils.setBit(32, value, this);
   }
-  toString(): string {
-    return "TestInterface_Foo$Params_" + super.toString();
-  }
+  toString(): string { return "TestInterface_Foo$Params_" + super.toString(); }
 }
 export class TestInterface_Foo$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "foo$Results",
     id: "b04fcaddab714ba4",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get x(): string {
     return $.utils.getText(0, this);
@@ -5084,9 +4943,7 @@ export class TestInterface_Foo$Results extends $.Struct {
   set x(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestInterface_Foo$Results_" + super.toString();
-  }
+  toString(): string { return "TestInterface_Foo$Results_" + super.toString(); }
 }
 export class TestInterface_Foo$Results$Promise {
   pipeline: $.Pipeline<any, any, TestInterface_Foo$Results>;
@@ -5101,21 +4958,17 @@ export class TestInterface_Bar$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "bar$Params",
     id: "d044893357b42568",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestInterface_Bar$Params_" + super.toString();
-  }
+  toString(): string { return "TestInterface_Bar$Params_" + super.toString(); }
 }
 export class TestInterface_Bar$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "bar$Results",
     id: "9bf141df4247d52f",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestInterface_Bar$Results_" + super.toString();
-  }
+  toString(): string { return "TestInterface_Bar$Results_" + super.toString(); }
 }
 export class TestInterface_Bar$Results$Promise {
   pipeline: $.Pipeline<any, any, TestInterface_Bar$Results>;
@@ -5130,7 +4983,7 @@ export class TestInterface_Baz$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "baz$Params",
     id: "d9ac8abb2a91cfbc",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   _adoptS(value: $.Orphan<TestAllTypes>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -5150,19 +5003,15 @@ export class TestInterface_Baz$Params extends $.Struct {
   set s(value: TestAllTypes) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestInterface_Baz$Params_" + super.toString();
-  }
+  toString(): string { return "TestInterface_Baz$Params_" + super.toString(); }
 }
 export class TestInterface_Baz$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "baz$Results",
     id: "9b99d14f2f375b2d",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestInterface_Baz$Results_" + super.toString();
-  }
+  toString(): string { return "TestInterface_Baz$Results_" + super.toString(); }
 }
 export class TestInterface_Baz$Results$Promise {
   pipeline: $.Pipeline<any, any, TestInterface_Baz$Results>;
@@ -5259,7 +5108,9 @@ export class TestInterface$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): TestInterface$Client { return new TestInterface$Client(this); }
+  client(): TestInterface$Client {
+    return new TestInterface$Client(this);
+  }
 }
 export class TestInterface extends $.Interface {
   static readonly Client = TestInterface$Client;
@@ -5267,31 +5118,25 @@ export class TestInterface extends $.Interface {
   static readonly _capnp = {
     displayName: "TestInterface",
     id: "88eb12a0e0af92b2",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestInterface_" + super.toString();
-  }
+  toString(): string { return "TestInterface_" + super.toString(); }
 }
 export class TestExtends_Qux$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "qux$Params",
     id: "83a4bc5471363f17",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestExtends_Qux$Params_" + super.toString();
-  }
+  toString(): string { return "TestExtends_Qux$Params_" + super.toString(); }
 }
 export class TestExtends_Qux$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "qux$Results",
     id: "8e4b3d1a3e2753dd",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestExtends_Qux$Results_" + super.toString();
-  }
+  toString(): string { return "TestExtends_Qux$Results_" + super.toString(); }
 }
 export class TestExtends_Qux$Results$Promise {
   pipeline: $.Pipeline<any, any, TestExtends_Qux$Results>;
@@ -5306,11 +5151,9 @@ export class TestExtends_Corge$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "corge$Results",
     id: "acf67532a7e7bad9",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestExtends_Corge$Results_" + super.toString();
-  }
+  toString(): string { return "TestExtends_Corge$Results_" + super.toString(); }
 }
 export class TestExtends_Corge$Results$Promise {
   pipeline: $.Pipeline<any, any, TestExtends_Corge$Results>;
@@ -5325,11 +5168,9 @@ export class TestExtends_Grault$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "grault$Params",
     id: "f3b834e851ea8af6",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestExtends_Grault$Params_" + super.toString();
-  }
+  toString(): string { return "TestExtends_Grault$Params_" + super.toString(); }
 }
 export class TestAllTypes$Promise {
   pipeline: $.Pipeline<any, any, TestAllTypes>;
@@ -5426,7 +5267,9 @@ export class TestExtends$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): TestExtends$Client { return new TestExtends$Client(this); }
+  client(): TestExtends$Client {
+    return new TestExtends$Client(this);
+  }
 }
 export class TestExtends extends $.Interface {
   static readonly Client = TestExtends$Client;
@@ -5434,11 +5277,9 @@ export class TestExtends extends $.Interface {
   static readonly _capnp = {
     displayName: "TestExtends",
     id: "e4e9bac98670b748",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestExtends_" + super.toString();
-  }
+  toString(): string { return "TestExtends_" + super.toString(); }
 }
 export class TestExtends2$Client {
   client: $.Client;
@@ -5458,7 +5299,9 @@ export class TestExtends2$Server extends $.Server {
     super(target, []);
     this.target = target;
   }
-  client(): TestExtends2$Client { return new TestExtends2$Client(this); }
+  client(): TestExtends2$Client {
+    return new TestExtends2$Client(this);
+  }
 }
 export class TestExtends2 extends $.Interface {
   static readonly Client = TestExtends2$Client;
@@ -5466,17 +5309,15 @@ export class TestExtends2 extends $.Interface {
   static readonly _capnp = {
     displayName: "TestExtends2",
     id: "98d7e0ef61488783",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestExtends2_" + super.toString();
-  }
+  toString(): string { return "TestExtends2_" + super.toString(); }
 }
 export class TestPipeline_Box extends $.Struct {
   static readonly _capnp = {
     displayName: "Box",
     id: "b0b29e51db0e26b1",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get cap(): TestInterface$Client {
     return new TestInterface$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -5484,15 +5325,13 @@ export class TestPipeline_Box extends $.Struct {
   set cap(value: TestInterface$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestPipeline_Box_" + super.toString();
-  }
+  toString(): string { return "TestPipeline_Box_" + super.toString(); }
 }
 export class TestPipeline_AnyBox extends $.Struct {
   static readonly _capnp = {
     displayName: "AnyBox",
     id: "9442ad5a1d2c8acb",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   _adoptCap(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -5509,15 +5348,13 @@ export class TestPipeline_AnyBox extends $.Struct {
   set cap(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestPipeline_AnyBox_" + super.toString();
-  }
+  toString(): string { return "TestPipeline_AnyBox_" + super.toString(); }
 }
 export class TestPipeline_GetCap$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "getCap$Params",
     id: "c7e8df5096257034",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get n(): number {
     return $.utils.getUint32(0, this);
@@ -5531,15 +5368,13 @@ export class TestPipeline_GetCap$Params extends $.Struct {
   set inCap(value: TestInterface$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestPipeline_GetCap$Params_" + super.toString();
-  }
+  toString(): string { return "TestPipeline_GetCap$Params_" + super.toString(); }
 }
 export class TestPipeline_GetCap$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "getCap$Results",
     id: "b2442a9e0ba28fdf",
-    size: new $.ObjectSize(0, 2)
+    size: new $.ObjectSize(0, 2),
   };
   get s(): string {
     return $.utils.getText(0, this);
@@ -5565,9 +5400,7 @@ export class TestPipeline_GetCap$Results extends $.Struct {
   set outBox(value: TestPipeline_Box) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "TestPipeline_GetCap$Results_" + super.toString();
-  }
+  toString(): string { return "TestPipeline_GetCap$Results_" + super.toString(); }
 }
 export class TestPipeline_GetCap$Results$Promise {
   pipeline: $.Pipeline<any, any, TestPipeline_GetCap$Results>;
@@ -5582,7 +5415,7 @@ export class TestPipeline_TestPointers$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "testPointers$Params",
     id: "a604ee63cf37819f",
-    size: new $.ObjectSize(0, 3)
+    size: new $.ObjectSize(0, 3),
   };
   get cap(): TestInterface$Client {
     return new TestInterface$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -5623,19 +5456,15 @@ export class TestPipeline_TestPointers$Params extends $.Struct {
   set list(value: $.List<TestInterface>) {
     $.utils.copyFrom(value, $.utils.getPointer(2, this));
   }
-  toString(): string {
-    return "TestPipeline_TestPointers$Params_" + super.toString();
-  }
+  toString(): string { return "TestPipeline_TestPointers$Params_" + super.toString(); }
 }
 export class TestPipeline_TestPointers$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "testPointers$Results",
     id: "8eda54756c6070d6",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestPipeline_TestPointers$Results_" + super.toString();
-  }
+  toString(): string { return "TestPipeline_TestPointers$Results_" + super.toString(); }
 }
 export class TestPipeline_TestPointers$Results$Promise {
   pipeline: $.Pipeline<any, any, TestPipeline_TestPointers$Results>;
@@ -5650,7 +5479,7 @@ export class TestPipeline_GetAnyCap$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "getAnyCap$Params",
     id: "f8e36b53ab093d4e",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get n(): number {
     return $.utils.getUint32(0, this);
@@ -5673,15 +5502,13 @@ export class TestPipeline_GetAnyCap$Params extends $.Struct {
   set inCap(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestPipeline_GetAnyCap$Params_" + super.toString();
-  }
+  toString(): string { return "TestPipeline_GetAnyCap$Params_" + super.toString(); }
 }
 export class TestPipeline_GetAnyCap$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "getAnyCap$Results",
     id: "bf44b4c94c26ef79",
-    size: new $.ObjectSize(0, 2)
+    size: new $.ObjectSize(0, 2),
   };
   get s(): string {
     return $.utils.getText(0, this);
@@ -5707,9 +5534,7 @@ export class TestPipeline_GetAnyCap$Results extends $.Struct {
   set outBox(value: TestPipeline_AnyBox) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "TestPipeline_GetAnyCap$Results_" + super.toString();
-  }
+  toString(): string { return "TestPipeline_GetAnyCap$Results_" + super.toString(); }
 }
 export class TestPipeline_GetAnyCap$Results$Promise {
   pipeline: $.Pipeline<any, any, TestPipeline_GetAnyCap$Results>;
@@ -5806,7 +5631,9 @@ export class TestPipeline$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): TestPipeline$Client { return new TestPipeline$Client(this); }
+  client(): TestPipeline$Client {
+    return new TestPipeline$Client(this);
+  }
 }
 export class TestPipeline extends $.Interface {
   static readonly Box = TestPipeline_Box;
@@ -5816,17 +5643,15 @@ export class TestPipeline extends $.Interface {
   static readonly _capnp = {
     displayName: "TestPipeline",
     id: "a5a404caa61d4cd0",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestPipeline_" + super.toString();
-  }
+  toString(): string { return "TestPipeline_" + super.toString(); }
 }
 export class TestCallOrder_GetCallSequence$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "getCallSequence$Params",
     id: "8f1e8cd56ceb74dc",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   get expected(): number {
     return $.utils.getUint32(0, this);
@@ -5834,15 +5659,13 @@ export class TestCallOrder_GetCallSequence$Params extends $.Struct {
   set expected(value: number) {
     $.utils.setUint32(0, value, this);
   }
-  toString(): string {
-    return "TestCallOrder_GetCallSequence$Params_" + super.toString();
-  }
+  toString(): string { return "TestCallOrder_GetCallSequence$Params_" + super.toString(); }
 }
 export class TestCallOrder_GetCallSequence$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "getCallSequence$Results",
     id: "dedbb6bf3810eab7",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   get n(): number {
     return $.utils.getUint32(0, this);
@@ -5850,9 +5673,7 @@ export class TestCallOrder_GetCallSequence$Results extends $.Struct {
   set n(value: number) {
     $.utils.setUint32(0, value, this);
   }
-  toString(): string {
-    return "TestCallOrder_GetCallSequence$Results_" + super.toString();
-  }
+  toString(): string { return "TestCallOrder_GetCallSequence$Results_" + super.toString(); }
 }
 export class TestCallOrder_GetCallSequence$Results$Promise {
   pipeline: $.Pipeline<any, any, TestCallOrder_GetCallSequence$Results>;
@@ -5905,7 +5726,9 @@ export class TestCallOrder$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): TestCallOrder$Client { return new TestCallOrder$Client(this); }
+  client(): TestCallOrder$Client {
+    return new TestCallOrder$Client(this);
+  }
 }
 export class TestCallOrder extends $.Interface {
   static readonly Client = TestCallOrder$Client;
@@ -5913,17 +5736,15 @@ export class TestCallOrder extends $.Interface {
   static readonly _capnp = {
     displayName: "TestCallOrder",
     id: "a0e77035bdff0051",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestCallOrder_" + super.toString();
-  }
+  toString(): string { return "TestCallOrder_" + super.toString(); }
 }
 export class TestTailCallee_TailResult extends $.Struct {
   static readonly _capnp = {
     displayName: "TailResult",
     id: "a9ed2e5a9fd53d19",
-    size: new $.ObjectSize(8, 2)
+    size: new $.ObjectSize(8, 2),
   };
   get i(): number {
     return $.utils.getUint32(0, this);
@@ -5943,15 +5764,13 @@ export class TestTailCallee_TailResult extends $.Struct {
   set c(value: TestCallOrder$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "TestTailCallee_TailResult_" + super.toString();
-  }
+  toString(): string { return "TestTailCallee_TailResult_" + super.toString(); }
 }
 export class TestTailCallee_Foo$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "foo$Params",
     id: "c5e1efc325614957",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get i(): number {
     return $.utils.getInt32(0, this);
@@ -5965,9 +5784,7 @@ export class TestTailCallee_Foo$Params extends $.Struct {
   set t(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestTailCallee_Foo$Params_" + super.toString();
-  }
+  toString(): string { return "TestTailCallee_Foo$Params_" + super.toString(); }
 }
 export class TestTailCallee_TailResult$Promise {
   pipeline: $.Pipeline<any, any, TestTailCallee_TailResult>;
@@ -6023,7 +5840,9 @@ export class TestTailCallee$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): TestTailCallee$Client { return new TestTailCallee$Client(this); }
+  client(): TestTailCallee$Client {
+    return new TestTailCallee$Client(this);
+  }
 }
 export class TestTailCallee extends $.Interface {
   static readonly TailResult = TestTailCallee_TailResult;
@@ -6032,17 +5851,15 @@ export class TestTailCallee extends $.Interface {
   static readonly _capnp = {
     displayName: "TestTailCallee",
     id: "ddd699207eb8e23b",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestTailCallee_" + super.toString();
-  }
+  toString(): string { return "TestTailCallee_" + super.toString(); }
 }
 export class TestTailCaller_Foo$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "foo$Params",
     id: "b07a279515dc8ac5",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get i(): number {
     return $.utils.getInt32(0, this);
@@ -6056,9 +5873,7 @@ export class TestTailCaller_Foo$Params extends $.Struct {
   set callee(value: TestTailCallee$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestTailCaller_Foo$Params_" + super.toString();
-  }
+  toString(): string { return "TestTailCaller_Foo$Params_" + super.toString(); }
 }
 export class TestTailCaller$Client {
   client: $.Client;
@@ -6102,7 +5917,9 @@ export class TestTailCaller$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): TestTailCaller$Client { return new TestTailCaller$Client(this); }
+  client(): TestTailCaller$Client {
+    return new TestTailCaller$Client(this);
+  }
 }
 export class TestTailCaller extends $.Interface {
   static readonly Client = TestTailCaller$Client;
@@ -6110,11 +5927,9 @@ export class TestTailCaller extends $.Interface {
   static readonly _capnp = {
     displayName: "TestTailCaller",
     id: "870bf40110ce3035",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestTailCaller_" + super.toString();
-  }
+  toString(): string { return "TestTailCaller_" + super.toString(); }
 }
 export class TestHandle$Client {
   client: $.Client;
@@ -6134,7 +5949,9 @@ export class TestHandle$Server extends $.Server {
     super(target, []);
     this.target = target;
   }
-  client(): TestHandle$Client { return new TestHandle$Client(this); }
+  client(): TestHandle$Client {
+    return new TestHandle$Client(this);
+  }
 }
 export class TestHandle extends $.Interface {
   static readonly Client = TestHandle$Client;
@@ -6142,17 +5959,15 @@ export class TestHandle extends $.Interface {
   static readonly _capnp = {
     displayName: "TestHandle",
     id: "a38e5efe41e53a15",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestHandle_" + super.toString();
-  }
+  toString(): string { return "TestHandle_" + super.toString(); }
 }
 export class TestMoreStuff_CallFoo$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "callFoo$Params",
     id: "931ba418da60f6e4",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get cap(): TestInterface$Client {
     return new TestInterface$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -6160,15 +5975,13 @@ export class TestMoreStuff_CallFoo$Params extends $.Struct {
   set cap(value: TestInterface$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestMoreStuff_CallFoo$Params_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_CallFoo$Params_" + super.toString(); }
 }
 export class TestMoreStuff_CallFoo$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "callFoo$Results",
     id: "9a28970beccecdd0",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get s(): string {
     return $.utils.getText(0, this);
@@ -6176,9 +5989,7 @@ export class TestMoreStuff_CallFoo$Results extends $.Struct {
   set s(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestMoreStuff_CallFoo$Results_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_CallFoo$Results_" + super.toString(); }
 }
 export class TestMoreStuff_CallFoo$Results$Promise {
   pipeline: $.Pipeline<any, any, TestMoreStuff_CallFoo$Results>;
@@ -6193,7 +6004,7 @@ export class TestMoreStuff_CallFooWhenResolved$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "callFooWhenResolved$Params",
     id: "fabc700c2ebe6378",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get cap(): TestInterface$Client {
     return new TestInterface$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -6201,15 +6012,13 @@ export class TestMoreStuff_CallFooWhenResolved$Params extends $.Struct {
   set cap(value: TestInterface$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestMoreStuff_CallFooWhenResolved$Params_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_CallFooWhenResolved$Params_" + super.toString(); }
 }
 export class TestMoreStuff_CallFooWhenResolved$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "callFooWhenResolved$Results",
     id: "a54ce1e9aa822f90",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get s(): string {
     return $.utils.getText(0, this);
@@ -6217,9 +6026,7 @@ export class TestMoreStuff_CallFooWhenResolved$Results extends $.Struct {
   set s(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestMoreStuff_CallFooWhenResolved$Results_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_CallFooWhenResolved$Results_" + super.toString(); }
 }
 export class TestMoreStuff_CallFooWhenResolved$Results$Promise {
   pipeline: $.Pipeline<any, any, TestMoreStuff_CallFooWhenResolved$Results>;
@@ -6234,7 +6041,7 @@ export class TestMoreStuff_NeverReturn$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "neverReturn$Params",
     id: "94fe60465c95182b",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get cap(): TestInterface$Client {
     return new TestInterface$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -6242,15 +6049,13 @@ export class TestMoreStuff_NeverReturn$Params extends $.Struct {
   set cap(value: TestInterface$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestMoreStuff_NeverReturn$Params_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_NeverReturn$Params_" + super.toString(); }
 }
 export class TestMoreStuff_NeverReturn$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "neverReturn$Results",
     id: "def4e5fa6999c5dc",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get capCopy(): TestInterface$Client {
     return new TestInterface$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -6258,9 +6063,7 @@ export class TestMoreStuff_NeverReturn$Results extends $.Struct {
   set capCopy(value: TestInterface$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestMoreStuff_NeverReturn$Results_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_NeverReturn$Results_" + super.toString(); }
 }
 export class TestMoreStuff_NeverReturn$Results$Promise {
   pipeline: $.Pipeline<any, any, TestMoreStuff_NeverReturn$Results>;
@@ -6278,7 +6081,7 @@ export class TestMoreStuff_Hold$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "hold$Params",
     id: "fe7c8fbb769d8e58",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get cap(): TestInterface$Client {
     return new TestInterface$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -6286,19 +6089,15 @@ export class TestMoreStuff_Hold$Params extends $.Struct {
   set cap(value: TestInterface$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestMoreStuff_Hold$Params_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_Hold$Params_" + super.toString(); }
 }
 export class TestMoreStuff_Hold$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "hold$Results",
     id: "f839fb1374d003c9",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestMoreStuff_Hold$Results_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_Hold$Results_" + super.toString(); }
 }
 export class TestMoreStuff_Hold$Results$Promise {
   pipeline: $.Pipeline<any, any, TestMoreStuff_Hold$Results>;
@@ -6313,17 +6112,15 @@ export class TestMoreStuff_CallHeld$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "callHeld$Params",
     id: "f8c5e5ef1edf83be",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestMoreStuff_CallHeld$Params_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_CallHeld$Params_" + super.toString(); }
 }
 export class TestMoreStuff_CallHeld$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "callHeld$Results",
     id: "e59935f160ac7578",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get s(): string {
     return $.utils.getText(0, this);
@@ -6331,9 +6128,7 @@ export class TestMoreStuff_CallHeld$Results extends $.Struct {
   set s(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestMoreStuff_CallHeld$Results_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_CallHeld$Results_" + super.toString(); }
 }
 export class TestMoreStuff_CallHeld$Results$Promise {
   pipeline: $.Pipeline<any, any, TestMoreStuff_CallHeld$Results>;
@@ -6348,17 +6143,15 @@ export class TestMoreStuff_GetHeld$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "getHeld$Params",
     id: "feffc025fce317e3",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestMoreStuff_GetHeld$Params_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_GetHeld$Params_" + super.toString(); }
 }
 export class TestMoreStuff_GetHeld$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "getHeld$Results",
     id: "ef4e146185af67ce",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get cap(): TestInterface$Client {
     return new TestInterface$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -6366,9 +6159,7 @@ export class TestMoreStuff_GetHeld$Results extends $.Struct {
   set cap(value: TestInterface$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestMoreStuff_GetHeld$Results_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_GetHeld$Results_" + super.toString(); }
 }
 export class TestMoreStuff_GetHeld$Results$Promise {
   pipeline: $.Pipeline<any, any, TestMoreStuff_GetHeld$Results>;
@@ -6386,7 +6177,7 @@ export class TestMoreStuff_Echo$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "echo$Params",
     id: "c07526f7e2e533b9",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get cap(): TestCallOrder$Client {
     return new TestCallOrder$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -6394,15 +6185,13 @@ export class TestMoreStuff_Echo$Params extends $.Struct {
   set cap(value: TestCallOrder$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestMoreStuff_Echo$Params_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_Echo$Params_" + super.toString(); }
 }
 export class TestMoreStuff_Echo$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "echo$Results",
     id: "a6224536593d5b92",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get cap(): TestCallOrder$Client {
     return new TestCallOrder$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -6410,9 +6199,7 @@ export class TestMoreStuff_Echo$Results extends $.Struct {
   set cap(value: TestCallOrder$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestMoreStuff_Echo$Results_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_Echo$Results_" + super.toString(); }
 }
 export class TestMoreStuff_Echo$Results$Promise {
   pipeline: $.Pipeline<any, any, TestMoreStuff_Echo$Results>;
@@ -6430,7 +6217,7 @@ export class TestMoreStuff_ExpectCancel$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "expectCancel$Params",
     id: "a1cc32d87f3edeb1",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get cap(): TestInterface$Client {
     return new TestInterface$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -6438,19 +6225,15 @@ export class TestMoreStuff_ExpectCancel$Params extends $.Struct {
   set cap(value: TestInterface$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestMoreStuff_ExpectCancel$Params_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_ExpectCancel$Params_" + super.toString(); }
 }
 export class TestMoreStuff_ExpectCancel$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "expectCancel$Results",
     id: "8a3eba1758c0916e",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestMoreStuff_ExpectCancel$Results_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_ExpectCancel$Results_" + super.toString(); }
 }
 export class TestMoreStuff_ExpectCancel$Results$Promise {
   pipeline: $.Pipeline<any, any, TestMoreStuff_ExpectCancel$Results>;
@@ -6487,9 +6270,7 @@ export class TestMoreStuff_MethodWithDefaults$Params extends $.Struct {
   set c(value: string) {
     $.utils.setText(1, value, this);
   }
-  toString(): string {
-    return "TestMoreStuff_MethodWithDefaults$Params_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_MethodWithDefaults$Params_" + super.toString(); }
 }
 export class TestMoreStuff_MethodWithDefaults$Results extends $.Struct {
   static readonly _capnp = {
@@ -6510,9 +6291,7 @@ export class TestMoreStuff_MethodWithDefaults$Results extends $.Struct {
   set e(value: string) {
     $.utils.setText(1, value, this);
   }
-  toString(): string {
-    return "TestMoreStuff_MethodWithDefaults$Results_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_MethodWithDefaults$Results_" + super.toString(); }
 }
 export class TestMoreStuff_MethodWithDefaults$Results$Promise {
   pipeline: $.Pipeline<any, any, TestMoreStuff_MethodWithDefaults$Results>;
@@ -6527,17 +6306,15 @@ export class TestMoreStuff_GetHandle$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "getHandle$Params",
     id: "ead024a301a092a1",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestMoreStuff_GetHandle$Params_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_GetHandle$Params_" + super.toString(); }
 }
 export class TestMoreStuff_GetHandle$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "getHandle$Results",
     id: "c3490d75420a1fe8",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get handle(): TestHandle$Client {
     return new TestHandle$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -6545,9 +6322,7 @@ export class TestMoreStuff_GetHandle$Results extends $.Struct {
   set handle(value: TestHandle$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestMoreStuff_GetHandle$Results_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_GetHandle$Results_" + super.toString(); }
 }
 export class TestMoreStuff_GetHandle$Results$Promise {
   pipeline: $.Pipeline<any, any, TestMoreStuff_GetHandle$Results>;
@@ -6565,17 +6340,15 @@ export class TestMoreStuff_GetNull$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "getNull$Params",
     id: "d8493f0e175d61f2",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestMoreStuff_GetNull$Params_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_GetNull$Params_" + super.toString(); }
 }
 export class TestMoreStuff_GetNull$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "getNull$Results",
     id: "e6955d8ef1023671",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get nullCap(): TestMoreStuff$Client {
     return new TestMoreStuff$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -6583,9 +6356,7 @@ export class TestMoreStuff_GetNull$Results extends $.Struct {
   set nullCap(value: TestMoreStuff$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestMoreStuff_GetNull$Results_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_GetNull$Results_" + super.toString(); }
 }
 export class TestMoreStuff_GetNull$Results$Promise {
   pipeline: $.Pipeline<any, any, TestMoreStuff_GetNull$Results>;
@@ -6603,17 +6374,15 @@ export class TestMoreStuff_GetEnormousString$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "getEnormousString$Params",
     id: "805df436f55dd07a",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestMoreStuff_GetEnormousString$Params_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_GetEnormousString$Params_" + super.toString(); }
 }
 export class TestMoreStuff_GetEnormousString$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "getEnormousString$Results",
     id: "860e7512dc3925b0",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get str(): string {
     return $.utils.getText(0, this);
@@ -6621,9 +6390,7 @@ export class TestMoreStuff_GetEnormousString$Results extends $.Struct {
   set str(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestMoreStuff_GetEnormousString$Results_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_GetEnormousString$Results_" + super.toString(); }
 }
 export class TestMoreStuff_GetEnormousString$Results$Promise {
   pipeline: $.Pipeline<any, any, TestMoreStuff_GetEnormousString$Results>;
@@ -6639,7 +6406,7 @@ export class TestMoreStuff_MethodWithNullDefault$Params extends $.Struct {
     displayName: "methodWithNullDefault$Params",
     id: "fb92899aeb0ee74f",
     size: new $.ObjectSize(0, 2),
-    defaultB: $.readRawPointer(new Uint8Array([0x10, 0x01, 0x00, 0x00]).buffer)
+    defaultB: $.readRawPointer(new Uint8Array([16, 1, 0, 0]).buffer)
   };
   get a(): string {
     return $.utils.getText(0, this);
@@ -6653,19 +6420,15 @@ export class TestMoreStuff_MethodWithNullDefault$Params extends $.Struct {
   set b(value: TestInterface$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "TestMoreStuff_MethodWithNullDefault$Params_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_MethodWithNullDefault$Params_" + super.toString(); }
 }
 export class TestMoreStuff_MethodWithNullDefault$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "methodWithNullDefault$Results",
     id: "8467348247305cf7",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestMoreStuff_MethodWithNullDefault$Results_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_MethodWithNullDefault$Results_" + super.toString(); }
 }
 export class TestMoreStuff_MethodWithNullDefault$Results$Promise {
   pipeline: $.Pipeline<any, any, TestMoreStuff_MethodWithNullDefault$Results>;
@@ -6982,38 +6745,37 @@ export class TestMoreStuff$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): TestMoreStuff$Client { return new TestMoreStuff$Client(this); }
+  client(): TestMoreStuff$Client {
+    return new TestMoreStuff$Client(this);
+  }
 }
 /**
 * Catch-all type that contains lots of testing methods.
-* */
+*
+*/
 export class TestMoreStuff extends $.Interface {
   static readonly Client = TestMoreStuff$Client;
   static readonly Server = TestMoreStuff$Server;
   static readonly _capnp = {
     displayName: "TestMoreStuff",
     id: "ddc70bf9784133cf",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestMoreStuff_" + super.toString();
-  }
+  toString(): string { return "TestMoreStuff_" + super.toString(); }
 }
 export class TestMembrane_Thing_PassThrough$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "passThrough$Params",
     id: "ff9bdcd05085d786",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestMembrane_Thing_PassThrough$Params_" + super.toString();
-  }
+  toString(): string { return "TestMembrane_Thing_PassThrough$Params_" + super.toString(); }
 }
 export class TestMembrane_Result extends $.Struct {
   static readonly _capnp = {
     displayName: "Result",
     id: "b0c6163faf291965",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get text(): string {
     return $.utils.getText(0, this);
@@ -7021,9 +6783,7 @@ export class TestMembrane_Result extends $.Struct {
   set text(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestMembrane_Result_" + super.toString();
-  }
+  toString(): string { return "TestMembrane_Result_" + super.toString(); }
 }
 export class TestMembrane_Result$Promise {
   pipeline: $.Pipeline<any, any, TestMembrane_Result>;
@@ -7038,11 +6798,9 @@ export class TestMembrane_Thing_Intercept$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "intercept$Params",
     id: "ee94bed3615ee745",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestMembrane_Thing_Intercept$Params_" + super.toString();
-  }
+  toString(): string { return "TestMembrane_Thing_Intercept$Params_" + super.toString(); }
 }
 export class TestMembrane_Thing$Client {
   client: $.Client;
@@ -7108,7 +6866,9 @@ export class TestMembrane_Thing$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): TestMembrane_Thing$Client { return new TestMembrane_Thing$Client(this); }
+  client(): TestMembrane_Thing$Client {
+    return new TestMembrane_Thing$Client(this);
+  }
 }
 export class TestMembrane_Thing extends $.Interface {
   static readonly Client = TestMembrane_Thing$Client;
@@ -7116,27 +6876,23 @@ export class TestMembrane_Thing extends $.Interface {
   static readonly _capnp = {
     displayName: "Thing",
     id: "9352e4e41f173917",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestMembrane_Thing_" + super.toString();
-  }
+  toString(): string { return "TestMembrane_Thing_" + super.toString(); }
 }
 export class TestMembrane_MakeThing$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "makeThing$Params",
     id: "d8ac2acc3ece6556",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestMembrane_MakeThing$Params_" + super.toString();
-  }
+  toString(): string { return "TestMembrane_MakeThing$Params_" + super.toString(); }
 }
 export class TestMembrane_MakeThing$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "makeThing$Results",
     id: "e5d4904814ccbf29",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get thing(): TestMembrane_Thing$Client {
     return new TestMembrane_Thing$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -7144,9 +6900,7 @@ export class TestMembrane_MakeThing$Results extends $.Struct {
   set thing(value: TestMembrane_Thing$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestMembrane_MakeThing$Results_" + super.toString();
-  }
+  toString(): string { return "TestMembrane_MakeThing$Results_" + super.toString(); }
 }
 export class TestMembrane_MakeThing$Results$Promise {
   pipeline: $.Pipeline<any, any, TestMembrane_MakeThing$Results>;
@@ -7164,7 +6918,7 @@ export class TestMembrane_CallPassThrough$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "callPassThrough$Params",
     id: "945d9f634a6a29da",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get thing(): TestMembrane_Thing$Client {
     return new TestMembrane_Thing$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -7178,15 +6932,13 @@ export class TestMembrane_CallPassThrough$Params extends $.Struct {
   set tailCall(value: boolean) {
     $.utils.setBit(0, value, this);
   }
-  toString(): string {
-    return "TestMembrane_CallPassThrough$Params_" + super.toString();
-  }
+  toString(): string { return "TestMembrane_CallPassThrough$Params_" + super.toString(); }
 }
 export class TestMembrane_CallIntercept$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "callIntercept$Params",
     id: "8749aac3375c5c71",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get thing(): TestMembrane_Thing$Client {
     return new TestMembrane_Thing$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -7200,15 +6952,13 @@ export class TestMembrane_CallIntercept$Params extends $.Struct {
   set tailCall(value: boolean) {
     $.utils.setBit(0, value, this);
   }
-  toString(): string {
-    return "TestMembrane_CallIntercept$Params_" + super.toString();
-  }
+  toString(): string { return "TestMembrane_CallIntercept$Params_" + super.toString(); }
 }
 export class TestMembrane_Loopback$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "loopback$Params",
     id: "869a1b7ab34b42c9",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get thing(): TestMembrane_Thing$Client {
     return new TestMembrane_Thing$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -7216,15 +6966,13 @@ export class TestMembrane_Loopback$Params extends $.Struct {
   set thing(value: TestMembrane_Thing$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestMembrane_Loopback$Params_" + super.toString();
-  }
+  toString(): string { return "TestMembrane_Loopback$Params_" + super.toString(); }
 }
 export class TestMembrane_Loopback$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "loopback$Results",
     id: "ecd19398fd88ab5c",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get thing(): TestMembrane_Thing$Client {
     return new TestMembrane_Thing$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -7232,9 +6980,7 @@ export class TestMembrane_Loopback$Results extends $.Struct {
   set thing(value: TestMembrane_Thing$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestMembrane_Loopback$Results_" + super.toString();
-  }
+  toString(): string { return "TestMembrane_Loopback$Results_" + super.toString(); }
 }
 export class TestMembrane_Loopback$Results$Promise {
   pipeline: $.Pipeline<any, any, TestMembrane_Loopback$Results>;
@@ -7356,7 +7102,9 @@ export class TestMembrane$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): TestMembrane$Client { return new TestMembrane$Client(this); }
+  client(): TestMembrane$Client {
+    return new TestMembrane$Client(this);
+  }
 }
 export class TestMembrane extends $.Interface {
   static readonly Thing = TestMembrane_Thing;
@@ -7366,17 +7114,15 @@ export class TestMembrane extends $.Interface {
   static readonly _capnp = {
     displayName: "TestMembrane",
     id: "c07d8dcd80a69c0c",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestMembrane_" + super.toString();
-  }
+  toString(): string { return "TestMembrane_" + super.toString(); }
 }
 export class TestContainMembrane extends $.Struct {
   static readonly _capnp = {
     displayName: "TestContainMembrane",
     id: "949449ad7c11fa5c",
-    size: new $.ObjectSize(0, 2)
+    size: new $.ObjectSize(0, 2),
   };
   get cap(): TestMembrane_Thing$Client {
     return new TestMembrane_Thing$Client($.utils.getInterfaceClientOrNullAt(0, this));
@@ -7402,15 +7148,13 @@ export class TestContainMembrane extends $.Struct {
   set list(value: $.List<TestMembrane_Thing>) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "TestContainMembrane_" + super.toString();
-  }
+  toString(): string { return "TestContainMembrane_" + super.toString(); }
 }
 export class TestContructorName extends $.Struct {
   static readonly _capnp = {
     displayName: "TestContructorName",
     id: "c16f644772532755",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get $constructor(): string {
     return $.utils.getText(0, this);
@@ -7418,15 +7162,13 @@ export class TestContructorName extends $.Struct {
   set $constructor(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestContructorName_" + super.toString();
-  }
+  toString(): string { return "TestContructorName_" + super.toString(); }
 }
 export class TestTransferCap_Element extends $.Struct {
   static readonly _capnp = {
     displayName: "Element",
     id: "c7263e8f88844abc",
-    size: new $.ObjectSize(0, 2)
+    size: new $.ObjectSize(0, 2),
   };
   get text(): string {
     return $.utils.getText(0, this);
@@ -7440,16 +7182,14 @@ export class TestTransferCap_Element extends $.Struct {
   set cap(value: TestInterface$Client) {
     $.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "TestTransferCap_Element_" + super.toString();
-  }
+  toString(): string { return "TestTransferCap_Element_" + super.toString(); }
 }
 export class TestTransferCap extends $.Struct {
   static readonly Element = TestTransferCap_Element;
   static readonly _capnp = {
     displayName: "TestTransferCap",
     id: "dd2b66a791a279f0",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   static _List: $.ListCtor<TestTransferCap_Element>;
   _adoptList(value: $.Orphan<$.List<TestTransferCap_Element>>): void {
@@ -7470,29 +7210,23 @@ export class TestTransferCap extends $.Struct {
   set list(value: $.List<TestTransferCap_Element>) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestTransferCap_" + super.toString();
-  }
+  toString(): string { return "TestTransferCap_" + super.toString(); }
 }
 export class TestKeywordMethods_Delete$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "delete$Params",
     id: "ca3a89cdeb6bd6b7",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestKeywordMethods_Delete$Params_" + super.toString();
-  }
+  toString(): string { return "TestKeywordMethods_Delete$Params_" + super.toString(); }
 }
 export class TestKeywordMethods_Delete$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "delete$Results",
     id: "eeb5843598307592",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestKeywordMethods_Delete$Results_" + super.toString();
-  }
+  toString(): string { return "TestKeywordMethods_Delete$Results_" + super.toString(); }
 }
 export class TestKeywordMethods_Delete$Results$Promise {
   pipeline: $.Pipeline<any, any, TestKeywordMethods_Delete$Results>;
@@ -7507,21 +7241,17 @@ export class TestKeywordMethods_Class$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "class$Params",
     id: "9cf5a8313c5db036",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestKeywordMethods_Class$Params_" + super.toString();
-  }
+  toString(): string { return "TestKeywordMethods_Class$Params_" + super.toString(); }
 }
 export class TestKeywordMethods_Class$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "class$Results",
     id: "c0253868ac12e7d8",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestKeywordMethods_Class$Results_" + super.toString();
-  }
+  toString(): string { return "TestKeywordMethods_Class$Results_" + super.toString(); }
 }
 export class TestKeywordMethods_Class$Results$Promise {
   pipeline: $.Pipeline<any, any, TestKeywordMethods_Class$Results>;
@@ -7536,21 +7266,17 @@ export class TestKeywordMethods_Void$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "void$Params",
     id: "a4a08763833c7757",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestKeywordMethods_Void$Params_" + super.toString();
-  }
+  toString(): string { return "TestKeywordMethods_Void$Params_" + super.toString(); }
 }
 export class TestKeywordMethods_Void$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "void$Results",
     id: "de82773089c0aeab",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestKeywordMethods_Void$Results_" + super.toString();
-  }
+  toString(): string { return "TestKeywordMethods_Void$Results_" + super.toString(); }
 }
 export class TestKeywordMethods_Void$Results$Promise {
   pipeline: $.Pipeline<any, any, TestKeywordMethods_Void$Results>;
@@ -7565,21 +7291,17 @@ export class TestKeywordMethods_Return$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "return$Params",
     id: "99817360625e8ca3",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestKeywordMethods_Return$Params_" + super.toString();
-  }
+  toString(): string { return "TestKeywordMethods_Return$Params_" + super.toString(); }
 }
 export class TestKeywordMethods_Return$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "return$Results",
     id: "b70872e07eaa992f",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestKeywordMethods_Return$Results_" + super.toString();
-  }
+  toString(): string { return "TestKeywordMethods_Return$Results_" + super.toString(); }
 }
 export class TestKeywordMethods_Return$Results$Promise {
   pipeline: $.Pipeline<any, any, TestKeywordMethods_Return$Results>;
@@ -7698,7 +7420,9 @@ export class TestKeywordMethods$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): TestKeywordMethods$Client { return new TestKeywordMethods$Client(this); }
+  client(): TestKeywordMethods$Client {
+    return new TestKeywordMethods$Client(this);
+  }
 }
 export class TestKeywordMethods extends $.Interface {
   static readonly Client = TestKeywordMethods$Client;
@@ -7706,27 +7430,23 @@ export class TestKeywordMethods extends $.Interface {
   static readonly _capnp = {
     displayName: "TestKeywordMethods",
     id: "9ae342d394247cfc",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestKeywordMethods_" + super.toString();
-  }
+  toString(): string { return "TestKeywordMethods_" + super.toString(); }
 }
 export class TestAuthenticatedBootstrap_GetCallerId$Params extends $.Struct {
   static readonly _capnp = {
     displayName: "getCallerId$Params",
     id: "8ec30e2451f1cffe",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestAuthenticatedBootstrap_GetCallerId$Params_" + super.toString();
-  }
+  toString(): string { return "TestAuthenticatedBootstrap_GetCallerId$Params_" + super.toString(); }
 }
 export class TestAuthenticatedBootstrap_GetCallerId$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "getCallerId$Results",
     id: "c71cf776034a3e67",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   _adoptCaller(value: $.Orphan<$.Pointer>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -7743,9 +7463,7 @@ export class TestAuthenticatedBootstrap_GetCallerId$Results extends $.Struct {
   set caller(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestAuthenticatedBootstrap_GetCallerId$Results_" + super.toString();
-  }
+  toString(): string { return "TestAuthenticatedBootstrap_GetCallerId$Results_" + super.toString(); }
 }
 export class TestAuthenticatedBootstrap_GetCallerId$Results$Promise {
   pipeline: $.Pipeline<any, any, TestAuthenticatedBootstrap_GetCallerId$Results>;
@@ -7798,7 +7516,9 @@ export class TestAuthenticatedBootstrap$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): TestAuthenticatedBootstrap$Client { return new TestAuthenticatedBootstrap$Client(this); }
+  client(): TestAuthenticatedBootstrap$Client {
+    return new TestAuthenticatedBootstrap$Client(this);
+  }
 }
 export class TestAuthenticatedBootstrap extends $.Interface {
   static readonly Client = TestAuthenticatedBootstrap$Client;
@@ -7806,17 +7526,15 @@ export class TestAuthenticatedBootstrap extends $.Interface {
   static readonly _capnp = {
     displayName: "TestAuthenticatedBootstrap",
     id: "ea72cc77253798cd",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestAuthenticatedBootstrap_" + super.toString();
-  }
+  toString(): string { return "TestAuthenticatedBootstrap_" + super.toString(); }
 }
 export class TestSturdyRef extends $.Struct {
   static readonly _capnp = {
     displayName: "TestSturdyRef",
     id: "ceba982cb629f6c2",
-    size: new $.ObjectSize(0, 2)
+    size: new $.ObjectSize(0, 2),
   };
   _adoptHostId(value: $.Orphan<TestSturdyRefHostId>): void {
     $.utils.adopt(value, $.utils.getPointer(0, this));
@@ -7851,15 +7569,13 @@ export class TestSturdyRef extends $.Struct {
   set objectId(value: $.Pointer) {
     $.utils.copyFrom(value, $.utils.getPointer(1, this));
   }
-  toString(): string {
-    return "TestSturdyRef_" + super.toString();
-  }
+  toString(): string { return "TestSturdyRef_" + super.toString(); }
 }
 export class TestSturdyRefHostId extends $.Struct {
   static readonly _capnp = {
     displayName: "TestSturdyRefHostId",
     id: "e02d3bbe1010e342",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   get host(): string {
     return $.utils.getText(0, this);
@@ -7867,9 +7583,7 @@ export class TestSturdyRefHostId extends $.Struct {
   set host(value: string) {
     $.utils.setText(0, value, this);
   }
-  toString(): string {
-    return "TestSturdyRefHostId_" + super.toString();
-  }
+  toString(): string { return "TestSturdyRefHostId_" + super.toString(); }
 }
 export const TestSturdyRefObjectId_Tag = {
   TEST_INTERFACE: 0,
@@ -7885,7 +7599,7 @@ export class TestSturdyRefObjectId extends $.Struct {
   static readonly _capnp = {
     displayName: "TestSturdyRefObjectId",
     id: "aeb2ad168e2f5697",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   get tag(): TestSturdyRefObjectId_Tag {
     return $.utils.getUint16(0, this) as TestSturdyRefObjectId_Tag;
@@ -7893,49 +7607,39 @@ export class TestSturdyRefObjectId extends $.Struct {
   set tag(value: TestSturdyRefObjectId_Tag) {
     $.utils.setUint16(0, value, this);
   }
-  toString(): string {
-    return "TestSturdyRefObjectId_" + super.toString();
-  }
+  toString(): string { return "TestSturdyRefObjectId_" + super.toString(); }
 }
 export class TestProvisionId extends $.Struct {
   static readonly _capnp = {
     displayName: "TestProvisionId",
     id: "9e5c574772b1d462",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestProvisionId_" + super.toString();
-  }
+  toString(): string { return "TestProvisionId_" + super.toString(); }
 }
 export class TestRecipientId extends $.Struct {
   static readonly _capnp = {
     displayName: "TestRecipientId",
     id: "ea2fb7dca9cdbdea",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestRecipientId_" + super.toString();
-  }
+  toString(): string { return "TestRecipientId_" + super.toString(); }
 }
 export class TestThirdPartyCapId extends $.Struct {
   static readonly _capnp = {
     displayName: "TestThirdPartyCapId",
     id: "a805157b98b65469",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestThirdPartyCapId_" + super.toString();
-  }
+  toString(): string { return "TestThirdPartyCapId_" + super.toString(); }
 }
 export class TestJoinResult extends $.Struct {
   static readonly _capnp = {
     displayName: "TestJoinResult",
     id: "f4c58a8ebcd0f600",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestJoinResult_" + super.toString();
-  }
+  toString(): string { return "TestJoinResult_" + super.toString(); }
 }
 export const TestNameAnnotation_BadlyNamedEnum = {
   FOO: 0,
@@ -7954,7 +7658,7 @@ export class TestNameAnnotation_NestedStruct extends $.Struct {
   static readonly _capnp = {
     displayName: "NestedStruct",
     id: "be406b6341d52284",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get badNestedFieldName(): boolean {
     return $.utils.getBit(0, this);
@@ -7980,19 +7684,15 @@ export class TestNameAnnotation_NestedStruct extends $.Struct {
   set anotherBadNestedFieldName(value: TestNameAnnotation_NestedStruct) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestNameAnnotation_NestedStruct_" + super.toString();
-  }
+  toString(): string { return "TestNameAnnotation_NestedStruct_" + super.toString(); }
 }
 export class TestNameAnnotation_BadlyNamedUnion_BadlyNamedGroup extends $.Struct {
   static readonly _capnp = {
     displayName: "badlyNamedGroup",
     id: "c3594bce5b24b722",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
-  toString(): string {
-    return "TestNameAnnotation_BadlyNamedUnion_BadlyNamedGroup_" + super.toString();
-  }
+  toString(): string { return "TestNameAnnotation_BadlyNamedUnion_BadlyNamedGroup_" + super.toString(); }
 }
 export const TestNameAnnotation_BadlyNamedUnion_Which = {
   BADLY_NAMED_GROUP: 0,
@@ -8005,7 +7705,7 @@ export class TestNameAnnotation_BadlyNamedUnion extends $.Struct {
   static readonly _capnp = {
     displayName: "badlyNamedUnion",
     id: "89d9d1626b34017c",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get badlyNamedGroup(): TestNameAnnotation_BadlyNamedUnion_BadlyNamedGroup {
     $.utils.testWhich("badlyNamedGroup", $.utils.getUint16(6, this), 0, this);
@@ -8046,9 +7746,7 @@ export class TestNameAnnotation_BadlyNamedUnion extends $.Struct {
     $.utils.setUint16(6, 1, this);
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "TestNameAnnotation_BadlyNamedUnion_" + super.toString();
-  }
+  toString(): string { return "TestNameAnnotation_BadlyNamedUnion_" + super.toString(); }
   which(): TestNameAnnotation_BadlyNamedUnion_Which {
     return $.utils.getUint16(6, this) as TestNameAnnotation_BadlyNamedUnion_Which;
   }
@@ -8066,7 +7764,7 @@ export class TestNameAnnotation extends $.Struct {
   static readonly _capnp = {
     displayName: "TestNameAnnotation",
     id: "d1fd8e9caf2a5d58",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get badFieldName(): boolean {
     $.utils.testWhich("badFieldName", $.utils.getUint16(2, this), 0, this);
@@ -8102,9 +7800,7 @@ export class TestNameAnnotation extends $.Struct {
   _initBadlyNamedUnion(): TestNameAnnotation_BadlyNamedUnion {
     return $.utils.getAs(TestNameAnnotation_BadlyNamedUnion, this);
   }
-  toString(): string {
-    return "TestNameAnnotation_" + super.toString();
-  }
+  toString(): string { return "TestNameAnnotation_" + super.toString(); }
   which(): TestNameAnnotation_Which {
     return $.utils.getUint16(2, this) as TestNameAnnotation_Which;
   }
@@ -8113,7 +7809,7 @@ export class TestNameAnnotationInterface_BadlyNamedMethod$Params extends $.Struc
   static readonly _capnp = {
     displayName: "badlyNamedMethod$Params",
     id: "c12efc3b075adfe9",
-    size: new $.ObjectSize(8, 0)
+    size: new $.ObjectSize(8, 0),
   };
   get badlyNamedParam(): number {
     return $.utils.getUint8(0, this);
@@ -8121,19 +7817,15 @@ export class TestNameAnnotationInterface_BadlyNamedMethod$Params extends $.Struc
   set badlyNamedParam(value: number) {
     $.utils.setUint8(0, value, this);
   }
-  toString(): string {
-    return "TestNameAnnotationInterface_BadlyNamedMethod$Params_" + super.toString();
-  }
+  toString(): string { return "TestNameAnnotationInterface_BadlyNamedMethod$Params_" + super.toString(); }
 }
 export class TestNameAnnotationInterface_BadlyNamedMethod$Results extends $.Struct {
   static readonly _capnp = {
     displayName: "badlyNamedMethod$Results",
     id: "dcc3cdb4b28f6c86",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestNameAnnotationInterface_BadlyNamedMethod$Results_" + super.toString();
-  }
+  toString(): string { return "TestNameAnnotationInterface_BadlyNamedMethod$Results_" + super.toString(); }
 }
 export class TestNameAnnotationInterface_BadlyNamedMethod$Results$Promise {
   pipeline: $.Pipeline<any, any, TestNameAnnotationInterface_BadlyNamedMethod$Results>;
@@ -8186,7 +7878,9 @@ export class TestNameAnnotationInterface$Server extends $.Server {
     ]);
     this.target = target;
   }
-  client(): TestNameAnnotationInterface$Client { return new TestNameAnnotationInterface$Client(this); }
+  client(): TestNameAnnotationInterface$Client {
+    return new TestNameAnnotationInterface$Client(this);
+  }
 }
 export class TestNameAnnotationInterface extends $.Interface {
   static readonly Client = TestNameAnnotationInterface$Client;
@@ -8194,11 +7888,9 @@ export class TestNameAnnotationInterface extends $.Interface {
   static readonly _capnp = {
     displayName: "TestNameAnnotationInterface",
     id: "d112a69d31ed918b",
-    size: new $.ObjectSize(0, 0)
+    size: new $.ObjectSize(0, 0),
   };
-  toString(): string {
-    return "TestNameAnnotationInterface_" + super.toString();
-  }
+  toString(): string { return "TestNameAnnotationInterface_" + super.toString(); }
 }
 TestAllTypes._StructList = $.CompositeList(TestAllTypes);
 TestDefaults._StructList = $.CompositeList(TestAllTypes);

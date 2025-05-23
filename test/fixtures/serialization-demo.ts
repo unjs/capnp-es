@@ -12,7 +12,7 @@ export class Person_PhoneNumber extends $.Struct {
   static readonly _capnp = {
     displayName: "PhoneNumber",
     id: "cba8ed6b45001ccc",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
   };
   get number(): string {
     return $.utils.getText(0, this);
@@ -26,9 +26,7 @@ export class Person_PhoneNumber extends $.Struct {
   set type(value: Person_PhoneNumber_Type) {
     $.utils.setUint16(0, value, this);
   }
-  toString(): string {
-    return "Person_PhoneNumber_" + super.toString();
-  }
+  toString(): string { return "Person_PhoneNumber_" + super.toString(); }
 }
 export const Person_Employment_Which = {
   UNEMPLOYED: 0,
@@ -45,7 +43,7 @@ export class Person_Employment extends $.Struct {
   static readonly _capnp = {
     displayName: "employment",
     id: "927f49708287c3b6",
-    size: new $.ObjectSize(8, 4)
+    size: new $.ObjectSize(8, 4),
   };
   get _isUnemployed(): boolean {
     return $.utils.getUint16(4, this) === 0;
@@ -81,9 +79,7 @@ export class Person_Employment extends $.Struct {
   set selfEmployed(_: true) {
     $.utils.setUint16(4, 3, this);
   }
-  toString(): string {
-    return "Person_Employment_" + super.toString();
-  }
+  toString(): string { return "Person_Employment_" + super.toString(); }
   which(): Person_Employment_Which {
     return $.utils.getUint16(4, this) as Person_Employment_Which;
   }
@@ -93,7 +89,7 @@ export class Person extends $.Struct {
   static readonly _capnp = {
     displayName: "Person",
     id: "efbbc4e996f07104",
-    size: new $.ObjectSize(8, 4)
+    size: new $.ObjectSize(8, 4),
   };
   static _Phones: $.ListCtor<Person_PhoneNumber>;
   get id(): number {
@@ -138,15 +134,13 @@ export class Person extends $.Struct {
   _initEmployment(): Person_Employment {
     return $.utils.getAs(Person_Employment, this);
   }
-  toString(): string {
-    return "Person_" + super.toString();
-  }
+  toString(): string { return "Person_" + super.toString(); }
 }
 export class AddressBook extends $.Struct {
   static readonly _capnp = {
     displayName: "AddressBook",
     id: "f724540a01e98224",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
   };
   static _People: $.ListCtor<Person>;
   _adoptPeople(value: $.Orphan<$.List<Person>>): void {
@@ -167,9 +161,7 @@ export class AddressBook extends $.Struct {
   set people(value: $.List<Person>) {
     $.utils.copyFrom(value, $.utils.getPointer(0, this));
   }
-  toString(): string {
-    return "AddressBook_" + super.toString();
-  }
+  toString(): string { return "AddressBook_" + super.toString(); }
 }
 Person._Phones = $.CompositeList(Person_PhoneNumber);
 AddressBook._People = $.CompositeList(Person);

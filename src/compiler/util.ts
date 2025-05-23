@@ -9,8 +9,14 @@ export function c2s(s: string): string {
     .join("_");
 }
 
+/**
+ * Capitalizes the first letter of a string.
+ *
+ * @param s - Input string to capitalize
+ * @returns String with first letter capitalized
+ */
 export function c2t(s: string): string {
-  return s.slice(0, 1).toUpperCase() + s.slice(1);
+  return s[0].toUpperCase() + s.slice(1);
 }
 
 export function d2h(d: string): string {
@@ -61,6 +67,12 @@ export function splitCamel(s: string): string[] {
   }, []);
 }
 
-export function hexToBigInt(h: string): bigint {
-  return BigInt(hexToDec(h)!);
+/**
+ * Converts a hexadecimal string to a BigInt value.
+ *
+ * @param hexString - Hexadecimal string to convert (with or without '0x' prefix)
+ * @returns The decimal value as a BigInt
+ */
+export function hexToBigInt(hexString: string): bigint {
+  return BigInt(hexToDec(hexString)!);
 }

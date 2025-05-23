@@ -69,18 +69,15 @@ const ConDefaultFinalize: Finalize = (obj, finalizer): void => {
 };
 
 export class Conn {
-  transport: Transport;
-  finalize: Finalize;
-
   questionID = new IDGen();
-  questions = [] as QuestionSlot[];
+  questions: QuestionSlot[] = [];
+
+  answers: { [key: number]: AnswerEntry<any> } = {};
 
   exportID = new IDGen();
-  exports = [] as Array<Export | null>;
+  exports: Array<Export | null> = [];
 
-  imports = {} as { [key: number]: ImportEntry };
-
-  answers = {} as { [key: number]: AnswerEntry<any> };
+  imports: { [key: number]: ImportEntry } = {};
 
   onError?: (err?: Error) => void;
   main?: Client;
@@ -96,11 +93,10 @@ export class Conn {
    * available.
    * @returns {Conn} A new connection.
    */
-  constructor(transport: Transport, finalize = ConDefaultFinalize) {
-    this.transport = transport;
-    this.finalize = finalize;
-    this.questionID = new IDGen();
-    this.questions = [];
+  constructor(
+    public transport: Transport,
+    public finalize = ConDefaultFinalize,
+  ) {
     this.startWork();
   }
 

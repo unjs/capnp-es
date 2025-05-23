@@ -1,43 +1,17 @@
 // Based on https://github.com/jdiaz5513/capnp-ts (MIT - Julián Díaz)
 
-import ts, { factory as f } from "typescript";
-import * as s from "../capnp/schema";
+import * as schema from "../capnp/schema";
 import { format } from "../util";
 
 import {
-  createBigIntExpression,
-  createClassExtends,
-  createConcreteListProperty,
-  createConstProperty,
-  createExpressionBlock,
-  createMethod,
   createNestedNodeProperty,
   createUnionConstProperty,
   createValueExpression,
+  createConcreteListProperty,
+  createBigIntExpression,
 } from "./ast-creators";
 import { CodeGeneratorFileContext } from "./code-generator-file-context";
-import {
-  ASYNC,
-  BOOLEAN_TYPE,
-  CAPNP,
-  ConcreteListType,
-  EXPORT,
-  LENGTH,
-  NUMBER_TYPE,
-  Primitive,
-  QUESTION_TOKEN,
-  READONLY,
-  STATIC,
-  STRING_TYPE,
-  UTILS,
-  THIS,
-  TS_FILE_ID,
-  VALUE,
-  VOID_TYPE,
-  ANY_TYPE,
-  OBJECT_SIZE,
-  BIGINT,
-} from "./constants";
+import { ConcreteListType, Primitives, TS_FILE_ID } from "./constants";
 import * as E from "./errors";
 import {
   compareCodeOrder,
@@ -53,6 +27,21 @@ import {
 } from "./file";
 import * as util from "./util";
 
+/**
+ * Generates the import statement for the capnp-es runtime library.
+ *
+ * This function checks for a custom import path annotation in the schema file.
+ * If found, it uses that path instead of the default 'capnp-es' import.
+ *
+ * The import path can be customized using the ts.importPath annotation:
+ *
+ * ```capnp
+ * using Ts = import "/capnp/ts.capnp";
+ * $Ts.importPath("../custom/path/to/capnp-es");
+ * ```
+ *
+ * @param ctx - The code generator context containing file and annotation information
+ */
 export function generateCapnpImport(ctx: CodeGeneratorFileContext): void {
   // Look for the special importPath annotation on the file to see if we need a different import path for capnp-es.
 
@@ -61,9 +50,9 @@ export function generateCapnpImport(ctx: CodeGeneratorFileContext): void {
   // This may be undefined if ts.capnp is not imported; fine, we'll just use the default.
   const tsAnnotationFile = ctx.nodes.find((n) => n.id === tsFileId);
   // We might not find the importPath annotation; that's definitely a bug but let's move on.
-  const tsImportPathAnnotation =
-    tsAnnotationFile &&
-    tsAnnotationFile.nestedNodes.find((n) => n.name === "importPath");
+  const tsImportPathAnnotation = tsAnnotationFile?.nestedNodes.find(
+    (n) => n.name === "importPath",
+  );
   // There may not necessarily be an import path annotation on the file node. That's fine.
   const importAnnotation =
     tsImportPathAnnotation &&
@@ -71,19 +60,19 @@ export function generateCapnpImport(ctx: CodeGeneratorFileContext): void {
   const importPath =
     importAnnotation === undefined ? "capnp-es" : importAnnotation.value.text;
 
-  // import * as capnp from '${importPath}';
-  ctx.statements.push(
-    f.createImportDeclaration(
-      undefined,
-      f.createImportClause(false, undefined, f.createNamespaceImport(CAPNP)),
-      f.createStringLiteral(importPath),
-    ),
-  );
+  ctx.codeParts.push(`import * as $ from '${importPath}';`);
 }
 
+/**
+ * Generates TypeScript import statements for nested types defined in Cap'n Proto schema files.
+ *
+ * @param ctx - The file context containing import information and statements
+ * @param ctx.imports - List of schema files to import from
+ * @param ctx.statements - Collection of TypeScript statements being generated
+ */
 export function generateNestedImports(ctx: CodeGeneratorFileContext): void {
-  for (const i of ctx.imports) {
-    const name = i.name;
+  for (const imp of ctx.imports) {
+    const { name } = imp;
     let importPath: string;
 
     if (name.startsWith("/capnp/")) {
@@ -95,89 +84,95 @@ export function generateNestedImports(ctx: CodeGeneratorFileContext): void {
       }
     }
 
-    const imports = getImportNodes(ctx, lookupNode(ctx, i))
+    const importNode = lookupNode(ctx, imp);
+
+    const imports = getImportNodes(ctx, importNode)
       .map((n) => getFullClassName(n))
       .join(", ");
 
-    if (imports.length === 0) continue;
+    if (imports.length === 0) {
+      continue;
+    }
 
-    const importStatement = `import { ${imports} } from "${importPath}"`;
-
-    ctx.statements.push(
-      f.createExpressionStatement(f.createIdentifier(importStatement)),
-    );
+    ctx.codeParts.push(`import { ${imports} } from "${importPath}";`);
   }
 }
 
+/**
+ * Generates a concrete list type initializer for a Cap'n Proto field.
+ *
+ * This function creates the static list type property initialization code for fields
+ * that require concrete list implementations (like lists of structs or nested lists).
+ *
+ * @param ctx - The code generator context
+ * @param fullClassName - The fully qualified name of the containing class
+ * @param field - The Cap'n Proto field definition requiring a concrete list type
+ */
 export function generateConcreteListInitializer(
   ctx: CodeGeneratorFileContext,
   fullClassName: string,
-  field: s.Field,
+  field: schema.Field,
 ): void {
-  const left = f.createPropertyAccessExpression(
-    f.createIdentifier(fullClassName),
-    `_${util.c2t(field.name)}`,
-  );
-  const right = f.createIdentifier(getConcreteListType(ctx, field.slot.type));
+  const name = `_${util.c2t(field.name)}`;
+  const type = getConcreteListType(ctx, field.slot.type);
 
-  ctx.statements.push(
-    f.createExpressionStatement(f.createAssignment(left, right)),
-  );
+  ctx.codeParts.push(`${fullClassName}.${name} = ${type};`);
 }
 
-export function generateDefaultValue(field: s.Field): ts.PropertyAssignment {
-  const name = field.name;
-  const slot = field.slot;
+/**
+ * Generates a string representation of a default value expression for a Cap'n Proto field.
+ *
+ * This function handles different field types and their default value representations:
+ * - Pointers (ANY_POINTER, DATA, LIST, STRUCT, INTERFACE)
+ * - Text fields
+ * - Boolean fields (with bit offset)
+ * - Numeric types (ENUM, FLOAT32/64, INT8/16/32/64, UINT8/16/32/64)
+ *
+ * @param field - The Cap'n Proto field definition containing type and default value information
+ * @returns A string containing the default value expression
+ * @throws {Error} If the field type is not supported for default values
+ */
+export function generateDefaultValue(field: schema.Field): string {
+  const { name, slot } = field;
   const whichSlotType = slot.type.which();
-  const p = Primitive[whichSlotType];
-  let initializer;
+  const primitive = Primitives[whichSlotType];
+  let initializer: string;
 
   switch (whichSlotType) {
-    case s.Type_Which.ANY_POINTER:
-    case s.Type_Which.DATA:
-    case s.Type_Which.LIST:
-    case s.Type_Which.STRUCT:
-    case s.Type_Which.INTERFACE: {
+    case schema.Type_Which.ANY_POINTER:
+    case schema.Type_Which.DATA:
+    case schema.Type_Which.LIST:
+    case schema.Type_Which.STRUCT:
+    case schema.Type_Which.INTERFACE: {
       initializer = createValueExpression(slot.defaultValue);
-
       break;
     }
 
-    case s.Type_Which.TEXT: {
-      initializer = f.createStringLiteral(slot.defaultValue.text);
-
+    case schema.Type_Which.TEXT: {
+      initializer = JSON.stringify(slot.defaultValue.text);
       break;
     }
 
-    case s.Type_Which.BOOL: {
-      initializer = f.createCallExpression(
-        f.createPropertyAccessExpression(CAPNP, p.mask),
-        undefined,
-        [
-          createValueExpression(slot.defaultValue),
-          f.createNumericLiteral((slot.offset % 8).toString()),
-        ],
-      );
-
+    case schema.Type_Which.BOOL: {
+      const value = createValueExpression(slot.defaultValue);
+      const bitOffset = slot.offset % 8;
+      initializer = `$.${primitive.mask}(${value}, ${bitOffset})`;
       break;
     }
 
-    case s.Type_Which.ENUM:
-    case s.Type_Which.FLOAT32:
-    case s.Type_Which.FLOAT64:
-    case s.Type_Which.INT16:
-    case s.Type_Which.INT32:
-    case s.Type_Which.INT64:
-    case s.Type_Which.INT8:
-    case s.Type_Which.UINT16:
-    case s.Type_Which.UINT32:
-    case s.Type_Which.UINT64:
-    case s.Type_Which.UINT8: {
-      initializer = f.createCallExpression(
-        f.createPropertyAccessExpression(CAPNP, p.mask),
-        undefined,
-        [createValueExpression(slot.defaultValue)],
-      );
+    case schema.Type_Which.ENUM:
+    case schema.Type_Which.FLOAT32:
+    case schema.Type_Which.FLOAT64:
+    case schema.Type_Which.INT16:
+    case schema.Type_Which.INT32:
+    case schema.Type_Which.INT64:
+    case schema.Type_Which.INT8:
+    case schema.Type_Which.UINT16:
+    case schema.Type_Which.UINT32:
+    case schema.Type_Which.UINT64:
+    case schema.Type_Which.UINT8: {
+      const value = createValueExpression(slot.defaultValue);
+      initializer = `$.${primitive.mask}(${value})`;
 
       break;
     }
@@ -192,88 +187,93 @@ export function generateDefaultValue(field: s.Field): ts.PropertyAssignment {
     }
   }
 
-  return f.createPropertyAssignment(`default${util.c2t(name)}`, initializer);
+  return `default${util.c2t(name)}: ${initializer}`;
 }
 
+/**
+ * Generates a unique file identifier constant for a Cap'n Proto schema file.
+ *
+ * @param ctx - The file context containing schema information
+ */
 export function generateFileId(ctx: CodeGeneratorFileContext): void {
-  // export const _capnpFileId = BigInt('0xabcdef');
-  const fileId = f.createCallExpression(BIGINT, undefined, [
-    f.createStringLiteral(`0x${ctx.file.id.toString(16)}`),
-  ]);
-  ctx.statements.push(
-    f.createVariableStatement(
-      [EXPORT],
-      f.createVariableDeclarationList(
-        [
-          f.createVariableDeclaration(
-            "_capnpFileId",
-            undefined,
-            undefined,
-            fileId,
-          ),
-        ],
-        ts.NodeFlags.Const,
-      ),
-    ),
+  ctx.codeParts.push(
+    `export const _capnpFileId = BigInt("0x${ctx.file.id.toString(16)}");`,
   );
 }
 
+/**
+ * Generates TypeScript code for a Cap'n Proto schema node.
+ * Handles different node types (struct, enum, interface) and their nested definitions.
+ *
+ * @param ctx - The file context containing schema information and output statements
+ * @param node - The schema node to generate code for
+ *
+ * @remarks
+ * - Generates nested nodes first to ensure proper symbol references
+ * - Handles group nodes that appear before struct nodes
+ * - Skips already generated nodes to avoid duplicates
+ * - Throws error for unknown node types
+ */
 export function generateNode(
   ctx: CodeGeneratorFileContext,
-  node: s.Node,
+  node: schema.Node,
 ): void {
   const nodeId = node.id;
   const nodeIdHex = nodeId.toString(16);
 
-  if (ctx.generatedNodeIds.includes(nodeIdHex)) return;
+  if (ctx.generatedNodeIds.has(nodeIdHex)) {
+    // skip already generated nodes
+    return;
+  }
 
-  ctx.generatedNodeIds.push(nodeIdHex);
+  ctx.generatedNodeIds.add(nodeIdHex);
 
-  /** An array of group structs formed as children of this struct. They appear before the struct node in the file. */
+  // An array of group structs formed as children of this struct.
+  // They appear before the struct node in the file.
   const groupNodes = ctx.nodes.filter(
     (n) => n.scopeId === nodeId && n._isStruct && n.struct.isGroup,
   );
-  /**
-   * An array of nodes that are nested within this node; these must appear first since those symbols will be
-   * referenced in the node's class definition.
-   */
+
+  // An array of nodes that are nested within this node;
+  // these must appear first since those symbols will be
+  // referenced in the node's class definition.
   const nestedNodes = node.nestedNodes.map((n) => lookupNode(ctx, n));
 
-  for (const n of nestedNodes) generateNode(ctx, n);
-  for (const n of groupNodes) generateNode(ctx, n);
+  for (const n of nestedNodes) {
+    generateNode(ctx, n);
+  }
+  for (const n of groupNodes) {
+    generateNode(ctx, n);
+  }
 
   const whichNode = node.which();
 
   switch (whichNode) {
-    case s.Node.STRUCT: {
+    case schema.Node.STRUCT: {
       generateStructNode(ctx, node, false);
-
       break;
     }
 
-    case s.Node.CONST: {
+    case schema.Node.CONST: {
       // Const nodes are generated along with the containing class, ignore these.
-
       break;
     }
 
-    case s.Node.ENUM: {
+    case schema.Node.ENUM: {
       generateEnumNode(
         ctx,
         getFullClassName(node),
         node.enum.enumerants.toArray(),
       );
-
       break;
     }
 
-    case s.Node.INTERFACE: {
+    case schema.Node.INTERFACE: {
       generateStructNode(ctx, node, true);
-
       break;
     }
 
-    case s.Node.ANNOTATION: {
+    case schema.Node.ANNOTATION: {
       break;
     }
 
@@ -284,22 +284,37 @@ export function generateNode(
           E.GEN_NODE_UNKNOWN_TYPE,
           whichNode /* s.Node_Which[whichNode] */,
         ),
-      ); // TODO
+      );
     }
   }
 }
 
 const listLengthParameterName = "length";
 
+/**
+ * Generates TypeScript code for struct field methods.
+ *
+ * This function creates accessor methods and properties for a Cap'n Proto struct field:
+ * - Getters and setters for the field value
+ * - Adoption and disowning methods for pointer fields
+ * - Initialization methods for lists and structs
+ * - Union discriminant handling for fields in unnamed unions
+ *
+ * @param ctx - The code generator context
+ * @param members - Array of code parts to append the generated methods to
+ * @param node - The struct node containing the field
+ * @param field - The field to generate methods for
+ * @param fieldIndex - Index of the field in the struct's field list (for documentation lookup)
+ */
 export function generateStructFieldMethods(
   ctx: CodeGeneratorFileContext,
-  members: ts.ClassElement[],
-  node: s.Node,
-  field: s.Field,
+  members: string[],
+  node: schema.Node,
+  field: schema.Field,
   fieldIndex: number,
 ): void {
   let jsType: string;
-  let whichType: s.Type_Which | string;
+  let whichType: schema.Type_Which | string;
 
   if (field._isSlot) {
     const slotType = field.slot.type;
@@ -311,58 +326,25 @@ export function generateStructFieldMethods(
   } else {
     throw new Error(format(E.GEN_UNKNOWN_STRUCT_FIELD, field.which()));
   }
-  let jsTypeReference = f.createTypeReferenceNode(jsType);
 
-  const isInterface = whichType === s.Type.INTERFACE;
+  const isInterface = whichType === schema.Type.INTERFACE;
   if (isInterface) {
     jsType = `${jsType}$Client`;
-    jsTypeReference = f.createTypeReferenceNode(jsType);
   }
 
-  const discriminantOffset = node.struct.discriminantOffset;
-  const name = field.name;
-  const properName = util.c2t(name);
-  const hadExplicitDefault = field._isSlot && field.slot.hadExplicitDefault;
-  const discriminantValue = field.discriminantValue;
+  const { discriminantOffset } = node.struct;
+  const { name } = field;
+  // `constructor` is not a valid accessor, use `$constructor` instead
+  const accessorName = name === "constructor" ? "$constructor" : name;
+  const capitalizedName = util.c2t(name);
+  const { discriminantValue } = field;
   const fullClassName = getFullClassName(node);
-  const union = discriminantValue !== s.Field.NO_DISCRIMINANT;
-  const offset = (field._isSlot && field.slot.offset) || 0;
-  const offsetLiteral = f.createNumericLiteral(offset.toString());
-  /** $.utils.getPointer(0, this) */
-  const getPointer = f.createCallExpression(
-    f.createPropertyAccessExpression(UTILS, "getPointer"),
-    undefined,
-    [offsetLiteral, THIS],
-  );
-  /** $.utils.copyFrom(value, $.utils.getPointer(0, this)) */
-  const copyFromValue = f.createCallExpression(
-    f.createPropertyAccessExpression(UTILS, "copyFrom"),
-    undefined,
-    [VALUE, getPointer],
-  );
-  /** capnp.Orphan<Foo> */
-  const orphanType = f.createTypeReferenceNode("$.Orphan", [jsTypeReference]);
-  const discriminantOffsetLiteral = f.createNumericLiteral(
-    (discriminantOffset * 2).toString(),
-  );
-  const discriminantValueLiteral = f.createNumericLiteral(
-    discriminantValue.toString(),
-  );
-  /** $.utils.getUint16(0, this) */
-  const getDiscriminant = f.createCallExpression(
-    f.createPropertyAccessExpression(UTILS, "getUint16"),
-    undefined,
-    [discriminantOffsetLiteral, THIS],
-  );
-  /** $.utils.setUint16(0, this) */
-  const setDiscriminant = f.createCallExpression(
-    f.createPropertyAccessExpression(UTILS, "setUint16"),
-    undefined,
-    [discriminantOffsetLiteral, discriminantValueLiteral, THIS],
-  );
-  const defaultValue = hadExplicitDefault
-    ? f.createIdentifier(`${fullClassName}._capnp.default${properName}`)
-    : undefined;
+  const hadExplicitDefault = field._isSlot && field.slot.hadExplicitDefault;
+  const maybeDefaultArg = hadExplicitDefault
+    ? `, ${fullClassName}._capnp.default${capitalizedName}`
+    : "";
+  const union = discriminantValue !== schema.Field.NO_DISCRIMINANT;
+  const offset = field._isSlot ? field.slot.offset : 0;
 
   let adopt = false;
   let disown = false;
@@ -370,253 +352,101 @@ export function generateStructFieldMethods(
   let has = false;
   let get;
   let set;
-  let getArgs: ts.Expression[];
-  let setArgs: ts.Expression[];
 
   switch (whichType) {
-    case s.Type.ANY_POINTER: {
-      getArgs = [offsetLiteral, THIS];
-
-      if (defaultValue) {
-        getArgs.push(defaultValue);
-      }
-
+    case schema.Type.ANY_POINTER: {
       adopt = true;
       disown = true;
-      /** $.utils.getPointer(0, this) */
-      get = f.createCallExpression(
-        f.createPropertyAccessExpression(UTILS, "getPointer"),
-        undefined,
-        getArgs,
-      );
       has = true;
-      /** $.utils.copyFrom(value, $.utils.getPointer(0, this)) */
-      set = f.createCallExpression(
-        f.createPropertyAccessExpression(UTILS, "copyFrom"),
-        undefined,
-        [VALUE, get],
-      );
-
+      get = `$.utils.getPointer(${offset}, this${maybeDefaultArg})`;
+      set = `$.utils.copyFrom(value, ${get})`;
       break;
     }
 
-    case s.Type.BOOL:
-    case s.Type.ENUM:
-    case s.Type.FLOAT32:
-    case s.Type.FLOAT64:
-    case s.Type.INT16:
-    case s.Type.INT32:
-    case s.Type.INT64:
-    case s.Type.INT8:
-    case s.Type.UINT16:
-    case s.Type.UINT32:
-    case s.Type.UINT64:
-    case s.Type.UINT8: {
-      const { byteLength, getter, setter } = Primitive[whichType as number];
+    case schema.Type.BOOL:
+    case schema.Type.ENUM:
+    case schema.Type.FLOAT32:
+    case schema.Type.FLOAT64:
+    case schema.Type.INT16:
+    case schema.Type.INT32:
+    case schema.Type.INT64:
+    case schema.Type.INT8:
+    case schema.Type.UINT16:
+    case schema.Type.UINT32:
+    case schema.Type.UINT64:
+    case schema.Type.UINT8: {
+      const { byteLength, getter, setter } = Primitives[whichType];
       // NOTE: For a BOOL type this is actually a bit offset; `byteLength` will be `1` in that case.
-      const byteOffset = f.createNumericLiteral(
-        (offset * byteLength).toString(),
-      );
-      getArgs = [byteOffset, THIS];
-      setArgs = [byteOffset, VALUE, THIS];
-
-      if (defaultValue) {
-        getArgs.push(defaultValue);
-        setArgs.push(defaultValue);
+      const byteOffset = offset * byteLength;
+      get = `$.utils.${getter}(${byteOffset}, this${maybeDefaultArg})`;
+      set = `$.utils.${setter}(${byteOffset}, value, this${maybeDefaultArg})`;
+      if (whichType === schema.Type.ENUM) {
+        get = `${get} as ${jsType}`;
       }
-
-      /** $.utils.getXYZ(0, this) */
-      get = f.createCallExpression(
-        f.createPropertyAccessExpression(UTILS, getter),
-        undefined,
-        getArgs,
-      );
-      /** $.utils.setXYZ(0, value, this) */
-      set = f.createCallExpression(
-        f.createPropertyAccessExpression(UTILS, setter),
-        undefined,
-        setArgs,
-      );
-
-      if (whichType === s.Type.ENUM) {
-        get = f.createAsExpression(get, jsTypeReference);
-      }
-
       break;
     }
-    case s.Type.DATA: {
-      getArgs = [offsetLiteral, THIS];
 
-      if (defaultValue) getArgs.push(defaultValue);
-
+    case schema.Type.DATA: {
       adopt = true;
       disown = true;
-      /** $.utils.getData(0, this) */
-      get = f.createCallExpression(
-        f.createPropertyAccessExpression(UTILS, "getData"),
-        undefined,
-        getArgs,
-      );
       has = true;
-      /** $.utils.initData(0, length, this) */
-      init = f.createCallExpression(
-        f.createPropertyAccessExpression(UTILS, "initData"),
-        undefined,
-        [offsetLiteral, LENGTH, THIS],
-      );
-      set = copyFromValue;
-
+      get = `$.utils.getData(${offset}, this${maybeDefaultArg})`;
+      set = `$.utils.copyFrom(value, $.utils.getPointer(${offset}, this))`;
+      init = `$.utils.initData(${offset}, length, this)`;
       break;
     }
 
-    case s.Type.INTERFACE: {
-      // new SomeInterface$Client(undefinedS.getInterfaceClientOrNullAt(0, this));
-      {
-        const client = f.createCallExpression(
-          f.createPropertyAccessExpression(UTILS, "getInterfaceClientOrNullAt"),
-          undefined, // typeParams
-          [offsetLiteral, THIS],
-        );
-        const newClient = f.createNewExpression(
-          f.createIdentifier(jsType),
-          undefined, // typeParams
-          [client],
-        );
-        get = newClient;
-      }
-
-      {
-        const message = f.createPropertyAccessExpression(
-          f.createPropertyAccessExpression(THIS, f.createIdentifier("segment")),
-          f.createIdentifier("message"),
-        );
-        const capId = f.createCallExpression(
-          f.createPropertyAccessExpression(message, "addCap"),
-          undefined, // typeParams
-          [
-            f.createPropertyAccessExpression(
-              f.createIdentifier("value"),
-              "client",
-            ),
-          ],
-        );
-        const ptr = f.createCallExpression(
-          f.createPropertyAccessExpression(UTILS, "getPointer"),
-          undefined, // typeParams
-          [offsetLiteral, THIS],
-        );
-
-        set = f.createCallExpression(
-          f.createPropertyAccessExpression(UTILS, "setInterfacePointer"),
-          undefined, // typeParams
-          [capId, ptr],
-        );
-      }
+    case schema.Type.INTERFACE: {
+      get = `new ${jsType}($.utils.getInterfaceClientOrNullAt(${offset}, this))`;
+      set = `$.utils.setInterfacePointer(this.segment.message.addCap(value.client), $.utils.getPointer(${offset}, this))`;
       break;
     }
 
-    case s.Type.LIST: {
+    case schema.Type.LIST: {
       const whichElementType = field.slot.type.list.elementType.which();
       let listClass = ConcreteListType[whichElementType];
 
       if (
-        whichElementType === s.Type.LIST ||
-        whichElementType === s.Type.STRUCT
+        whichElementType === schema.Type.LIST ||
+        whichElementType === schema.Type.STRUCT
       ) {
-        listClass = `${fullClassName}._${properName}`;
-      } else if (listClass === void 0) {
-        /* istanbul ignore next */
+        listClass = `${fullClassName}._${capitalizedName}`;
+      } else if (listClass === undefined) {
         throw new Error(
           format(E.GEN_UNSUPPORTED_LIST_ELEMENT_TYPE, whichElementType),
         );
       }
 
-      const listClassIdentifier = f.createIdentifier(listClass);
-
-      getArgs = [offsetLiteral, listClassIdentifier, THIS];
-
-      if (defaultValue) getArgs.push(defaultValue);
-
       adopt = true;
       disown = true;
-      /** $.utils.getList(0, Myutils._Foo, this) */
-      get = f.createCallExpression(
-        f.createPropertyAccessExpression(UTILS, "getList"),
-        undefined,
-        getArgs,
-      );
-      if (whichElementType === s.Type.ENUM) {
-        get = f.createAsExpression(get, jsTypeReference);
-      }
       has = true;
-      /** $.utils.initList(0, Myutils._Foo, length, this) */
-      init = f.createCallExpression(
-        f.createPropertyAccessExpression(UTILS, "initList"),
-        undefined,
-        [
-          offsetLiteral,
-          listClassIdentifier,
-          f.createIdentifier(listLengthParameterName),
-          THIS,
-        ],
-      );
-      if (whichElementType === s.Type.ENUM) {
-        init = f.createAsExpression(init, jsTypeReference);
+      get = `$.utils.getList(${offset}, ${listClass}, this${maybeDefaultArg})`;
+      set = `$.utils.copyFrom(value, $.utils.getPointer(${offset}, this))`;
+      init = `$.utils.initList(${offset}, ${listClass}, length, this)`;
+      if (whichElementType === schema.Type.ENUM) {
+        get = `${get} as ${jsType}`;
+        init = `${init} as ${jsType}`;
       }
-      set = copyFromValue;
-
       break;
     }
-    case s.Type.STRUCT: {
-      const structType = f.createIdentifier(
-        getJsType(ctx, field.slot.type, false),
-      );
 
-      getArgs = [offsetLiteral, structType, THIS];
-
-      if (defaultValue) getArgs.push(defaultValue);
-
+    case schema.Type.STRUCT: {
       adopt = true;
       disown = true;
-      /** $.utils.getStruct(0, Foo, this) */
-      get = f.createCallExpression(
-        f.createPropertyAccessExpression(UTILS, "getStruct"),
-        undefined,
-        getArgs,
-      );
       has = true;
-      /** $.utils.initStruct(0, Foo, this) */
-      init = f.createCallExpression(
-        f.createPropertyAccessExpression(UTILS, "initStructAt"),
-        undefined,
-        [offsetLiteral, structType, THIS],
-      );
-      set = copyFromValue;
-
-      break;
-    }
-    case s.Type.TEXT: {
-      getArgs = [offsetLiteral, THIS];
-
-      if (defaultValue) getArgs.push(defaultValue);
-
-      /** $.utils.getText(0, this) */
-      get = f.createCallExpression(
-        f.createPropertyAccessExpression(UTILS, "getText"),
-        undefined,
-        getArgs,
-      );
-      /** $.utils.setText(0, value, this) */
-      set = f.createCallExpression(
-        f.createPropertyAccessExpression(UTILS, "setText"),
-        undefined,
-        [offsetLiteral, VALUE, THIS],
-      );
-
+      get = `$.utils.getStruct(${offset}, ${jsType}, this${maybeDefaultArg})`;
+      set = `$.utils.copyFrom(value, $.utils.getPointer(${offset}, this))`;
+      init = `$.utils.initStructAt(${offset}, ${jsType}, this)`;
       break;
     }
 
-    case s.Type.VOID: {
+    case schema.Type.TEXT: {
+      get = `$.utils.getText(${offset}, this${maybeDefaultArg})`;
+      set = `$.utils.setText(${offset}, value, this)`;
+      break;
+    }
+
+    case schema.Type.VOID: {
       break;
     }
 
@@ -624,19 +454,11 @@ export function generateStructFieldMethods(
       if (hadExplicitDefault) {
         throw new Error(format(E.GEN_EXPLICIT_DEFAULT_NON_PRIMITIVE, "group"));
       }
-
-      const groupType = f.createIdentifier(jsType);
-
-      /** $.utils.getAs(Foo, this); */
-      get = f.createCallExpression(
-        f.createPropertyAccessExpression(UTILS, "getAs"),
-        undefined,
-        [groupType, THIS],
-      );
+      get = `$.utils.getAs(${jsType}, this)`;
       init = get;
-
       break;
     }
+
     default: {
       // TODO Maybe this should be an error?
 
@@ -644,217 +466,95 @@ export function generateStructFieldMethods(
     }
   }
 
-  // _adoptFoo(value: capnp.Orphan<Foo>): void { $.utils.adopt(value, this._getPointer(3)); }}
   if (adopt) {
-    const parameters = [
-      f.createParameterDeclaration(
-        undefined,
-        undefined,
-        VALUE,
-        undefined,
-        orphanType,
-        undefined,
-      ),
-    ];
-    const expressions = [
-      f.createCallExpression(
-        f.createPropertyAccessExpression(UTILS, "adopt"),
-        undefined,
-        [VALUE, getPointer],
-      ),
-    ];
-
-    if (union) expressions.unshift(setDiscriminant);
-
-    members.push(
-      createMethod(`_adopt${properName}`, parameters, VOID_TYPE, expressions),
-    );
+    members.push(`
+      _adopt${capitalizedName}(value: $.Orphan<${jsType}>): void {
+        ${union ? `$.utils.setUint16(${discriminantOffset * 2}, ${discriminantValue}, this);` : ""}
+        $.utils.adopt(value, $.utils.getPointer(${offset}, this));
+      }
+    `);
   }
 
-  // _disownFoo(): capnp.Orphan<Foo> { return $.utils.disown(this.foo); }
   if (disown) {
-    const getter = f.createPropertyAccessExpression(
-      THIS,
-      name === "constructor" ? `$${name}` : name,
-    );
-    const expressions = [
-      f.createCallExpression(
-        f.createPropertyAccessExpression(UTILS, "disown"),
-        undefined,
-        [getter],
-      ),
-    ];
-
-    members.push(
-      createMethod(`_disown${properName}`, [], orphanType, expressions),
-    );
+    members.push(`
+      _disown${capitalizedName}(): $.Orphan<${jsType}> {
+        return $.utils.disown(this.${name === "constructor" ? `$${name}` : name});
+      }
+    `);
   }
 
-  // get foo(): FooType { ... }
   if (get) {
-    const expressions = [get];
-
-    if (union) {
-      expressions.unshift(
-        f.createCallExpression(
-          f.createPropertyAccessExpression(UTILS, "testWhich"),
-          undefined,
-          [
-            f.createStringLiteral(name),
-            getDiscriminant,
-            discriminantValueLiteral,
-            THIS,
-          ],
-        ),
-      );
-    }
-
-    const d = f.createGetAccessorDeclaration(
-      [],
-      // Avoid generating invalid "get constructor()"
-      name === "constructor" ? `$${name}` : name,
-      [],
-      jsTypeReference,
-      createExpressionBlock(expressions, true),
+    const docComment = extractJSDocs(
+      lookupNodeSourceInfo(ctx, node)?.members.at(fieldIndex),
     );
 
-    try {
-      attachJSDocs(d, lookupNodeSourceInfo(ctx, node)?.members.at(fieldIndex));
-    } catch {
-      // ignore
-    }
-
-    members.push(d);
+    members.push(`
+      ${docComment}
+      get ${accessorName}(): ${jsType} {
+        ${union ? `$.utils.testWhich(${JSON.stringify(name)}, $.utils.getUint16(${discriminantOffset * 2}, this), ${discriminantValue}, this);` : ""}
+        return ${get};
+      }
+    `);
   }
 
-  // hasFoo(): boolean { ... }
   if (has) {
-    // !$.utils.isNull(this._getPointer(8));
-    const expressions = [
-      f.createLogicalNot(
-        f.createCallExpression(
-          f.createPropertyAccessExpression(UTILS, "isNull"),
-          undefined,
-          [getPointer],
-        ),
-      ),
-    ];
-
-    members.push(
-      createMethod(`_has${properName}`, [], BOOLEAN_TYPE, expressions),
-    );
+    members.push(`
+      _has${capitalizedName}(): boolean {
+        return !$.utils.isNull($.utils.getPointer(${offset}, this));
+      }
+    `);
   }
 
-  // _initFoo(): FooType { ... } / _initFoo(length: number): $.List<FooElementType> { ... }
   if (init) {
-    const parameters =
-      whichType === s.Type.DATA || whichType === s.Type.LIST
-        ? [
-            f.createParameterDeclaration(
-              undefined,
-              undefined,
-              listLengthParameterName,
-              undefined,
-              NUMBER_TYPE,
-              undefined,
-            ),
-          ]
-        : [];
-    const expressions = [init];
-
-    if (union) expressions.unshift(setDiscriminant);
-
-    members.push(
-      createMethod(
-        `_init${properName}`,
-        parameters,
-        jsTypeReference,
-        expressions,
-      ),
-    );
+    const params =
+      whichType === schema.Type.DATA || whichType === schema.Type.LIST
+        ? `${listLengthParameterName}: number`
+        : "";
+    members.push(`
+      _init${capitalizedName}(${params}): ${jsType} {
+        ${union ? `$.utils.setUint16(${discriminantOffset * 2}, ${discriminantValue}, this);` : ""}
+        return ${init};
+      }
+    `);
   }
 
-  // isFoo(): boolean { ... }
   if (union) {
-    const left = f.createCallExpression(
-      f.createPropertyAccessExpression(UTILS, "getUint16"),
-      undefined,
-      [discriminantOffsetLiteral, THIS],
-    );
-    const right = discriminantValueLiteral;
-    const expressions = [
-      f.createBinaryExpression(
-        left,
-        ts.SyntaxKind.EqualsEqualsEqualsToken,
-        right,
-      ),
-    ];
-
-    // members.push(
-    //   createMethod(`is${properName}`, [], BOOLEAN_TYPE, expressions),
-    // );
-    // get isFoo() { return $.utils.getUint16(12, this) === 1; }
-    members.push(
-      f.createGetAccessorDeclaration(
-        [],
-        `_is${properName}`,
-        [],
-        BOOLEAN_TYPE,
-        createExpressionBlock(expressions, true),
-      ),
-    );
+    members.push(`
+      get _is${capitalizedName}(): boolean {
+        return $.utils.getUint16(${discriminantOffset * 2}, this) === ${discriminantValue};
+      }
+    `);
   }
 
-  // set foo(value: FooType): void { ... }
   if (set || union) {
-    const expressions = [];
-    const parameters = [];
-
-    if (set) {
-      expressions.unshift(set);
-
-      parameters.unshift(
-        f.createParameterDeclaration(
-          undefined,
-          undefined,
-          VALUE,
-          undefined,
-          jsTypeReference,
-          undefined,
-        ),
-      );
-    }
-
-    if (union) {
-      expressions.unshift(setDiscriminant);
-    }
-
-    if (parameters.length === 0) {
-      parameters.unshift(
-        f.createParameterDeclaration(
-          undefined,
-          undefined,
-          "_",
-          undefined,
-          f.createTypeReferenceNode("true"),
-        ),
-      );
-    }
-
-    members.push(
-      f.createSetAccessorDeclaration(
-        [],
-        name === "constructor" ? `$${name}` : name,
-        parameters,
-        createExpressionBlock(expressions, false),
-      ),
-    );
+    const param = set ? `value: ${jsType}` : `_: true`;
+    members.push(`
+      set ${accessorName}(${param}) {
+        ${union ? `$.utils.setUint16(${discriminantOffset * 2}, ${discriminantValue}, this);` : ""}
+        ${set ? `${set};` : ""}
+      }
+    `);
   }
 }
 
+/**
+ * Generates TypeScript class definition for a Cap'n Proto struct or interface node.
+ * Creates class members, properties, methods and nested type definitions.
+ *
+ * @param ctx - The file context containing schema information and output statements
+ * @param node - The schema node to generate code for
+ * @param interfaceNode - Whether this node represents an interface (true) or struct (false)
+ *
+ * @remarks
+ * - Generates enum definitions for unnamed unions if present
+ * - Creates static properties for constants and nested types
+ * - Generates getter/setter methods for all fields
+ * - Handles special cases for interfaces (Client/Server classes)
+ * - Preserves documentation comments from schema
+ */
 export function generateStructNode(
   ctx: CodeGeneratorFileContext,
-  node: s.Node,
+  node: schema.Node,
   interfaceNode: boolean,
 ): void {
   const displayNamePrefix = getDisplayNamePrefix(node);
@@ -864,7 +564,7 @@ export function generateStructNode(
     .filter((n) => !n._isConst && !n._isAnnotation);
   const nodeId = node.id;
   const nodeIdHex = nodeId.toString(16);
-  const struct = node.which() === s.Node.STRUCT ? node.struct : undefined;
+  const struct = node.which() === schema.Node.STRUCT ? node.struct : undefined;
   const unionFields = getUnnamedUnionFields(node).sort(compareCodeOrder);
 
   const dataWordCount = struct ? struct.dataWordCount : 0;
@@ -884,141 +584,82 @@ export function generateStructNode(
     .filter((f) => needsConcreteListClass(f))
     .sort(compareCodeOrder);
   const consts = ctx.nodes.filter((n) => n.scopeId === nodeId && n._isConst);
-  // const groups = ctx.nodes.filter(
-  //   (n) => n.getScopeId().equals(nodeId) && n.isStruct() && n.getStruct().getIsGroup());
   const hasUnnamedUnion = discriminantCount !== 0;
 
   if (hasUnnamedUnion) {
     generateEnumNode(ctx, fullClassName + "_Which", unionFields);
   }
 
-  const members: ts.ClassElement[] = [];
+  const members: string[] = [];
 
   // static readonly CONSTANT = 'foo';
-  members.push(...consts.map((n) => createConstProperty(n)));
-
-  // static readonly WHICH = MyStruct_Which.WHICH;
   members.push(
-    ...unionFields.map((f) => createUnionConstProperty(fullClassName, f)),
+    ...consts.map((node) => {
+      const name = util.c2s(getDisplayNamePrefix(node));
+      const value = createValueExpression(node.const.value);
+      return `static readonly ${name} = ${value}`;
+    }),
+    ...unionFields.map((field) =>
+      createUnionConstProperty(fullClassName, field),
+    ),
+    ...nestedNodes.map((node) => createNestedNodeProperty(node)),
   );
 
-  // static readonly NestedStruct = MyStruct_NestedStruct;
-  members.push(...nestedNodes.map((n) => createNestedNodeProperty(n)));
-
-  // static readonly Client = MyInterface$Client;
-  // static readonly Server = MyInterface$Server;
   if (interfaceNode) {
-    members.push(
-      f.createPropertyDeclaration(
-        [STATIC, READONLY],
-        "Client",
-        undefined,
-        undefined,
-        f.createIdentifier(`${fullClassName}$Client`),
-      ),
-    );
-    members.push(
-      f.createPropertyDeclaration(
-        [STATIC, READONLY],
-        "Server",
-        undefined,
-        undefined,
-        f.createIdentifier(`${fullClassName}$Server`),
-      ),
-    );
+    members.push(`
+      static readonly Client = ${fullClassName}$Client;
+      static readonly Server = ${fullClassName}$Server;
+      `);
   }
 
-  const defaultValues: ts.PropertyAssignment[] = [];
+  const defaultValues: string[] = [];
   for (const index of fieldIndexInCodeOrder) {
     const field = fields[index];
     if (
       field._isSlot &&
       field.slot.hadExplicitDefault &&
-      field.slot.type.which() !== s.Type.VOID
+      field.slot.type.which() !== schema.Type.VOID
     ) {
       defaultValues.push(generateDefaultValue(field));
     }
   }
 
-  // static reaodnly _capnp = { displayName: 'MyStruct', id: '4732bab4310f81', size = new undefinedO(8, 8) };
   members.push(
-    f.createPropertyDeclaration(
-      [STATIC, READONLY],
-      "_capnp",
-      undefined,
-      undefined,
-      f.createObjectLiteralExpression(
-        [
-          f.createPropertyAssignment(
-            "displayName",
-            f.createStringLiteral(displayNamePrefix),
-          ),
-          f.createPropertyAssignment("id", f.createStringLiteral(nodeIdHex)),
-          f.createPropertyAssignment(
-            "size",
-            f.createNewExpression(OBJECT_SIZE, undefined, [
-              f.createNumericLiteral(dataByteLength.toString()),
-              f.createNumericLiteral(pointerCount.toString()),
-            ]),
-          ),
-          ...defaultValues,
-        ],
-        true,
-      ),
-    ),
+    `
+      static readonly _capnp = {
+        displayName: "${displayNamePrefix}",
+        id: "${nodeIdHex}",
+        size: new $.ObjectSize(${dataByteLength}, ${pointerCount}),
+        ${defaultValues.join(",")}
+      }`,
+    ...concreteLists.map((field) => createConcreteListProperty(ctx, field)),
   );
 
-  // private static _ConcreteListClass: MyStruct_ConcreteListClass;
-  members.push(...concreteLists.map((f) => createConcreteListProperty(ctx, f)));
-
-  // get foo() { ... } initFoo() { ... } set foo() { ... }
   for (const index of fieldIndexInCodeOrder) {
     const field = fields[index];
     generateStructFieldMethods(ctx, members, node, field, index);
   }
 
   // toString(): string { return 'MyStruct_' + super.toString(); }
-  const toStringExpression = f.createBinaryExpression(
-    f.createStringLiteral(`${fullClassName}_`),
-    ts.SyntaxKind.PlusToken,
-    f.createCallExpression(f.createIdentifier("super.toString"), undefined, []),
+  members.push(
+    `toString(): string { return "${fullClassName}_" + super.toString(); }`,
   );
-  members.push(createMethod("toString", [], STRING_TYPE, [toStringExpression]));
 
   if (hasUnnamedUnion) {
-    // which(): MyStruct_Which { return $.utils.getUint16(12, this); }
-    const whichExpression = f.createAsExpression(
-      f.createCallExpression(
-        f.createPropertyAccessExpression(UTILS, "getUint16"),
-        undefined,
-        [f.createNumericLiteral((discriminantOffset * 2).toString()), THIS],
-      ),
-      f.createTypeReferenceNode(`${fullClassName}_Which`, undefined),
-    );
-    members.push(
-      createMethod(
-        "which",
-        [],
-        f.createTypeReferenceNode(`${fullClassName}_Which`, undefined),
-        [whichExpression],
-      ),
-    );
+    members.push(`
+      which(): ${fullClassName}_Which {
+        return $.utils.getUint16(${discriminantOffset * 2}, this) as ${fullClassName}_Which;
+      }
+    `);
   }
 
-  const c = f.createClassDeclaration(
-    [EXPORT],
-    fullClassName,
-    undefined,
-    [createClassExtends(interfaceNode ? "$.Interface" : "$.Struct")],
-    members,
-  );
+  const docComment = extractJSDocs(lookupNodeSourceInfo(ctx, node));
 
-  // Add jsdoc comments to the class.
-  try {
-    attachJSDocs(c, lookupNodeSourceInfo(ctx, node));
-  } catch {
-    // Ignore
-  }
+  const classCode = `
+  ${docComment}
+  export class ${fullClassName} extends ${interfaceNode ? "$.Interface" : "$.Struct"} {
+    ${members.join("\n")}
+  }`;
 
   // Make sure the interface classes are generated first.
 
@@ -1026,70 +667,57 @@ export function generateStructNode(
     generateInterfaceClasses(ctx, node);
   }
 
-  ctx.statements.push(c);
+  ctx.codeParts.push(classCode);
 
   // Write out the concrete list type initializer after all the class definitions. It can't be initialized within the
   // class's static initializer because the nested type might not be defined yet.
   // FIXME: This might be solvable with topological sorting?
-
   ctx.concreteLists.push(
-    ...concreteLists.map<[string, s.Field]>((f) => [fullClassName, f]),
+    ...concreteLists.map((field): [string, schema.Field] => [
+      fullClassName,
+      field,
+    ]),
   );
 }
 
+/**
+ * Generates TypeScript enum code from Cap'n Proto enum definitions.
+ *
+ * @param ctx - The file context containing schema information and output statements
+ * @param className - The name to use for the generated enum type and const object
+ * @param fields - Array of enum fields containing names and optional discriminant values
+ */
 export function generateEnumNode(
   ctx: CodeGeneratorFileContext,
   className: string,
-  fields: s.Enumerant[] | s.Field[],
+  fields: schema.Enumerant[] | schema.Field[],
 ): void {
-  const members = fields.sort(compareCodeOrder).map((e, index) => {
-    const key = f.createIdentifier(util.c2s(e.name));
-    const val = f.createNumericLiteral(
-      ((e as s.Field).discriminantValue || index).toString(),
-    );
-    return f.createPropertyAssignment(key, val);
+  const propInits = fields.sort(compareCodeOrder).map((e, index) => {
+    const key = util.c2s(e.name);
+    const val = (e as schema.Field).discriminantValue || index;
+    return `${key}: ${val}`;
   });
 
-  // export const MyEnum = { FOO: 1, BAR: 2 } as const
-  const d = f.createVariableStatement(
-    [EXPORT],
-    f.createVariableDeclarationList(
-      [
-        f.createVariableDeclaration(
-          className,
-          undefined,
-          undefined,
-          f.createAsExpression(
-            f.createObjectLiteralExpression(members, true),
-            f.createTypeReferenceNode("const", undefined),
-          ),
-        ),
-      ],
-      ts.NodeFlags.Const,
-    ),
-  );
+  ctx.codeParts.push(`
+    export const ${className} = {
+      ${propInits.join(",\n")}
+    } as const;
 
-  // export type MyEnum = (typeof MyEnum)[keyof typeof MyEnum]
-  const t = f.createTypeAliasDeclaration(
-    [EXPORT],
-    className,
-    undefined,
-    f.createIndexedAccessTypeNode(
-      f.createTypeQueryNode(f.createIdentifier(className)),
-      f.createTypeOperatorNode(
-        ts.SyntaxKind.KeyOfKeyword,
-        f.createTypeQueryNode(f.createIdentifier(className)),
-      ),
-    ),
-  );
-
-  ctx.statements.push(d, t);
+    export type ${className} = (typeof ${className})[keyof typeof ${className}];
+  `);
 }
 
+/**
+ * Recursively collects structs and enums from a schema node and its nested nodes.
+ *
+ * @param ctx - The file context containing schema information
+ * @param node - The root node to start collecting imports from
+ * @returns Array of Node objects that can be imported (structs and enums only)
+ */
 export function getImportNodes(
   ctx: CodeGeneratorFileContext,
-  node: s.Node,
-): s.Node[] {
+  node: schema.Node,
+): schema.Node[] {
   return (
     lookupNode(ctx, node)
       .nestedNodes.filter((n) => hasNode(ctx, n))
@@ -1097,38 +725,59 @@ export function getImportNodes(
       // eslint-disable-next-line unicorn/no-array-reduce
       .reduce(
         (a, n) => [...a, n, ...getImportNodes(ctx, n)],
-        new Array<s.Node>(),
+        new Array<schema.Node>(),
       )
-      .filter((n) => lookupNode(ctx, n)._isStruct || lookupNode(ctx, n)._isEnum)
+      .filter((n) => {
+        const node = lookupNode(ctx, n);
+        return node._isStruct || node._isEnum;
+      })
   );
 }
 
-function attachJSDocs(
-  d: ts.Declaration,
-  sourceInfo?: s.Node_SourceInfo | s.Node_SourceInfo_Member,
-) {
+/**
+ * Extracts JSDoc comments from a Cap'n Proto source info as a formatted string.
+ *
+ * @param sourceInfo - The source info containing documentation comments
+ * @returns Formatted JSDoc string or undefined if no documentation exists
+ */
+function extractJSDocs(
+  sourceInfo?: schema.Node_SourceInfo | schema.Node_SourceInfo_Member,
+): string {
   const docComment = sourceInfo?.docComment;
   if (!docComment) {
-    return;
+    return "";
   }
-  ts.addSyntheticLeadingComment(
-    d,
-    ts.SyntaxKind.MultiLineCommentTrivia,
-    "*\n" +
-      docComment
-        .toString()
-        .split("\n")
-        .map((l) => `* ${l}`)
-        .join("\n"),
-    true,
+
+  return (
+    "/**\n" +
+    docComment
+      .toString()
+      .split("\n")
+      .map((l) => `* ${l}`)
+      .join("\n") +
+    "\n*/"
   );
 }
 
 // ---- RPC stuff ----
 
+/**
+ * Generates TypeScript classes for a Cap'n Proto RPC interface.
+ *
+ * This function creates all the necessary classes for an RPC interface:
+ * - Parameter and result structs for each method
+ * - Client class for making RPC calls
+ * - Server class for implementing the interface
+ *
+ * The generated code follows the Cap'n Proto RPC protocol specification,
+ * creating type-safe client/server implementations.
+ *
+ * @param ctx - The code generator context
+ * @param node - The interface node to generate classes for
+ */
 export function generateInterfaceClasses(
   ctx: CodeGeneratorFileContext,
-  node: s.Node,
+  node: schema.Node,
 ): void {
   // Generate the parameter and result structs first
   generateMethodStructs(ctx, node);
@@ -1140,7 +789,7 @@ export function generateInterfaceClasses(
 
 export function generateMethodStructs(
   ctx: CodeGeneratorFileContext,
-  node: s.Node,
+  node: schema.Node,
 ): void {
   for (const method of node.interface.methods) {
     const paramNode = lookupNode(ctx, method.paramStructType);
@@ -1151,9 +800,20 @@ export function generateMethodStructs(
   }
 }
 
+/**
+ * Generates a TypeScript server implementation for a Cap'n Proto RPC interface.
+ *
+ * Creates a server class and target interface that implement the RPC service:
+ * - Generates method signatures for all interface methods
+ * - Creates a target interface that users implement to handle RPC calls
+ * - Builds a server class that bridges between the RPC runtime and user implementation
+ *
+ * @param ctx - The code generator context
+ * @param node - The interface node to generate server code for
+ */
 export function generateServer(
   ctx: CodeGeneratorFileContext,
-  node: s.Node,
+  node: schema.Node,
 ): void {
   // TODO: handle superclasses
   const fullClassName = getFullClassName(node);
@@ -1161,246 +821,93 @@ export function generateServer(
   const serverTargetName = `${serverName}$Target`;
   const clientName = `${fullClassName}$Client`;
 
-  // Generate the `Foobar$Server$Target` interface
-  {
-    const elements = node.interface.methods.map<ts.TypeElement>((method) => {
+  const methodSignatures = node.interface.methods
+    .map((method) => {
       const paramTypeName = getFullClassName(
         lookupNode(ctx, method.paramStructType),
       );
       const resultTypeName = getFullClassName(
         lookupNode(ctx, method.resultStructType),
       );
+      return `${method.name}(params: ${paramTypeName}, results: ${resultTypeName}): Promise<void>;`;
+    })
+    .join("\n");
 
-      return f.createMethodSignature(
-        undefined, // modifiers
-        method.name, // name
-        undefined, // questionToken
-        undefined, // typeParams
-        [
-          f.createParameterDeclaration(
-            undefined, // modifiers
-            undefined, // dotDotToken
-            "params", // name
-            undefined, // questionToken
-            f.createTypeReferenceNode(paramTypeName, undefined), // type,
-            undefined, // initializer
-          ),
-          f.createParameterDeclaration(
-            undefined, // modifiers
-            undefined, // dotDotToken
-            "results", // name
-            undefined, // questionToken
-            f.createTypeReferenceNode(resultTypeName, undefined), // type,
-            undefined, // initializer
-          ),
-        ], // params
-        f.createTypeReferenceNode("Promise", [VOID_TYPE]), // type
-      );
-    });
+  ctx.codeParts.push(`
+  export interface ${serverTargetName} {
+    ${methodSignatures}
+  }`);
 
-    ctx.statements.push(
-      f.createInterfaceDeclaration(
-        [EXPORT], // modifiers
-        serverTargetName, // name
-        undefined, // typeParams
-        undefined, // heritageClauses
-        elements,
-      ),
-    );
-  }
+  const members: string[] = [];
 
-  const members: ts.ClassElement[] = [];
-
-  members.push(
-    f.createPropertyDeclaration(
-      [READONLY], // modifiers
-      "target", // name
-      undefined, // questionOrExclamationmark
-      f.createTypeReferenceNode(serverTargetName, undefined), // type
-      undefined, // initializer
-    ),
-  );
+  members.push(`readonly target: ${serverTargetName};`);
 
   // Generate server constructor
-  {
-    const serverMethods: ts.Expression[] = [];
+  const codeServerMethods: string[] = [];
 
-    let index = 0;
-    for (const method of node.interface.methods) {
-      serverMethods.push(
-        f.createObjectLiteralExpression(
-          [
-            f.createSpreadAssignment(
-              f.createElementAccessExpression(
-                f.createPropertyAccessExpression(
-                  f.createIdentifier(clientName),
-                  "methods",
-                ),
-                index++,
-              ),
-            ),
-            f.createPropertyAssignment(
-              "impl",
-              f.createPropertyAccessExpression(
-                f.createIdentifier("target"),
-                method.name,
-              ),
-            ),
-          ],
-          true, // multiline
-        ),
-      );
-    }
+  let index = 0;
+  for (const method of node.interface.methods) {
+    codeServerMethods.push(`{
+        ...${clientName}.methods[${index}],
+        impl: target.${method.name}
+      }`);
 
-    members.push(
-      f.createConstructorDeclaration(
-        undefined, // modifiers
-        [
-          f.createParameterDeclaration(
-            undefined, // modifiers
-            undefined, // dotDotToken
-            "target", // name
-            undefined, // questionToken
-            f.createTypeReferenceNode(serverTargetName, undefined), // type
-            undefined, // initializer
-          ),
-        ], // parameters
-        f.createBlock(
-          [
-            f.createExpressionStatement(
-              f.createCallExpression(
-                f.createIdentifier("super"),
-                undefined, // typeArguments
-                [
-                  f.createIdentifier("target"),
-                  f.createArrayLiteralExpression(
-                    serverMethods,
-                    true /* multiline */,
-                  ),
-                ], // arguments
-              ),
-            ),
-            f.createExpressionStatement(
-              f.createAssignment(
-                f.createPropertyAccessExpression(THIS, "target"),
-                f.createIdentifier("target"),
-              ),
-            ),
-          ],
-          true, // multiline
-        ), // body
-      ),
-    );
+    index++;
   }
 
-  members.push(
-    f.createMethodDeclaration(
-      undefined, // modifiers
-      undefined, // asteriskToken
-      "client", // name
-      undefined, // questionToken
-      undefined, // typeParams
-      [], // params
-      f.createTypeReferenceNode(clientName, undefined), // type
-      f.createBlock(
-        [
-          f.createReturnStatement(
-            f.createNewExpression(
-              f.createIdentifier(clientName),
-              undefined, // typeArgs
-              [THIS], // args
-            ),
-          ),
-        ],
-        false, // multiline
-      ),
-    ),
-  );
+  members.push(`
+      constructor(target: ${serverTargetName}) {
+        super(target, [
+          ${codeServerMethods.join(",\n")}
+        ]);
+        this.target = target;
+      }
+      client(): ${clientName} {
+        return new ${clientName}(this);
+      }
+  `);
 
-  ctx.statements.push(
-    f.createClassDeclaration(
-      [EXPORT], // modifiers
-      serverName, // name
-      undefined, // typeParams
-      [createClassExtends("$.Server")], // heritageClauses
-      members, // members
-    ),
-  );
+  ctx.codeParts.push(`
+    export class ${serverName} extends $.Server {
+      ${members.join("\n")}
+    }
+  `);
 }
 
+/**
+ * Generates a TypeScript client class for a Cap'n Proto RPC interface.
+ *
+ * Creates a client class that provides type-safe method calls to a remote service:
+ * - Generates method implementations for all interface methods
+ * - Creates method metadata for the RPC runtime
+ * - Handles parameter passing and promise resolution
+ * - Registers the client class with the RPC registry
+ *
+ * @param ctx - The code generator context
+ * @param node - The interface node to generate client code for
+ */
 export function generateClient(
   ctx: CodeGeneratorFileContext,
-  node: s.Node,
+  node: schema.Node,
 ): void {
   const fullClassName = getFullClassName(node);
   const clientName = `${fullClassName}$Client`;
 
   // TODO: handle superclasses
-  const members: ts.ClassElement[] = [];
+  const members: string[] = [];
 
-  const ClientType = f.createTypeReferenceNode("$.Client", undefined);
+  // Add client property
+  members.push(`
+    client: $.Client;
+    static readonly interfaceId: bigint = ${createBigIntExpression(node.id)};
+    constructor(client: $.Client) {
+      this.client = client;
+    }
+  `);
 
-  members.push(
-    f.createPropertyDeclaration(
-      undefined,
-      "client",
-      undefined,
-      ClientType,
-      undefined,
-    ),
-  );
-
-  members.push(
-    f.createPropertyDeclaration(
-      [STATIC, READONLY],
-      "interfaceId",
-      undefined,
-      f.createTypeReferenceNode("bigint", undefined),
-      createBigIntExpression(node.id),
-    ),
-  );
-
-  members.push(
-    f.createConstructorDeclaration(
-      undefined, // modifiers
-      [
-        f.createParameterDeclaration(
-          undefined,
-          undefined,
-          "client",
-          undefined,
-          ClientType,
-        ),
-      ], // parameters
-      f.createBlock(
-        [
-          f.createExpressionStatement(
-            f.createAssignment(
-              f.createPropertyAccessExpression(THIS, "client"),
-              f.createIdentifier("client"),
-            ),
-          ),
-        ],
-        true, // multiline
-      ), // body
-    ),
-  );
-
-  const methodDefs: ts.Expression[] = [];
-  const methodDefTypes: ts.TypeNode[] = [];
-
-  members.push(
-    f.createPropertyDeclaration(
-      [STATIC, READONLY], // modifiers
-      "methods", // name
-      undefined, // questionOrExclamationToken
-      f.createTupleTypeNode(methodDefTypes), // type
-      f.createArrayLiteralExpression(
-        methodDefs,
-        true, // multiline
-      ), // initializer
-    ),
-  );
+  const methods: string[] = [];
+  const methodDefs: string[] = [];
+  const methodDefTypes: string[] = [];
 
   let index = 0;
   for (const method of node.interface.methods) {
@@ -1408,106 +915,79 @@ export function generateClient(
       ctx,
       node,
       clientName,
-      members,
+      methods,
       methodDefs,
       methodDefTypes,
       method,
-      index++,
+      index,
     );
+    index++;
   }
 
-  ctx.statements.push(
-    f.createClassDeclaration([EXPORT], clientName, undefined, [], members),
-  );
+  members.push(`
+    static readonly methods:[
+      ${methodDefTypes.join(",\n")}
+    ] = [
+      ${methodDefs.join(",\n")}
+    ];
+    ${methods.join("\n")}
+    `);
 
-  ctx.statements.push(
-    f.createExpressionStatement(
-      f.createCallExpression(
-        f.createPropertyAccessExpression(
-          f.createIdentifier("$.Registry"),
-          "register",
-        ),
-        undefined, // typeArgs
-        [
-          f.createPropertyAccessExpression(
-            f.createIdentifier(clientName),
-            "interfaceId",
-          ),
-          f.createIdentifier(clientName),
-        ],
-      ),
-    ),
-  );
+  ctx.codeParts.push(`
+    export class ${clientName} {
+      ${members.join("\n")}
+    }
+    $.Registry.register(${clientName}.interfaceId, ${clientName});
+  `);
 }
 
+/**
+ * Generates a TypeScript Promise wrapper class for Cap'n Proto RPC method results.
+ *
+ * Creates a Promise class that handles asynchronous RPC results:
+ * - Manages pipelined method calls on promised results
+ * - Provides type-safe access to interface capabilities
+ * - Handles promise resolution for final results
+ *
+ * @param ctx - The code generator context
+ * @param node - The result struct node to generate promise wrapper for
+ */
 export function generateResultPromise(
   ctx: CodeGeneratorFileContext,
-  node: s.Node,
+  node: schema.Node,
 ): void {
   const nodeId = node.id;
 
-  if (ctx.generatedResultsPromiseIds.has(nodeId)) return;
+  if (ctx.generatedResultsPromiseIds.has(nodeId)) {
+    return;
+  }
 
   ctx.generatedResultsPromiseIds.add(nodeId);
 
   const resultsClassName = getFullClassName(node);
   const fullClassName = `${resultsClassName}$Promise`;
 
-  const PipelineType = f.createTypeReferenceNode("$.Pipeline", [
-    ANY_TYPE,
-    ANY_TYPE,
-    f.createTypeReferenceNode(resultsClassName, undefined),
-  ]);
+  const members: string[] = [];
 
-  const members: ts.ClassElement[] = [];
-  members.push(
-    f.createPropertyDeclaration(
-      undefined,
-      "pipeline",
-      undefined,
-      PipelineType,
-      undefined,
-    ),
-  );
+  members.push(`
+    pipeline: $.Pipeline<any, any, ${resultsClassName}>;
+    constructor(pipeline: $.Pipeline<any, any, ${resultsClassName}>) {
+      this.pipeline = pipeline;
+    }
+  `);
 
-  members.push(
-    f.createConstructorDeclaration(
-      undefined, // modifiers
-      [
-        f.createParameterDeclaration(
-          undefined,
-          undefined,
-          "pipeline",
-          undefined,
-          PipelineType,
-        ),
-      ], // parameters
-      f.createBlock(
-        [
-          f.createExpressionStatement(
-            f.createAssignment(
-              f.createPropertyAccessExpression(THIS, "pipeline"),
-              f.createIdentifier("pipeline"),
-            ),
-          ),
-        ],
-        true, // multiline
-      ), // body
-    ),
-  );
-
-  const struct = node.struct;
+  const { struct } = node;
   const fields = struct.fields.toArray().sort(compareCodeOrder);
 
-  const generatePromiseFieldMethod = (field: s.Field) => {
+  const generatePromiseFieldMethod = (field: schema.Field) => {
     let jsType: string;
     let isInterface = false;
-    let slot: s.Field_Slot;
+    let slot: schema.Field_Slot;
 
     if (field._isSlot) {
       slot = field.slot;
       const slotType = slot.type;
-      if (slotType.which() !== s.Type.INTERFACE) {
+      if (slotType.which() !== schema.Type.INTERFACE) {
         // TODO: return a Promise<jsType> for non-interface slots
         return;
       }
@@ -1525,118 +1005,62 @@ export function generateResultPromise(
       jsType = `${jsType}$Client`;
     }
 
-    const name = field.name;
+    const { name } = field;
     const properName = util.c2t(name);
-    const jsTypeReference = f.createTypeReferenceNode(jsType, undefined);
 
-    {
-      // const pipeline = this.pipeline.getPipeline(SlotType, offset)
-      const pipeline = f.createCallExpression(
-        f.createPropertyAccessExpression(
-          f.createPropertyAccessExpression(THIS, "pipeline"),
-          "getPipeline",
-        ),
-        undefined, // typeArguments
-        [
-          f.createIdentifier(promisedJsType),
-          f.createNumericLiteral(slot.offset.toString()),
-        ], // arguments
-      ); // call
-
-      // const client = pipeline.client()
-      const client = f.createCallExpression(
-        f.createPropertyAccessExpression(
-          pipeline,
-          f.createIdentifier("client"),
-        ),
-        undefined, // typeArguments
-        undefined, // arguments
-      );
-
-      // new RemoteInterface(client)
-      const remoteInterface = f.createNewExpression(
-        f.createIdentifier(jsType), // expression
-        undefined, // typeArguments
-        [client], // argumentsArray
-      );
-
-      members.push(
-        f.createMethodDeclaration(
-          undefined, // modifiers
-          undefined, // asteriskToken
-          `get${properName}`,
-          undefined,
-          undefined,
-          [], // parameters
-          jsTypeReference,
-          f.createBlock(
-            [f.createReturnStatement(remoteInterface)],
-            true, // multiLine
-          ),
-        ),
-      );
-    }
+    members.push(`
+      get${properName}(): ${jsType} {
+        return new ${jsType}(this.pipeline.getPipeline(${promisedJsType}, ${slot.offset}).client());
+      }
+    `);
   };
 
   for (const field of fields) {
     generatePromiseFieldMethod(field);
   }
 
-  {
-    members.push(
-      f.createMethodDeclaration(
-        [ASYNC], // modifiers
-        undefined, // asteriskToken
-        `promise`,
-        undefined,
-        undefined,
-        [], // parameters
-        f.createTypeReferenceNode(
-          "Promise",
-          [f.createTypeReferenceNode(resultsClassName, undefined)], // typeArguments
-        ),
-        createExpressionBlock(
-          [
-            f.createAwaitExpression(
-              f.createCallExpression(
-                f.createPropertyAccessExpression(
-                  f.createPropertyAccessExpression(THIS, "pipeline"),
-                  "struct",
-                ),
-                undefined, // typeArguments
-                undefined, // parameters
-              ), // call
-            ), // await
-          ],
-          true, // returns
-          false, // allowSingleLine
-        ),
-      ),
-    );
-  }
+  members.push(`
+    async promise(): Promise<${resultsClassName}> {
+      return await this.pipeline.struct();
+    }
+  `);
 
-  const c = f.createClassDeclaration(
-    [EXPORT],
-    fullClassName,
-    undefined,
-    [], // TODO: inheritance
-    members,
-  );
-
-  ctx.statements.push(c);
+  ctx.codeParts.push(`
+    export class ${fullClassName} {
+      ${members.join("\n")}
+    }
+  `);
 }
 
+/**
+ * Generates a client method implementation for a Cap'n Proto RPC interface.
+ *
+ * Creates the method definition, type declaration, and implementation code for a single
+ * RPC method in the client class. The generated code includes:
+ * - Method type definition for TypeScript
+ * - Method metadata for the RPC runtime
+ * - Client-side implementation that handles parameter passing and promise resolution
+ *
+ * @param ctx - The code generator context
+ * @param node - The interface node containing the method
+ * @param clientName - Name of the client class being generated
+ * @param methodsCode - Array to append method implementations to
+ * @param methodDefs - Array to append method definitions to
+ * @param methodDefTypes - Array to append method type declarations to
+ * @param method - The RPC method definition from the schema
+ * @param index - Index of this method in the interface's method list
+ */
 export function generateClientMethod(
   ctx: CodeGeneratorFileContext,
-  node: s.Node,
+  node: schema.Node,
   clientName: string,
-  members: ts.ClassElement[],
-  methodDefs: ts.Expression[],
-  methodDefTypes: ts.TypeNode[],
-  method: s.Method,
+  methodsCode: string[],
+  methodDefs: string[],
+  methodDefTypes: string[],
+  method: schema.Method,
   index: number,
 ): void {
-  const name = method.name;
+  const { name } = method;
 
   const paramTypeName = getFullClassName(
     lookupNode(ctx, method.paramStructType),
@@ -1645,155 +1069,28 @@ export function generateClientMethod(
     lookupNode(ctx, method.resultStructType),
   );
 
-  methodDefTypes.push(
-    f.createTypeReferenceNode(
-      "$.Method",
-      [
-        f.createTypeReferenceNode(paramTypeName, undefined),
-        f.createTypeReferenceNode(resultTypeName, undefined),
-      ], // typeArgs
-    ),
-  );
-  methodDefs.push(
-    f.createObjectLiteralExpression(
-      [
-        f.createPropertyAssignment(
-          "ParamsClass",
-          f.createIdentifier(paramTypeName),
-        ),
-        f.createPropertyAssignment(
-          "ResultsClass",
-          f.createIdentifier(resultTypeName),
-        ),
-        f.createPropertyAssignment(
-          "interfaceId",
-          f.createPropertyAccessExpression(
-            f.createIdentifier(clientName),
-            "interfaceId",
-          ),
-        ),
-        f.createPropertyAssignment(
-          "methodId",
-          f.createNumericLiteral(index.toString()),
-        ),
-        f.createPropertyAssignment(
-          "interfaceName",
-          f.createStringLiteral(node.displayName),
-        ),
-        f.createPropertyAssignment(
-          "methodName",
-          f.createStringLiteral(method.name),
-        ),
-      ],
-      true /* multiline */,
-    ),
-  );
+  // Add method type to methodDefTypes
+  methodDefTypes.push(`$.Method<${paramTypeName}, ${resultTypeName}>`);
 
-  members.push(
-    f.createMethodDeclaration(
-      undefined, // modifiers
-      undefined, // asteriskToken
-      name,
-      undefined, // typeParameters
-      undefined, // questionToken
-      [
-        f.createParameterDeclaration(
-          undefined, // modifiers
-          undefined, // dotDotToken
-          "paramsFunc",
-          QUESTION_TOKEN, // questionToken
-          f.createFunctionTypeNode(
-            undefined, // typeParameters
-            [
-              f.createParameterDeclaration(
-                undefined, // modifiers
-                undefined, // dotDotToken
-                "params", // name
-                undefined, // questionToken
-                f.createTypeReferenceNode(paramTypeName, undefined), // type
-              ),
-            ],
-            VOID_TYPE, // type
-          ),
-        ),
-      ], // parameters
-      f.createTypeReferenceNode(`${resultTypeName}$Promise`, undefined),
-      f.createBlock(
-        [
-          f.createVariableStatement(
-            undefined, // modifiers
-            f.createVariableDeclarationList(
-              [
-                f.createVariableDeclaration(
-                  "answer",
-                  undefined,
-                  undefined,
-                  f.createCallExpression(
-                    f.createPropertyAccessExpression(
-                      f.createPropertyAccessExpression(THIS, "client"),
-                      "call",
-                    ),
-                    undefined, // typeArgs
-                    [
-                      f.createObjectLiteralExpression(
-                        [
-                          f.createPropertyAssignment(
-                            "method",
-                            f.createElementAccessExpression(
-                              f.createPropertyAccessExpression(
-                                f.createIdentifier(clientName),
-                                "methods",
-                              ),
-                              index,
-                            ),
-                          ),
-                          f.createPropertyAssignment(
-                            "paramsFunc",
-                            f.createIdentifier("paramsFunc"),
-                          ),
-                        ],
-                        true, // multiline
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-              ts.NodeFlags.Const,
-            ),
-          ), // const answer = ...
+  // Add method definition to methodDefs
+  methodDefs.push(`{
+    ParamsClass: ${paramTypeName},
+    ResultsClass: ${resultTypeName},
+    interfaceId: ${clientName}.interfaceId,
+    methodId: ${index},
+    interfaceName: "${node.displayName}",
+    methodName: "${method.name}"
+  }`);
 
-          f.createVariableStatement(
-            undefined, // modifiers
-            f.createVariableDeclarationList(
-              [
-                f.createVariableDeclaration(
-                  "pipeline",
-                  undefined,
-                  undefined,
-                  f.createNewExpression(
-                    f.createIdentifier("$.Pipeline"),
-                    undefined, // typeArgs
-                    [
-                      f.createIdentifier(resultTypeName),
-                      f.createIdentifier("answer"),
-                    ],
-                  ),
-                ),
-              ],
-              ts.NodeFlags.Const,
-            ),
-          ), // const pipeline = ...
-
-          f.createReturnStatement(
-            f.createNewExpression(
-              f.createIdentifier(`${resultTypeName}$Promise`),
-              undefined, // typeArguments
-              [f.createIdentifier("pipeline")],
-            ),
-          ),
-        ],
-        true, // multiline
-      ),
-    ),
-  );
+  // Add method implementation to members
+  methodsCode.push(`
+    ${name}(paramsFunc?: (params: ${paramTypeName}) => void): ${resultTypeName}$Promise {
+      const answer = this.client.call({
+        method: ${clientName}.methods[${index}],
+        paramsFunc: paramsFunc
+      });
+      const pipeline = new $.Pipeline(${resultTypeName}, answer);
+      return new ${resultTypeName}$Promise(pipeline);
+    }
+  `);
 }

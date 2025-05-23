@@ -34,7 +34,6 @@ export interface _Pointer {
   /**
    * A number that is decremented as nested pointers are traversed. When this hits zero errors will be thrown.
    */
-
   depthLimit: number;
 }
 
@@ -45,7 +44,6 @@ export interface _Pointer {
  * @export
  * @class Pointer
  */
-
 export class Pointer<T extends _Pointer = _Pointer> {
   static readonly _capnp: _PointerCtor = {
     displayName: "Pointer" as string,
@@ -54,14 +52,12 @@ export class Pointer<T extends _Pointer = _Pointer> {
   readonly _capnp: T;
 
   /** Offset, in bytes, from the start of the segment to the beginning of this pointer. */
-
   byteOffset: number;
 
   /**
    * The starting segment for this pointer's data. In the case of a far pointer, the actual content this pointer is
    * referencing will be in another segment within the same message.
    */
-
   segment: Segment;
 
   constructor(segment: Segment, byteOffset: number, depthLimit = MAX_DEPTH) {
@@ -74,14 +70,12 @@ export class Pointer<T extends _Pointer = _Pointer> {
     }
 
     // Make sure we keep track of all pointer allocations; there's a limit per message (prevent DoS).
-
     trackPointerAllocation(segment.message, this);
 
     // NOTE: It's okay to have a pointer to the end of the segment; you'll see this when creating pointers to the
     // beginning of the content of a newly-allocated composite list with zero elements. Unlike other language
     // implementations buffer over/underflows are not a big issue since all buffer access is bounds checked in native
     // code anyway.
-
     if (byteOffset < 0 || byteOffset > segment.byteLength) {
       throw new Error(format(PTR_OFFSET_OUT_OF_BOUNDS, byteOffset));
     }

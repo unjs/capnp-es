@@ -54,14 +54,12 @@ const TMP_WORD = new DataView(new ArrayBuffer(8));
  * @param {Struct} s The struct to initialize.
  * @returns {void}
  */
-
 export function initStruct(size: ObjectSize, s: Struct): void {
   if (s._capnp.compositeIndex !== undefined) {
     throw new Error(format(PTR_INIT_COMPOSITE_STRUCT, s));
   }
 
   // Make sure to clear existing contents before overwriting the pointer data (erase is a noop if already empty).
-
   erase(s);
 
   const c = s.segment.allocate(getByteLength(size));
@@ -84,7 +82,7 @@ export function initStructAt<T extends Struct>(
 }
 
 export function checkPointerBounds(index: number, s: Struct): void {
-  const pointerLength = getSize(s).pointerLength;
+  const { pointerLength } = getSize(s);
 
   if (index < 0 || index >= pointerLength) {
     throw new Error(
@@ -100,7 +98,7 @@ export function getInterfaceClientOrNullAt(index: number, s: Struct): Client {
 export function getInterfaceClientOrNull(p: Pointer): Client {
   let client: Client | null = null;
   const capId = getInterfacePointer(p);
-  const capTable = p.segment.message._capnp.capTable;
+  const { capTable } = p.segment.message._capnp;
   if (capTable && capId >= 0 && capId < capTable.length) {
     client = capTable[capId];
   }
@@ -117,7 +115,6 @@ export function getInterfaceClientOrNull(p: Pointer): Client {
  * @param {Struct} s The struct to resize.
  * @returns {void}
  */
-
 export function resize(dstSize: ObjectSize, s: Struct): void {
   const srcSize = getSize(s);
   const srcContent = getContent(s);
@@ -176,7 +173,6 @@ export function resize(dstSize: ObjectSize, s: Struct): void {
     );
 
     // Read the old pointer data, but discard the original offset.
-
     const a = srcPtrTarget.segment.getUint8(srcPtrTarget.byteOffset) & 0x03;
     const b = srcPtrTarget.segment.getUint32(srcPtrTarget.byteOffset + 4);
 
@@ -185,7 +181,6 @@ export function resize(dstSize: ObjectSize, s: Struct): void {
   }
 
   // Zero out the old data and pointer sections.
-
   srcContent.segment.fillZeroWords(
     srcContent.byteOffset,
     getWordLength(srcSize),
@@ -201,7 +196,6 @@ export function resize(dstSize: ObjectSize, s: Struct): void {
  * @param {Struct} s The struct to convert.
  * @returns {T} A new instance of the desired struct class pointing to the same location.
  */
-
 export function getAs<T extends Struct>(
   StructClass: StructCtor<T>,
   s: Struct,
@@ -223,7 +217,6 @@ export function getAs<T extends Struct>(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {boolean} The value.
  */
-
 export function getBit(
   bitOffset: number,
   s: Struct,
@@ -238,7 +231,9 @@ export function getBit(
 
   const v = ds.segment.getUint8(ds.byteOffset + byteOffset);
 
-  if (defaultMask === undefined) return (v & bitMask) !== 0;
+  if (defaultMask === undefined) {
+    return (v & bitMask) !== 0;
+  }
 
   const defaultValue = defaultMask.getUint8(0);
   return ((v ^ defaultValue) & bitMask) !== 0;
@@ -280,7 +275,6 @@ export function getDataSection(s: Struct): Pointer {
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {number} The value.
  */
-
 export function getFloat32(
   byteOffset: number,
   s: Struct,
@@ -309,7 +303,6 @@ export function getFloat32(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {number} The value.
  */
-
 export function getFloat64(
   byteOffset: number,
   s: Struct,
@@ -342,7 +335,6 @@ export function getFloat64(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {number} The value.
  */
-
 export function getInt16(
   byteOffset: number,
   s: Struct,
@@ -371,7 +363,6 @@ export function getInt16(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {number} The value.
  */
-
 export function getInt32(
   byteOffset: number,
   s: Struct,
@@ -400,7 +391,6 @@ export function getInt32(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {bigint} The value.
  */
-
 export function getInt64(
   byteOffset: number,
   s: Struct,
@@ -433,7 +423,6 @@ export function getInt64(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {number} The value.
  */
-
 export function getInt8(
   byteOffset: number,
   s: Struct,
@@ -504,7 +493,6 @@ export function getList<T>(
       );
 
       // Write the new tag word.
-
       setStructPointer(srcLength, dstSize, dstContent);
 
       // Seek ahead past the tag word before copying the content.
@@ -517,7 +505,6 @@ export function getList<T>(
           dstContent.byteOffset + i * getByteLength(dstSize);
 
         // Copy the data section.
-
         dstContent.segment.copyWords(
           dstElementOffset,
           srcContent.segment,
@@ -526,7 +513,6 @@ export function getList<T>(
         );
 
         // Iterate through the pointers and update the offsets so they point to the right place.
-
         for (let j = 0; j < srcSize.pointerLength; j++) {
           const srcPtr = new Pointer(
             srcContent.segment,
@@ -554,7 +540,6 @@ export function getList<T>(
           );
 
           // Read the old pointer data, but discard the original offset.
-
           const a =
             srcPtrTarget.segment.getUint8(srcPtrTarget.byteOffset) & 0x03;
           const b = srcPtrTarget.segment.getUint32(srcPtrTarget.byteOffset + 4);
@@ -667,7 +652,9 @@ export function getText(
   const t = Text.fromPointer(getPointer(index, s));
 
   // FIXME: This will perform an unnecessary string<>ArrayBuffer roundtrip.
-  if (isNull(t) && defaultValue) t.set(0, defaultValue);
+  if (isNull(t) && defaultValue) {
+    t.set(0, defaultValue);
+  }
 
   return t.get(0);
 }
@@ -680,7 +667,6 @@ export function getText(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {number} The value.
  */
-
 export function getUint16(
   byteOffset: number,
   s: Struct,
@@ -708,7 +694,6 @@ export function getUint16(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {number} The value.
  */
-
 export function getUint32(
   byteOffset: number,
   s: Struct,
@@ -736,7 +721,6 @@ export function getUint32(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {bigint} The value.
  */
-
 export function getUint64(
   byteOffset: number,
   s: Struct,
@@ -769,7 +753,6 @@ export function getUint64(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {number} The value.
  */
-
 export function getUint8(
   byteOffset: number,
   s: Struct,
@@ -873,7 +856,6 @@ export function setBit(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {void}
  */
-
 export function setFloat32(
   byteOffset: number,
   value: number,
@@ -907,7 +889,6 @@ export function setFloat32(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {void}
  */
-
 export function setFloat64(
   byteOffset: number,
   value: number,
@@ -945,7 +926,6 @@ export function setFloat64(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {void}
  */
-
 export function setInt16(
   byteOffset: number,
   value: number,
@@ -979,7 +959,6 @@ export function setInt16(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {void}
  */
-
 export function setInt32(
   byteOffset: number,
   value: number,
@@ -1013,7 +992,6 @@ export function setInt32(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {void}
  */
-
 export function setInt64(
   byteOffset: number,
   value: bigint,
@@ -1051,7 +1029,6 @@ export function setInt64(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {void}
  */
-
 export function setInt8(
   byteOffset: number,
   value: number,
@@ -1087,7 +1064,6 @@ export function setText(index: number, value: string, s: Struct): void {
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {void}
  */
-
 export function setUint16(
   byteOffset: number,
   value: number,
@@ -1098,7 +1074,9 @@ export function setUint16(
 
   const ds = getDataSection(s);
 
-  if (defaultMask !== undefined) value ^= defaultMask.getUint16(0, true);
+  if (defaultMask !== undefined) {
+    value ^= defaultMask.getUint16(0, true);
+  }
 
   ds.segment.setUint16(ds.byteOffset + byteOffset, value);
 }
@@ -1113,7 +1091,6 @@ export function setUint16(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {void}
  */
-
 export function setUint32(
   byteOffset: number,
   value: number,
@@ -1124,7 +1101,9 @@ export function setUint32(
 
   const ds = getDataSection(s);
 
-  if (defaultMask !== undefined) value ^= defaultMask.getUint32(0, true);
+  if (defaultMask !== undefined) {
+    value ^= defaultMask.getUint32(0, true);
+  }
 
   ds.segment.setUint32(ds.byteOffset + byteOffset, value);
 }
@@ -1139,7 +1118,6 @@ export function setUint32(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {void}
  */
-
 export function setUint64(
   byteOffset: number,
   value: bigint,
@@ -1177,7 +1155,6 @@ export function setUint64(
  * @param {DataView} [defaultMask] The default value as a DataView.
  * @returns {void}
  */
-
 export function setUint8(
   byteOffset: number,
   value: number,
@@ -1188,8 +1165,9 @@ export function setUint8(
 
   const ds = getDataSection(s);
 
-  if (defaultMask !== undefined) value ^= defaultMask.getUint8(0);
-
+  if (defaultMask !== undefined) {
+    value ^= defaultMask.getUint8(0);
+  }
   ds.segment.setUint8(ds.byteOffset + byteOffset, value);
 }
 
@@ -1209,7 +1187,7 @@ export function checkDataBounds(
   byteLength: number,
   s: Struct,
 ): void {
-  const dataByteLength = getSize(s).dataByteLength;
+  const { dataByteLength } = getSize(s);
 
   if (
     byteOffset < 0 ||
