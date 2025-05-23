@@ -1,14 +1,16 @@
 // Based on https://github.com/jdiaz5513/capnp-ts (MIT - Julián Díaz)
 
 import { MAX_DEPTH } from "../../constants";
+import type { AnyArena } from "../arena";
+import { Message } from "../message";
 import { ObjectSize } from "../object-size";
 import { Segment } from "../segment";
 import { _Pointer, _PointerCtor, Pointer } from "./pointer";
-import { getContent } from "./pointer.utils";
 
 export interface _StructCtor extends _PointerCtor {
   readonly id: string;
   readonly size: ObjectSize;
+  readonly fields?: string[];
 }
 
 export interface StructCtor<T extends Struct> {
@@ -47,7 +49,7 @@ export class Struct extends Pointer<_Struct> {
   constructor(
     segment: Segment,
     byteOffset: number,
-    depthLimit = MAX_DEPTH,
+    depthLimit: number = MAX_DEPTH,
     compositeIndex?: number,
   ) {
     super(segment, byteOffset, depthLimit);
@@ -56,16 +58,39 @@ export class Struct extends Pointer<_Struct> {
     this._capnp.compositeList = compositeIndex !== undefined;
   }
 
+  static init<T extends Struct>(
+    this: new (
+      segment: Segment,
+      byteOffset: number,
+      depthLimit?: number,
+      compositeIndex?: number,
+    ) => T,
+    src?: AnyArena | ArrayBufferView | ArrayBuffer,
+    opts?: { packed?: boolean; singleSegment?: boolean },
+  ): T {
+    const msg = new Message(src, opts?.packed, opts?.singleSegment);
+    return msg.getRoot(this as StructCtor<T>);
+  }
+
   static [Symbol.toStringTag](): string {
     return this._capnp.displayName;
   }
 
-  [Symbol.toStringTag](): string {
-    return (
-      `Struct_${super.toString()}` +
-      `${this._capnp.compositeIndex === undefined ? "" : `,ci:${this._capnp.compositeIndex}`}` +
-      ` > ${getContent(this).toString()}`
+  toJSON() {
+    const fieldNames =
+      (this.constructor as StructCtor<Struct>)._capnp.fields || [];
+    const fields = Object.fromEntries(
+      fieldNames.map((name) => {
+        let val;
+        try {
+          val = this[name as keyof this];
+        } catch {
+          // Ignore
+        }
+        return [name, val];
+      }),
     );
+    return fields;
   }
 }
 

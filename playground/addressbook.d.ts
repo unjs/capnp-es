@@ -16,6 +16,7 @@ export declare class Person_PhoneNumber extends $.Struct {
     displayName: string;
     id: string;
     size: $.ObjectSize;
+    fields: string[];
   };
   get number(): string;
   set number(value: string);
@@ -39,6 +40,7 @@ export declare class Person_Employment extends $.Struct {
     displayName: string;
     id: string;
     size: $.ObjectSize;
+    fields: string[];
   };
   get _isUnemployed(): boolean;
   set unemployed(_: true);
@@ -59,6 +61,7 @@ export declare class Person extends $.Struct {
     displayName: string;
     id: string;
     size: $.ObjectSize;
+    fields: string[];
   };
   static _Phones: $.ListCtor<Person_PhoneNumber>;
   get id(): number;
@@ -82,6 +85,7 @@ export declare class AddressBook extends $.Struct {
     displayName: string;
     id: string;
     size: $.ObjectSize;
+    fields: string[];
   };
   static _People: $.ListCtor<Person>;
   _adoptPeople(value: $.Orphan<$.List<Person>>): void;

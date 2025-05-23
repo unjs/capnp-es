@@ -11,7 +11,8 @@ export class Person_PhoneNumber extends $.Struct {
   static _capnp = {
     displayName: "PhoneNumber",
     id: "af663da31c027e0e",
-    size: new $.ObjectSize(8, 1)
+    size: new $.ObjectSize(8, 1),
+    fields: ["number", "type"]
   };
   get number() {
     return $.utils.getText(0, this);
@@ -43,7 +44,8 @@ export class Person_Employment extends $.Struct {
   static _capnp = {
     displayName: "employment",
     id: "e88780a90af3da0c",
-    size: new $.ObjectSize(8, 4)
+    size: new $.ObjectSize(8, 4),
+    fields: ["unemployed", "employer", "school", "selfEmployed"]
   };
   get _isUnemployed() {
     return $.utils.getUint16(4, this) === 0;
@@ -91,7 +93,8 @@ export class Person extends $.Struct {
   static _capnp = {
     displayName: "Person",
     id: "d94307c4985be8e7",
-    size: new $.ObjectSize(8, 4)
+    size: new $.ObjectSize(8, 4),
+    fields: ["id", "name", "email", "phones", "employment"]
   };
   static _Phones;
   get id() {
@@ -144,7 +147,8 @@ export class AddressBook extends $.Struct {
   static _capnp = {
     displayName: "AddressBook",
     id: "c06ea6d038a357bb",
-    size: new $.ObjectSize(0, 1)
+    size: new $.ObjectSize(0, 1),
+    fields: ["people"]
   };
   static _People;
   _adoptPeople(value) {

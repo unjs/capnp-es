@@ -10,7 +10,7 @@ export function c2s(s: string): string {
 }
 
 export function c2t(s: string): string {
-  return s.slice(0, 1).toUpperCase() + s.slice(1);
+  return s[0].toUpperCase() + s.slice(1);
 }
 
 export function d2h(d: string): string {

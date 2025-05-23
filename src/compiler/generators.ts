@@ -961,6 +961,12 @@ export function generateStructNode(
               f.createNumericLiteral(pointerCount.toString()),
             ]),
           ),
+          f.createPropertyAssignment(
+            "fields",
+            f.createArrayLiteralExpression(
+              fields.map((field) => f.createStringLiteral(field.name)),
+            ),
+          ),
           ...defaultValues,
         ],
         true,
@@ -978,12 +984,12 @@ export function generateStructNode(
   }
 
   // toString(): string { return 'MyStruct_' + super.toString(); }
-  const toStringExpression = f.createBinaryExpression(
-    f.createStringLiteral(`${fullClassName}_`),
-    ts.SyntaxKind.PlusToken,
-    f.createCallExpression(f.createIdentifier("super.toString"), undefined, []),
-  );
-  members.push(createMethod("toString", [], STRING_TYPE, [toStringExpression]));
+  // const toStringExpression = f.createBinaryExpression(
+  //   f.createStringLiteral(`${fullClassName}_`),
+  //   ts.SyntaxKind.PlusToken,
+  //   f.createCallExpression(f.createIdentifier("super.toString"), undefined, []),
+  // );
+  // members.push(createMethod("toString", [], STRING_TYPE, [toStringExpression]));
 
   if (hasUnnamedUnion) {
     // which(): MyStruct_Which { return $.utils.getUint16(12, this); }
