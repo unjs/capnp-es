@@ -28,14 +28,14 @@ using Cxx = import "/capnp/c++.capnp";
 $Cxx.namespace("capnproto_test::capnp::test");
 
 enum TestEnum {
-  foo @0;
-  bar @1;
+  foo @0; # foo
+  garply @7; # garply
+  bar @1; #bar
   baz @2;
   qux @3;
   quux @4;
   corge @5;
   grault @6;
-  garply @7;
 }
 
 struct TestAllTypes {
@@ -913,10 +913,10 @@ struct TestSturdyRefHostId {
 struct TestSturdyRefObjectId {
   tag @0 :Tag;
   enum Tag {
-    testInterface @0;
+    testInterface @0; # testInterface
+    testTailCallee @3; # testTailCallee
     testExtends @1;
     testPipeline @2;
-    testTailCallee @3;
     testTailCaller @4;
     testMoreStuff @5;
   }

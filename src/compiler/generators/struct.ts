@@ -51,7 +51,7 @@ export function generateStructNode(
     .filter((n) => !n._isConst && !n._isAnnotation);
   const nodeId = node.id;
   const nodeIdHex = nodeId.toString(16);
-  const unionFields = getUnnamedUnionFields(node).sort(compareCodeOrder);
+  const unionFields = getUnnamedUnionFields(node);
 
   const struct = type === "struct" ? node.struct : undefined;
   const dataWordCount = struct ? struct.dataWordCount : 0;
@@ -63,7 +63,7 @@ export function generateStructNode(
 
   // List of field indexes in code order
   const fieldIndexInCodeOrder = fields
-    .map((field, fieldIndex) => ({ fieldIndex, codeOrder: field.codeOrder }))
+    .map(({ codeOrder }, fieldIndex) => ({ fieldIndex, codeOrder }))
     .sort(compareCodeOrder)
     .map(({ fieldIndex }) => fieldIndex);
 
@@ -74,7 +74,7 @@ export function generateStructNode(
   const hasUnnamedUnion = discriminantCount !== 0;
 
   if (hasUnnamedUnion) {
-    generateEnumNode(ctx, fullClassName + "_Which", unionFields);
+    generateEnumNode(ctx, fullClassName + "_Which", node, unionFields);
   }
 
   const members: string[] = [];
@@ -86,9 +86,9 @@ export function generateStructNode(
       const value = createValueExpression(node.const.value);
       return `static readonly ${name} = ${value}`;
     }),
-    ...unionFields.map((field) =>
-      createUnionConstProperty(fullClassName, field),
-    ),
+    ...unionFields
+      .sort(compareCodeOrder)
+      .map((field) => createUnionConstProperty(fullClassName, field)),
     ...nestedNodes.map((node) => createNestedNodeProperty(node)),
   );
 

@@ -2,19 +2,97 @@
 import * as $ from "capnp-es";
 export const _capnpFileId = BigInt("0xb312981b2552a250");
 export const Message_Which = {
+  /**
+* The sender previously received this message from the peer but didn't understand it or doesn't
+* yet implement the functionality that was requested.  So, the sender is echoing the message
+* back.  In some cases, the receiver may be able to recover from this by pretending the sender
+* had taken some appropriate "null" action.
+*
+* For example, say `resolve` is received by a level 0 implementation (because a previous call
+* or return happened to contain a promise).  The level 0 implementation will echo it back as
+* `unimplemented`.  The original sender can then simply release the cap to which the promise
+* had resolved, thus avoiding a leak.
+*
+* For any message type that introduces a question, if the message comes back unimplemented,
+* the original sender may simply treat it as if the question failed with an exception.
+*
+* In cases where there is no sensible way to react to an `unimplemented` message (without
+* resource leaks or other serious problems), the connection may need to be aborted.  This is
+* a gray area; different implementations may take different approaches.
+*
+*/
   UNIMPLEMENTED: 0,
+  /**
+* Sent when a connection is being aborted due to an unrecoverable error.  This could be e.g.
+* because the sender received an invalid or nonsensical message or because the sender had an
+* internal error.  The sender will shut down the outgoing half of the connection after `abort`
+* and will completely close the connection shortly thereafter (it's up to the sender how much
+* of a time buffer they want to offer for the client to receive the `abort` before the
+* connection is reset).
+*
+*/
   ABORT: 1,
+  /**
+* Request the peer's bootstrap interface.
+*
+*/
   BOOTSTRAP: 8,
+  /**
+* Begin a method call.
+*
+*/
   CALL: 2,
+  /**
+* Complete a method call.
+*
+*/
   RETURN: 3,
+  /**
+* Release a returned answer / cancel a call.
+*
+*/
   FINISH: 4,
+  /**
+* Resolve a previously-sent promise.
+*
+*/
   RESOLVE: 5,
+  /**
+* Release a capability so that the remote object can be deallocated.
+*
+*/
   RELEASE: 6,
+  /**
+* Lift an embargo used to enforce E-order over promise resolution.
+*
+*/
   DISEMBARGO: 13,
+  /**
+* Obsolete request to save a capability, resulting in a SturdyRef. This has been replaced
+* by the `Persistent` interface defined in `persistent.capnp`. This operation was never
+* implemented.
+*
+*/
   OBSOLETE_SAVE: 7,
+  /**
+* Obsolete way to delete a SturdyRef. This operation was never implemented.
+*
+*/
   OBSOLETE_DELETE: 9,
+  /**
+* Provide a capability to a third party.
+*
+*/
   PROVIDE: 10,
+  /**
+* Accept a capability provided by a third party.
+*
+*/
   ACCEPT: 11,
+  /**
+* Directly connect to the common root of two or more proxied caps.
+*
+*/
   JOIN: 12
 } as const;
 export type Message_Which = (typeof Message_Which)[keyof typeof Message_Which];
@@ -610,8 +688,65 @@ export class Bootstrap extends $.Struct {
   toString(): string { return "Bootstrap_" + super.toString(); }
 }
 export const Call_SendResultsTo_Which = {
+  /**
+* Send the return message back to the caller (the usual).
+*
+*/
   CALLER: 0,
+  /**
+* **(level 1)**
+*
+* Don't actually return the results to the sender.  Instead, hold on to them and await
+* instructions from the sender regarding what to do with them.  In particular, the sender
+* may subsequently send a `Return` for some other call (which the receiver had previously made
+* to the sender) with `takeFromOtherQuestion` set.  The results from this call are then used
+* as the results of the other call.
+*
+* When `yourself` is used, the receiver must still send a `Return` for the call, but sets the
+* field `resultsSentElsewhere` in that `Return` rather than including the results.
+*
+* This feature can be used to implement tail calls in which a call from Vat A to Vat B ends up
+* returning the result of a call from Vat B back to Vat A.
+*
+* In particular, the most common use case for this feature is when Vat A makes a call to a
+* promise in Vat B, and then that promise ends up resolving to a capability back in Vat A.
+* Vat B must forward all the queued calls on that promise back to Vat A, but can set `yourself`
+* in the calls so that the results need not pass back through Vat B.
+*
+* For example:
+* - Alice, in Vat A, calls foo() on Bob in Vat B.
+* - Alice makes a pipelined call bar() on the promise returned by foo().
+* - Later on, Bob resolves the promise from foo() to point at Carol, who lives in Vat A (next
+*   to Alice).
+* - Vat B dutifully forwards the bar() call to Carol.  Let us call this forwarded call bar'().
+*   Notice that bar() and bar'() are travelling in opposite directions on the same network
+*   link.
+* - The `Call` for bar'() has `sendResultsTo` set to `yourself`.
+* - Vat B sends a `Return` for bar() with `takeFromOtherQuestion` set in place of the results,
+*   with the value set to the question ID of bar'().  Vat B does not wait for bar'() to return,
+*   as doing so would introduce unnecessary round trip latency.
+* - Vat A receives bar'() and delivers it to Carol.
+* - When bar'() returns, Vat A sends a `Return` for bar'() to Vat B, with `resultsSentElsewhere`
+*   set in place of results.
+* - Vat A sends a `Finish` for the bar() call to Vat B.
+* - Vat B receives the `Finish` for bar() and sends a `Finish` for bar'().
+*
+*/
   YOURSELF: 1,
+  /**
+* **(level 3)**
+*
+* The call's result should be returned to a different vat.  The receiver (the callee) expects
+* to receive an `Accept` message from the indicated vat, and should return the call's result
+* to it, rather than to the sender of the `Call`.
+*
+* This operates much like `yourself`, above, except that Carol is in a separate Vat C.  `Call`
+* messages are sent from Vat A -> Vat B and Vat B -> Vat C.  A `Return` message is sent from
+* Vat B -> Vat A that contains `acceptFromThirdParty` in place of results.  When Vat A sends
+* an `Accept` to Vat C, it receives back a `Return` containing the call's actual result.  Vat C
+* also sends a `Return` to Vat B with `resultsSentElsewhere`.
+*
+*/
   THIRD_PARTY: 2
 } as const;
 export type Call_SendResultsTo_Which = (typeof Call_SendResultsTo_Which)[keyof typeof Call_SendResultsTo_Which];
@@ -840,11 +975,54 @@ export class Call extends $.Struct {
   toString(): string { return "Call_" + super.toString(); }
 }
 export const Return_Which = {
+  /**
+* Equal to the QuestionId of the corresponding `Call` message.
+*
+*/
   RESULTS: 0,
+  /**
+* If true, all capabilities that were in the params should be considered released.  The sender
+* must not send separate `Release` messages for them.  Level 0 implementations in particular
+* should always set this true.  This defaults true because if level 0 implementations forget to
+* set it they'll never notice (just silently leak caps), but if level >=1 implementations forget
+* to set it to false they'll quickly get errors.
+*
+* The receiver should act as if the sender had sent a release message with count=1 for each
+* CapDescriptor in the original Call message.
+*
+*/
   EXCEPTION: 1,
+  /**
+* The result.
+*
+* For regular method calls, `results.content` points to the result struct.
+*
+* For a `Return` in response to an `Accept` or `Bootstrap`, `results` contains a single
+* capability (rather than a struct), and `results.content` is just a capability pointer with
+* index 0.  A `Finish` is still required in this case.
+*
+*/
   CANCELED: 2,
+  /**
+* Indicates that the call failed and explains why.
+*
+*/
   RESULTS_SENT_ELSEWHERE: 3,
+  /**
+* Indicates that the call was canceled due to the caller sending a Finish message
+* before the call had completed.
+*
+*/
   TAKE_FROM_OTHER_QUESTION: 4,
+  /**
+* This is set when returning from a `Call` that had `sendResultsTo` set to something other
+* than `caller`.
+*
+* It doesn't matter too much when this is sent, as the receiver doesn't need to do anything
+* with it, but the C++ implementation appears to wait for the call to finish before sending
+* this.
+*
+*/
   ACCEPT_FROM_THIRD_PARTY: 5
 } as const;
 export type Return_Which = (typeof Return_Which)[keyof typeof Return_Which];
@@ -1113,7 +1291,43 @@ export class Finish extends $.Struct {
   toString(): string { return "Finish_" + super.toString(); }
 }
 export const Resolve_Which = {
+  /**
+* The ID of the promise to be resolved.
+*
+* Unlike all other instances of `ExportId` sent from the exporter, the `Resolve` message does
+* _not_ increase the reference count of `promiseId`.  In fact, it is expected that the receiver
+* will release the export soon after receiving `Resolve`, and the sender will not send this
+* `ExportId` again until it has been released and recycled.
+*
+* When an export ID sent over the wire (e.g. in a `CapDescriptor`) is indicated to be a promise,
+* this indicates that the sender will follow up at some point with a `Resolve` message.  If the
+* same `promiseId` is sent again before `Resolve`, still only one `Resolve` is sent.  If the
+* same ID is sent again later _after_ a `Resolve`, it can only be because the export's
+* reference count hit zero in the meantime and the ID was re-assigned to a new export, therefore
+* this later promise does _not_ correspond to the earlier `Resolve`.
+*
+* If a promise ID's reference count reaches zero before a `Resolve` is sent, the `Resolve`
+* message may or may not still be sent (the `Resolve` may have already been in-flight when
+* `Release` was sent, but if the `Release` is received before `Resolve` then there is no longer
+* any reason to send a `Resolve`).  Thus a `Resolve` may be received for a promise of which
+* the receiver has no knowledge, because it already released it earlier.  In this case, the
+* receiver should simply release the capability to which the promise resolved.
+*
+*/
   CAP: 0,
+  /**
+* The object to which the promise resolved.
+*
+* The sender promises that from this point forth, until `promiseId` is released, it shall
+* simply forward all messages to the capability designated by `cap`.  This is true even if
+* `cap` itself happens to designate another promise, and that other promise later resolves --
+* messages sent to `promiseId` shall still go to that other promise, not to its resolution.
+* This is important in the case that the receiver of the `Resolve` ends up sending a
+* `Disembargo` message towards `promiseId` in order to control message ordering -- that
+* `Disembargo` really needs to reflect back to exactly the object designated by `cap` even
+* if that object is itself a promise.
+*
+*/
   EXCEPTION: 1
 } as const;
 export type Resolve_Which = (typeof Resolve_Which)[keyof typeof Resolve_Which];
@@ -1282,9 +1496,48 @@ export class Release extends $.Struct {
   toString(): string { return "Release_" + super.toString(); }
 }
 export const Disembargo_Context_Which = {
+  /**
+* The sender is requesting a disembargo on a promise that is known to resolve back to a
+* capability hosted by the sender.  As soon as the receiver has echoed back all pipelined calls
+* on this promise, it will deliver the Disembargo back to the sender with `receiverLoopback`
+* set to the same value as `senderLoopback`.  This value is chosen by the sender, and since
+* it is also consumed be the sender, the sender can use whatever strategy it wants to make sure
+* the value is unambiguous.
+*
+* The receiver must verify that the target capability actually resolves back to the sender's
+* vat.  Otherwise, the sender has committed a protocol error and should be disconnected.
+*
+*/
   SENDER_LOOPBACK: 0,
+  /**
+* The receiver previously sent a `senderLoopback` Disembargo towards a promise resolving to
+* this capability, and that Disembargo is now being echoed back.
+*
+*/
   RECEIVER_LOOPBACK: 1,
+  /**
+* **(level 3)**
+*
+* The sender is requesting a disembargo on a promise that is known to resolve to a third-party
+* capability that the sender is currently in the process of accepting (using `Accept`).
+* The receiver of this `Disembargo` has an outstanding `Provide` on said capability.  The
+* receiver should now send a `Disembargo` with `provide` set to the question ID of that
+* `Provide` message.
+*
+* See `Accept.embargo` for an example.
+*
+*/
   ACCEPT: 2,
+  /**
+* **(level 3)**
+*
+* The sender is requesting a disembargo on a capability currently being provided to a third
+* party.  The question ID identifies the `Provide` message previously sent by the sender to
+* this capability.  On receipt, the receiver (the capability host) shall release the embargo
+* on the `Accept` message that it has received from the third party.  See `Accept.embargo` for
+* an example.
+*
+*/
   PROVIDE: 3
 } as const;
 export type Disembargo_Context_Which = (typeof Disembargo_Context_Which)[keyof typeof Disembargo_Context_Which];
@@ -1755,7 +2008,20 @@ export class Join extends $.Struct {
   toString(): string { return "Join_" + super.toString(); }
 }
 export const MessageTarget_Which = {
+  /**
+* This message is to a capability or promise previously imported by the caller (exported by
+* the receiver).
+*
+*/
   IMPORTED_CAP: 0,
+  /**
+* This message is to a capability that is expected to be returned by another call that has not
+* yet been completed.
+*
+* At level 0, this is supported only for addressing the result of a previous `Bootstrap`, so
+* that initial startup doesn't require a round trip.
+*
+*/
   PROMISED_ANSWER: 1
 } as const;
 export type MessageTarget_Which = (typeof MessageTarget_Which)[keyof typeof MessageTarget_Which];
@@ -1881,11 +2147,52 @@ export class Payload extends $.Struct {
   toString(): string { return "Payload_" + super.toString(); }
 }
 export const CapDescriptor_Which = {
+  /**
+* There is no capability here.  This `CapDescriptor` should not appear in the payload content.
+* A `none` CapDescriptor can be generated when an application inserts a capability into a
+* message and then later changes its mind and removes it -- rewriting all of the other
+* capability pointers may be hard, so instead a tombstone is left, similar to the way a removed
+* struct or list instance is zeroed out of the message but the space is not reclaimed.
+* Hopefully this is unusual.
+*
+*/
   NONE: 0,
+  /**
+* The ID of a capability in the sender's export table (receiver's import table).  It may be a
+* newly allocated table entry, or an existing entry (increments the reference count).
+*
+*/
   SENDER_HOSTED: 1,
+  /**
+* A promise that the sender will resolve later.  The sender will send exactly one Resolve
+* message at a future point in time to replace this promise.  Note that even if the same
+* `senderPromise` is received multiple times, only one `Resolve` is sent to cover all of
+* them.  If `senderPromise` is released before the `Resolve` is sent, the sender (of this
+* `CapDescriptor`) may choose not to send the `Resolve` at all.
+*
+*/
   SENDER_PROMISE: 2,
+  /**
+* A capability (or promise) previously exported by the receiver (imported by the sender).
+*
+*/
   RECEIVER_HOSTED: 3,
+  /**
+* A capability expected to be returned in the results of a currently-outstanding call posed
+* by the sender.
+*
+*/
   RECEIVER_ANSWER: 4,
+  /**
+* **(level 3)**
+*
+* A capability that lives in neither the sender's nor the receiver's vat.  The sender needs
+* to form a direct connection to a third party to pick up the capability.
+*
+* Level 1 and 2 implementations that receive a `thirdPartyHosted` may simply send calls to its
+* `vine` instead.
+*
+*/
   THIRD_PARTY_HOSTED: 5
 } as const;
 export type CapDescriptor_Which = (typeof CapDescriptor_Which)[keyof typeof CapDescriptor_Which];
@@ -2111,7 +2418,17 @@ export class CapDescriptor extends $.Struct {
   }
 }
 export const PromisedAnswer_Op_Which = {
+  /**
+* Does nothing.  This member is mostly defined so that we can make `Op` a union even
+* though (as of this writing) only one real operation is defined.
+*
+*/
   NOOP: 0,
+  /**
+* Get a pointer field within a struct.  The number is an index into the pointer section, NOT
+* a field ordinal, so that the receiver does not need to understand the schema.
+*
+*/
   GET_POINTER_FIELD: 1
 } as const;
 export type PromisedAnswer_Op_Which = (typeof PromisedAnswer_Op_Which)[keyof typeof PromisedAnswer_Op_Which];
@@ -2265,9 +2582,61 @@ export class ThirdPartyCapDescriptor extends $.Struct {
   toString(): string { return "ThirdPartyCapDescriptor_" + super.toString(); }
 }
 export const Exception_Type = {
+  /**
+* A generic problem occurred, and it is believed that if the operation were repeated without
+* any change in the state of the world, the problem would occur again.
+*
+* A client might respond to this error by logging it for investigation by the developer and/or
+* displaying it to the user.
+*
+*/
   FAILED: 0,
+  /**
+* The request was rejected due to a temporary lack of resources.
+*
+* Examples include:
+* - There's not enough CPU time to keep up with incoming requests, so some are rejected.
+* - The server ran out of RAM or disk space during the request.
+* - The operation timed out (took significantly longer than it should have).
+*
+* A client might respond to this error by scheduling to retry the operation much later. The
+* client should NOT retry again immediately since this would likely exacerbate the problem.
+*
+*/
   OVERLOADED: 1,
+  /**
+* The method failed because a connection to some necessary capability was lost.
+*
+* Examples include:
+* - The client introduced the server to a third-party capability, the connection to that third
+*   party was subsequently lost, and then the client requested that the server use the dead
+*   capability for something.
+* - The client previously requested that the server obtain a capability from some third party.
+*   The server returned a capability to an object wrapping the third-party capability. Later,
+*   the server's connection to the third party was lost.
+* - The capability has been revoked. Revocation does not necessarily mean that the client is
+*   no longer authorized to use the capability; it is often used simply as a way to force the
+*   client to repeat the setup process, perhaps to efficiently move them to a new back-end or
+*   get them to recognize some other change that has occurred.
+*
+* A client should normally respond to this error by releasing all capabilities it is currently
+* holding related to the one it called and then re-creating them by restoring SturdyRefs and/or
+* repeating the method calls used to create them originally. In other words, disconnect and
+* start over. This should in turn cause the server to obtain a new copy of the capability that
+* it lost, thus making everything work.
+*
+* If the client receives another `disconnected` error in the process of rebuilding the
+* capability and retrying the call, it should treat this as an `overloaded` error: the network
+* is currently unreliable, possibly due to load or other temporary issues.
+*
+*/
   DISCONNECTED: 2,
+  /**
+* The server doesn't implement the requested method. If there is some other method that the
+* client could call (perhaps an older and/or slower interface), it should try that instead.
+* Otherwise, this should be treated like `failed`.
+*
+*/
   UNIMPLEMENTED: 3
 } as const;
 export type Exception_Type = (typeof Exception_Type)[keyof typeof Exception_Type];
