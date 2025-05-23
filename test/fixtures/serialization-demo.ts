@@ -32,6 +32,10 @@ export const Person_Employment_Which = {
   UNEMPLOYED: 0,
   EMPLOYER: 1,
   SCHOOL: 2,
+  /**
+* We assume that a person is only one of these.
+*
+*/
   SELF_EMPLOYED: 3
 } as const;
 export type Person_Employment_Which = (typeof Person_Employment_Which)[keyof typeof Person_Employment_Which];
