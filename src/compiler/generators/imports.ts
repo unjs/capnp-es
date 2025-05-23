@@ -64,6 +64,7 @@ export function generateNestedImports(ctx: CodeGeneratorFileContext): void {
 
     const imports = getImportNodes(ctx, importNode)
       .map((n) => getFullClassName(n))
+      .sort()
       .join(", ");
 
     if (imports.length === 0) {
