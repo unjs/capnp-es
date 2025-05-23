@@ -553,7 +553,7 @@ export class Node extends $.Struct {
     return $.utils.disown(this.parameters);
   }
   /**
-  * List of nodes nested within this node, along with the names under which they were declared.
+  * If this node is parameterized (generic), the list of parameters. Empty for non-generic types.
   * */
   get parameters(): $.List<Node_Parameter> {
     return $.utils.getList(5, Node._Parameters, this);
@@ -568,7 +568,8 @@ export class Node extends $.Struct {
     $.utils.copyFrom(value, $.utils.getPointer(5, this));
   }
   /**
-  * Annotations applied to this node.
+  * True if this node is generic, meaning that it or one of its parent scopes has a non-empty
+  * `parameters`.
   * */
   get isGeneric(): boolean {
     return $.utils.getBit(288, this);
@@ -582,6 +583,9 @@ export class Node extends $.Struct {
   _disownNestedNodes(): $.Orphan<$.List<Node_NestedNode>> {
     return $.utils.disown(this.nestedNodes);
   }
+  /**
+  * List of nodes nested within this node, along with the names under which they were declared.
+  * */
   get nestedNodes(): $.List<Node_NestedNode> {
     return $.utils.getList(1, Node._NestedNodes, this);
   }
@@ -600,6 +604,9 @@ export class Node extends $.Struct {
   _disownAnnotations(): $.Orphan<$.List<Annotation>> {
     return $.utils.disown(this.annotations);
   }
+  /**
+  * Annotations applied to this node.
+  * */
   get annotations(): $.List<Annotation> {
     return $.utils.getList(2, Node._Annotations, this);
   }
@@ -660,9 +667,6 @@ export class Node extends $.Struct {
   set interface(_: true) {
     $.utils.setUint16(12, 3, this);
   }
-  /**
-  * If this node is parameterized (generic), the list of parameters. Empty for non-generic types.
-  * */
   get const(): Node_Const {
     $.utils.testWhich("const", $.utils.getUint16(12, this), 4, this);
     return $.utils.getAs(Node_Const, this);
@@ -677,10 +681,6 @@ export class Node extends $.Struct {
   set const(_: true) {
     $.utils.setUint16(12, 4, this);
   }
-  /**
-  * True if this node is generic, meaning that it or one of its parent scopes has a non-empty
-  * `parameters`.
-  * */
   get annotation(): Node_Annotation {
     $.utils.testWhich("annotation", $.utils.getUint16(12, this), 5, this);
     return $.utils.getAs(Node_Annotation, this);
@@ -1069,13 +1069,8 @@ export class Method extends $.Struct {
     return $.utils.disown(this.implicitParameters);
   }
   /**
-  * ID of the parameter struct type.  If a named parameter list was specified in the method
-  * declaration (rather than a single struct parameter type) then a corresponding struct type is
-  * auto-generated.  Such an auto-generated type will not be listed in the interface's
-  * `nestedNodes` and its `scopeId` will be zero -- it is completely detached from the namespace.
-  * (Awkwardly, it does of course inherit generic parameters from the method's scope, which makes
-  * this a situation where you can't just climb the scope chain to find where a particular
-  * generic parameter was introduced. Making the `scopeId` zero was a mistake.)
+  * The parameters listed in [] (typically, type / generic parameters), whose bindings are intended
+  * to be inferred rather than specified explicitly, although not all languages support this.
   * */
   get implicitParameters(): $.List<Node_Parameter> {
     return $.utils.getList(4, Method._ImplicitParameters, this);
@@ -1090,7 +1085,13 @@ export class Method extends $.Struct {
     $.utils.copyFrom(value, $.utils.getPointer(4, this));
   }
   /**
-  * ID of the return struct type; similar to `paramStructType`.
+  * ID of the parameter struct type.  If a named parameter list was specified in the method
+  * declaration (rather than a single struct parameter type) then a corresponding struct type is
+  * auto-generated.  Such an auto-generated type will not be listed in the interface's
+  * `nestedNodes` and its `scopeId` will be zero -- it is completely detached from the namespace.
+  * (Awkwardly, it does of course inherit generic parameters from the method's scope, which makes
+  * this a situation where you can't just climb the scope chain to find where a particular
+  * generic parameter was introduced. Making the `scopeId` zero was a mistake.)
   * */
   get paramStructType(): bigint {
     return $.utils.getUint64(8, this);
@@ -1104,6 +1105,9 @@ export class Method extends $.Struct {
   _disownParamBrand(): $.Orphan<Brand> {
     return $.utils.disown(this.paramBrand);
   }
+  /**
+  * Brand of param struct type.
+  * */
   get paramBrand(): Brand {
     return $.utils.getStruct(2, Brand, this);
   }
@@ -1117,7 +1121,7 @@ export class Method extends $.Struct {
     $.utils.copyFrom(value, $.utils.getPointer(2, this));
   }
   /**
-  * Brand of param struct type.
+  * ID of the return struct type; similar to `paramStructType`.
   * */
   get resultStructType(): bigint {
     return $.utils.getUint64(16, this);
@@ -1152,10 +1156,6 @@ export class Method extends $.Struct {
   _disownAnnotations(): $.Orphan<$.List<Annotation>> {
     return $.utils.disown(this.annotations);
   }
-  /**
-  * The parameters listed in [] (typically, type / generic parameters), whose bindings are intended
-  * to be inferred rather than specified explicitly, although not all languages support this.
-  * */
   get annotations(): $.List<Annotation> {
     return $.utils.getList(1, Method._Annotations, this);
   }
@@ -2178,6 +2178,11 @@ export class Annotation extends $.Struct {
   _disownBrand(): $.Orphan<Brand> {
     return $.utils.disown(this.brand);
   }
+  /**
+  * Brand of the annotation.
+  *
+  * Note that the annotation itself is not allowed to be parameterized, but its scope might be.
+  * */
   get brand(): Brand {
     return $.utils.getStruct(1, Brand, this);
   }
@@ -2196,11 +2201,6 @@ export class Annotation extends $.Struct {
   _disownValue(): $.Orphan<Value> {
     return $.utils.disown(this.value);
   }
-  /**
-  * Brand of the annotation.
-  *
-  * Note that the annotation itself is not allowed to be parameterized, but its scope might be.
-  * */
   get value(): Value {
     return $.utils.getStruct(0, Value, this);
   }
@@ -2358,8 +2358,12 @@ export class CodeGeneratorRequest extends $.Struct {
     return $.utils.disown(this.capnpVersion);
   }
   /**
-  * All nodes parsed by the compiler, including for the files on the command line and their
-  * imports.
+  * Version of the `capnp` executable. Generally, code generators should ignore this, but the code
+  * generators that ship with `capnp` itself will print a warning if this mismatches since that
+  * probably indicates something is misconfigured.
+  *
+  * The first version of 'capnp' to set this was 0.6.0. So, if it's missing, the compiler version
+  * is older than that.
   * */
   get capnpVersion(): CapnpVersion {
     return $.utils.getStruct(2, CapnpVersion, this);
@@ -2380,7 +2384,8 @@ export class CodeGeneratorRequest extends $.Struct {
     return $.utils.disown(this.nodes);
   }
   /**
-  * Files which were listed on the command line.
+  * All nodes parsed by the compiler, including for the files on the command line and their
+  * imports.
   * */
   get nodes(): $.List<Node> {
     return $.utils.getList(0, CodeGeneratorRequest._Nodes, this);
@@ -2401,12 +2406,8 @@ export class CodeGeneratorRequest extends $.Struct {
     return $.utils.disown(this.sourceInfo);
   }
   /**
-  * Version of the `capnp` executable. Generally, code generators should ignore this, but the code
-  * generators that ship with `capnp` itself will print a warning if this mismatches since that
-  * probably indicates something is misconfigured.
-  *
-  * The first version of 'capnp' to set this was 0.6.0. So, if it's missing, the compiler version
-  * is older than that.
+  * Information about the original source code for each node, where available. This array may be
+  * omitted or may be missing some nodes if no info is available for them.
   * */
   get sourceInfo(): $.List<Node_SourceInfo> {
     return $.utils.getList(3, CodeGeneratorRequest._SourceInfo, this);
@@ -2427,8 +2428,7 @@ export class CodeGeneratorRequest extends $.Struct {
     return $.utils.disown(this.requestedFiles);
   }
   /**
-  * Information about the original source code for each node, where available. This array may be
-  * omitted or may be missing some nodes if no info is available for them.
+  * Files which were listed on the command line.
   * */
   get requestedFiles(): $.List<CodeGeneratorRequest_RequestedFile> {
     return $.utils.getList(1, CodeGeneratorRequest._RequestedFiles, this);
