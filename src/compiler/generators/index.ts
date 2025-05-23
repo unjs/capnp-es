@@ -67,6 +67,7 @@ export function generateNode(
       generateEnumNode(
         ctx,
         getFullClassName(node),
+        node,
         node.enum.enumerants.toArray(),
       );
       break;

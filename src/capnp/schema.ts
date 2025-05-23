@@ -480,10 +480,38 @@ export class Node_Annotation extends $.Struct {
 }
 export const Node_Which = {
   FILE: 0,
+  /**
+* Name to present to humans to identify this Node.  You should not attempt to parse this.  Its
+* format could change.  It is not guaranteed to be unique.
+*
+* (On Zooko's triangle, this is the node's nickname.)
+*
+*/
   STRUCT: 1,
+  /**
+* If you want a shorter version of `displayName` (just naming this node, without its surrounding
+* scope), chop off this many characters from the beginning of `displayName`.
+*
+*/
   ENUM: 2,
+  /**
+* ID of the lexical parent node.  Typically, the scope node will have a NestedNode pointing back
+* at this node, but robust code should avoid relying on this (and, in fact, group nodes are not
+* listed in the outer struct's nestedNodes, since they are listed in the fields).  `scopeId` is
+* zero if the node has no parent, which is normally only the case with files, but should be
+* allowed for any kind of node (in order to make runtime type generation easier).
+*
+*/
   INTERFACE: 3,
+  /**
+* List of nodes nested within this node, along with the names under which they were declared.
+*
+*/
   CONST: 4,
+  /**
+* Annotations applied to this node.
+*
+*/
   ANNOTATION: 5
 } as const;
 export type Node_Which = (typeof Node_Which)[keyof typeof Node_Which];
@@ -804,6 +832,13 @@ export class Field_Group extends $.Struct {
 }
 export const Field_Ordinal_Which = {
   IMPLICIT: 0,
+  /**
+* The original ordinal number given to the field.  You probably should NOT use this; if you need
+* a numeric identifier for a field, use its position within the field array for its scope.
+* The ordinal is given here mainly just so that the original schema text can be reproduced given
+* the compiled version -- i.e. so that `capnp compile -ocapnp` can do its job.
+*
+*/
   EXPLICIT: 1
 } as const;
 export type Field_Ordinal_Which = (typeof Field_Ordinal_Which)[keyof typeof Field_Ordinal_Which];
@@ -846,6 +881,15 @@ export class Field_Ordinal extends $.Struct {
 }
 export const Field_Which = {
   SLOT: 0,
+  /**
+* Indicates where this member appeared in the code, relative to other members.
+* Code ordering may have semantic relevance -- programmers tend to place related fields
+* together.  So, using code ordering makes sense in human-readable formats where ordering is
+* otherwise irrelevant, like JSON.  The values of codeOrder are tightly-packed, so the maximum
+* value is count(members) - 1.  Fields that are members of a union are only ordered relative to
+* the other members of that union, so the maximum value there is count(union.members).
+*
+*/
   GROUP: 1
 } as const;
 export type Field_Which = (typeof Field_Which)[keyof typeof Field_Which];
@@ -1306,9 +1350,25 @@ export class Type_Interface extends $.Struct {
   toString(): string { return "Type_Interface_" + super.toString(); }
 }
 export const Type_AnyPointer_Unconstrained_Which = {
+  /**
+* truly AnyPointer
+*
+*/
   ANY_KIND: 0,
+  /**
+* AnyStruct
+*
+*/
   STRUCT: 1,
+  /**
+* AnyList
+*
+*/
   LIST: 2,
+  /**
+* Capability
+*
+*/
   CAPABILITY: 3
 } as const;
 export type Type_AnyPointer_Unconstrained_Which = (typeof Type_AnyPointer_Unconstrained_Which)[keyof typeof Type_AnyPointer_Unconstrained_Which];
@@ -1412,8 +1472,25 @@ export class Type_AnyPointer_ImplicitMethodParameter extends $.Struct {
   toString(): string { return "Type_AnyPointer_ImplicitMethodParameter_" + super.toString(); }
 }
 export const Type_AnyPointer_Which = {
+  /**
+* A regular AnyPointer.
+*
+* The name "unconstrained" means as opposed to constraining it to match a type parameter.
+* In retrospect this name is probably a poor choice given that it may still be constrained
+* to be a struct, list, or capability.
+*
+*/
   UNCONSTRAINED: 0,
+  /**
+* This is actually a reference to a type parameter defined within this scope.
+*
+*/
   PARAMETER: 1,
+  /**
+* This is actually a reference to an implicit (generic) parameter of a method. The only
+* legal context for this type to appear is inside Method.paramBrand or Method.resultBrand.
+*
+*/
   IMPLICIT_METHOD_PARAMETER: 2
 } as const;
 export type Type_AnyPointer_Which = (typeof Type_AnyPointer_Which)[keyof typeof Type_AnyPointer_Which];
@@ -1701,7 +1778,15 @@ export class Type extends $.Struct {
   }
 }
 export const Brand_Scope_Which = {
+  /**
+* ID of the scope to which these params apply.
+*
+*/
   BIND: 0,
+  /**
+* List of parameter bindings.
+*
+*/
   INHERIT: 1
 } as const;
 export type Brand_Scope_Which = (typeof Brand_Scope_Which)[keyof typeof Brand_Scope_Which];
@@ -1871,6 +1956,11 @@ export const Value_Which = {
   LIST: 14,
   ENUM: 15,
   STRUCT: 16,
+  /**
+* The only interface value that can be represented statically is "null", whose methods always
+* throw exceptions.
+*
+*/
   INTERFACE: 17,
   ANY_POINTER: 18
 } as const;
@@ -2218,6 +2308,10 @@ export class Annotation extends $.Struct {
   toString(): string { return "Annotation_" + super.toString(); }
 }
 export const ElementSize = {
+  /**
+* aka "void", but that's a keyword.
+*
+*/
   EMPTY: 0,
   BIT: 1,
   BYTE: 2,

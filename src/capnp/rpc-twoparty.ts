@@ -2,7 +2,25 @@
 import * as $ from "capnp-es";
 export const _capnpFileId = BigInt("0xa184c7885cdaf2a1");
 export const Side = {
+  /**
+* The object lives on the "server" or "supervisor" end of the connection. Only the
+* server/supervisor knows how to interpret the ref; to the client, it is opaque.
+*
+* Note that containers intending to implement strong confinement should rewrite SturdyRefs
+* received from the external network before passing them on to the confined app. The confined
+* app thus does not ever receive the raw bits of the SturdyRef (which it could perhaps
+* maliciously leak), but instead receives only a thing that it can pass back to the container
+* later to restore the ref. See:
+* http://www.erights.org/elib/capability/dist-confine.html
+*
+*/
   SERVER: 0,
+  /**
+* The object lives on the "client" or "confined app" end of the connection. Only the client
+* knows how to interpret the ref; to the server/supervisor, it is opaque. Most clients do not
+* actually know how to persist capabilities at all, so use of this is unusual.
+*
+*/
   CLIENT: 1
 } as const;
 export type Side = (typeof Side)[keyof typeof Side];
