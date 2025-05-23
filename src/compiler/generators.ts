@@ -612,7 +612,7 @@ export function generateStructNode(
       `);
   }
 
-  const defaultValues: ts.PropertyAssignment[] = [];
+  const defaultValues: string[] = [];
   for (const index of fieldIndexInCodeOrder) {
     const field = fields[index];
     if (
