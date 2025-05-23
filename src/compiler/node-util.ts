@@ -3,7 +3,7 @@
 import * as schema from "../capnp/schema";
 import { format } from "../util";
 
-import { CodeGeneratorFileContext } from "./code-generator-file-context";
+import { CodeGeneratorFileContext } from "./generators";
 import { ConcreteListType } from "./constants";
 import * as E from "./errors";
 import * as util from "./util";
