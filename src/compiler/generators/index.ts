@@ -32,30 +32,29 @@ export function generateNode(
 
   ctx.generatedNodeIds.add(nodeIdHex);
 
-  // An array of group structs formed as children of this struct.
-  // They appear before the struct node in the file.
-  const groupNodes = ctx.nodes.filter(
-    (n) => n.scopeId === nodeId && n._isStruct && n.struct.isGroup,
-  );
-
   // An array of nodes that are nested within this node;
   // these must appear first since those symbols will be
   // referenced in the node's class definition.
-  const nestedNodes = node.nestedNodes.map((n) => lookupNode(ctx, n));
+  const nestedNodes = node.nestedNodes.map((node) => lookupNode(ctx, node));
 
-  for (const n of nestedNodes) {
-    generateNode(ctx, n);
+  for (const nestedNode of nestedNodes) {
+    generateNode(ctx, nestedNode);
   }
 
-  for (const n of groupNodes) {
-    generateNode(ctx, n);
+  // An array of group structs formed as children of this struct.
+  // They appear before the struct node in the file.
+  const groupNodes = ctx.nodes.filter(
+    (node) => node.scopeId === nodeId && node._isStruct && node.struct.isGroup,
+  );
+  for (const groupNode of groupNodes) {
+    generateNode(ctx, groupNode);
   }
 
   const nodeType = node.which();
 
   switch (nodeType) {
     case schema.Node.STRUCT: {
-      generateStructNode(ctx, node, false);
+      generateStructNode(ctx, node);
       break;
     }
 
@@ -74,7 +73,7 @@ export function generateNode(
     }
 
     case schema.Node.INTERFACE: {
-      generateStructNode(ctx, node, true);
+      generateStructNode(ctx, node);
       break;
     }
 

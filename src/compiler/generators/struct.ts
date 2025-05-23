@@ -30,7 +30,6 @@ import { format, pad } from "../../util";
  *
  * @param ctx - The file context containing schema information and output statements
  * @param node - The schema node to generate code for
- * @param interfaceNode - Whether this node represents an interface (true) or struct (false)
  *
  * @remarks
  * - Generates enum definitions for unnamed unions if present
@@ -42,8 +41,9 @@ import { format, pad } from "../../util";
 export function generateStructNode(
   ctx: CodeGeneratorFileContext,
   node: schema.Node,
-  interfaceNode: boolean,
 ): void {
+  const type = node.which() === schema.Node.STRUCT ? "struct" : "interface";
+
   const displayNamePrefix = getDisplayNamePrefix(node);
   const fullClassName = getFullClassName(node);
   const nestedNodes = node.nestedNodes
@@ -51,9 +51,9 @@ export function generateStructNode(
     .filter((n) => !n._isConst && !n._isAnnotation);
   const nodeId = node.id;
   const nodeIdHex = nodeId.toString(16);
-  const struct = node.which() === schema.Node.STRUCT ? node.struct : undefined;
   const unionFields = getUnnamedUnionFields(node).sort(compareCodeOrder);
 
+  const struct = type === "struct" ? node.struct : undefined;
   const dataWordCount = struct ? struct.dataWordCount : 0;
   const dataByteLength = struct ? dataWordCount * 8 : 0;
   const discriminantCount = struct ? struct.discriminantCount : 0;
@@ -92,7 +92,7 @@ export function generateStructNode(
     ...nestedNodes.map((node) => createNestedNodeProperty(node)),
   );
 
-  if (interfaceNode) {
+  if (type === "interface") {
     members.push(`
       static readonly Client = ${fullClassName}$Client;
       static readonly Server = ${fullClassName}$Server;
@@ -144,12 +144,12 @@ export function generateStructNode(
 
   const classCode = `
   ${docComment}
-  export class ${fullClassName} extends ${interfaceNode ? "$.Interface" : "$.Struct"} {
+  export class ${fullClassName} extends ${type === "interface" ? "$.Interface" : "$.Struct"} {
     ${members.join("\n")}
   }`;
 
   // Make sure the interface classes are generated first.
-  if (interfaceNode) {
+  if (type === "interface") {
     generateInterfaceClasses(ctx, node);
   }
 
