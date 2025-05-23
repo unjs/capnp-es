@@ -4,17 +4,19 @@ import ts from "typescript";
 import * as s from "../capnp/schema.ts";
 import { Message } from "../serialization/message.ts";
 import * as E from "./errors";
-import { CodeGeneratorContext } from "./code-generator-context";
-import { CodeGeneratorFileContext } from "./code-generator-file-context";
-import { SOURCE_COMMENT } from "./constants";
-import { loadRequestedFile, lookupNode } from "./file";
 import {
-  generateCapnpImport,
-  generateConcreteListInitializer,
-  generateFileId,
-  generateNode,
+  CodeGeneratorContext,
+  CodeGeneratorFileContext,
+} from "./generators/index.ts";
+import { SOURCE_COMMENT } from "./constants";
+import { loadRequestedFile, lookupNode } from "./node-util.ts";
+import { generateFileId } from "./generators/file-id.ts";
+import { generateConcreteListInitializer } from "./generators/list.ts";
+import { generateNode } from "./generators/index.ts";
+import {
   generateNestedImports,
-} from "./generators";
+  generateCapnpImport,
+} from "./generators/imports.ts";
 
 /**
  * Compiles Cap'n Proto schema files into TypeScript/JavaScript code.
