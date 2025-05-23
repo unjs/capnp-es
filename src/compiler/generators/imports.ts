@@ -87,7 +87,8 @@ export function generateNestedImports(ctx: CodeGeneratorFileContext): void {
  *
  * @param ctx - The file context containing schema information
  * @param node - The root node to start collecting imports from
- * @returns Array of Node objects that can be imported (structs and enums only)
+ * @param visitedIds - The ids of the nodes that have been visited (internal use)
+ * @returns Array of transitively imported nodes
  */
 export function getImportNodes(
   ctx: CodeGeneratorFileContext,
@@ -104,7 +105,7 @@ export function getImportNodes(
 
   // Only consider structs, enums, and interfaces.
   const nodes = newNestedNodes
-    .map((nestedNode) => lookupNode(ctx, nestedNode))
+    .map(({ id }) => lookupNode(ctx, id))
     .filter((node) => node._isStruct || node._isEnum || node._isInterface);
 
   // Recurse on the nested nodes.
