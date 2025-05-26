@@ -2,14 +2,26 @@
 import * as $ from "capnp-es";
 export const _capnpFileId = BigInt("0xd508eebdc2dc42b8");
 export const TestEnum = {
+  /**
+* foo
+*
+*/
   FOO: 0,
+  /**
+* garply
+*
+*/
+  GARPLY: 7,
+  /**
+* bar
+*
+*/
   BAR: 1,
   BAZ: 2,
   QUX: 3,
   QUUX: 4,
   CORGE: 5,
-  GRAULT: 6,
-  GARPLY: 7
+  GRAULT: 6
 } as const;
 export type TestEnum = (typeof TestEnum)[keyof typeof TestEnum];
 export class TestAllTypes extends $.Struct {
@@ -1514,7 +1526,7 @@ export const TestUnion_Union2_Which = {
   U2F0S32: 3,
   U2F0S16: 2,
   U2F0S8: 1,
-  U2F0S1: 4
+  U2F0S1: 0
 } as const;
 export type TestUnion_Union2_Which = (typeof TestUnion_Union2_Which)[keyof typeof TestUnion_Union2_Which];
 export class TestUnion_Union2 extends $.Struct {
@@ -1593,7 +1605,7 @@ export const TestUnion_Union3_Which = {
   U3F0S32: 3,
   U3F0S16: 2,
   U3F0S8: 1,
-  U3F0S1: 4
+  U3F0S1: 0
 } as const;
 export type TestUnion_Union3_Which = (typeof TestUnion_Union3_Which)[keyof typeof TestUnion_Union3_Which];
 export class TestUnion_Union3 extends $.Struct {
@@ -7586,10 +7598,18 @@ export class TestSturdyRefHostId extends $.Struct {
   toString(): string { return "TestSturdyRefHostId_" + super.toString(); }
 }
 export const TestSturdyRefObjectId_Tag = {
+  /**
+* testInterface
+*
+*/
   TEST_INTERFACE: 0,
+  /**
+* testTailCallee
+*
+*/
+  TEST_TAIL_CALLEE: 3,
   TEST_EXTENDS: 1,
   TEST_PIPELINE: 2,
-  TEST_TAIL_CALLEE: 3,
   TEST_TAIL_CALLER: 4,
   TEST_MORE_STUFF: 5
 } as const;
