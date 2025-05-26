@@ -34,11 +34,10 @@ export class Struct extends Pointer<_Struct> {
   /**
    * Create a new pointer to a struct.
    *
-   * @constructor {Struct}
-   * @param {Segment} segment The segment the pointer resides in.
-   * @param {number} byteOffset The offset from the beginning of the segment to the beginning of the pointer data.
-   * @param {any} [depthLimit=MAX_DEPTH] The nesting depth limit for this object.
-   * @param {number} [compositeIndex] If set, then this pointer is actually a reference to a composite list
+   * @param segment The segment the pointer resides in.
+   * @param byteOffset The offset from the beginning of the segment to the beginning of the pointer data.
+   * @param depthLimit The nesting depth limit for this object.
+   * @param compositeIndex If set, then this pointer is actually a reference to a composite list
    * (`this._getPointerTargetType() === PointerType.LIST`), and this number is used as the index of the struct within
    * the list. It is not valid to call `initStruct()` on a composite struct – the struct contents are initialized when
    * the list pointer is initialized.

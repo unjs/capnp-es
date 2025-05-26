@@ -41,8 +41,8 @@ export class Segment implements DataView {
    * Attempt to allocate the requested number of bytes in this segment. If this segment is full this method will return
    * a pointer to freshly allocated space in another segment from the same message.
    *
-   * @param {number} byteLength The number of bytes to allocate, will be rounded up to the nearest word.
-   * @returns {Pointer} A pointer to the newly allocated space.
+   * @param byteLength The number of bytes to allocate, will be rounded up to the nearest word.
+   * @returns A pointer to the newly allocated space.
    */
   allocate(byteLength: number): Pointer {
     // eslint-disable-next-line @typescript-eslint/no-this-alias, unicorn/no-this-assignment
@@ -68,10 +68,9 @@ export class Segment implements DataView {
   /**
    * Quickly copy a word (8 bytes) from `srcSegment` into this one at the given offset.
    *
-   * @param {number} byteOffset The offset to write the word to.
-   * @param {Segment} srcSegment The segment to copy the word from.
-   * @param {number} srcByteOffset The offset from the start of `srcSegment` to copy from.
-   * @returns {void}
+   * @param byteOffset The offset to write the word to.
+   * @param srcSegment The segment to copy the word from.
+   * @param srcByteOffset The offset from the start of `srcSegment` to copy from.
    */
   copyWord(
     byteOffset: number,
@@ -89,11 +88,10 @@ export class Segment implements DataView {
   /**
    * Quickly copy words from `srcSegment` into this one.
    *
-   * @param {number} byteOffset The offset to start copying into.
-   * @param {Segment} srcSegment The segment to copy from.
-   * @param {number} srcByteOffset The start offset to copy from.
-   * @param {number} wordLength The number of words to copy.
-   * @returns {void}
+   * @param byteOffset The offset to start copying into.
+   * @param srcSegment The segment to copy from.
+   * @param srcByteOffset The start offset to copy from.
+   * @param wordLength The number of words to copy.
    */
   copyWords(
     byteOffset: number,
@@ -110,9 +108,8 @@ export class Segment implements DataView {
   /**
    * Quickly fill a number of words in the buffer with zeroes.
    *
-   * @param {number} byteOffset The first byte to set to zero.
-   * @param {number} wordLength The number of words (not bytes!) to zero out.
-   * @returns {void}
+   * @param byteOffset The first byte to set to zero.
+   * @param wordLength The number of words (not bytes!) to zero out.
    */
   fillZeroWords(byteOffset: number, wordLength: number): void {
     new Float64Array(this.buffer, byteOffset, wordLength).fill(0);
@@ -129,7 +126,7 @@ export class Segment implements DataView {
   /**
    * Get the total number of bytes available in this segment (the size of its underlying buffer).
    *
-   * @returns {number} The total number of bytes this segment can hold.
+   * @returns The total number of bytes this segment can hold.
    */
   getCapacity(): number {
     return this.buffer.byteLength;
@@ -138,8 +135,8 @@ export class Segment implements DataView {
   /**
    * Read a float32 value out of this segment.
    *
-   * @param {number} byteOffset The offset in bytes to the value.
-   * @returns {number} The value.
+   * @param byteOffset The offset in bytes to the value.
+   * @returns The value.
    */
   getFloat32(byteOffset: number): number {
     return this._dv.getFloat32(byteOffset, true);
@@ -148,8 +145,8 @@ export class Segment implements DataView {
   /**
    * Read a float64 value out of this segment.
    *
-   * @param {number} byteOffset The offset in bytes to the value.
-   * @returns {number} The value.
+   * @param byteOffset The offset in bytes to the value.
+   * @returns The value.
    */
   getFloat64(byteOffset: number): number {
     return this._dv.getFloat64(byteOffset, true);
@@ -158,8 +155,8 @@ export class Segment implements DataView {
   /**
    * Read an int16 value out of this segment.
    *
-   * @param {number} byteOffset The offset in bytes to the value.
-   * @returns {number} The value.
+   * @param byteOffset The offset in bytes to the value.
+   * @returns The value.
    */
   getInt16(byteOffset: number): number {
     return this._dv.getInt16(byteOffset, true);
@@ -168,8 +165,8 @@ export class Segment implements DataView {
   /**
    * Read an int32 value out of this segment.
    *
-   * @param {number} byteOffset The offset in bytes to the value.
-   * @returns {number} The value.
+   * @param byteOffset The offset in bytes to the value.
+   * @returns The value.
    */
   getInt32(byteOffset: number): number {
     return this._dv.getInt32(byteOffset, true);
@@ -178,8 +175,8 @@ export class Segment implements DataView {
   /**
    * Read an int64 value out of this segment.
    *
-   * @param {number} byteOffset The offset in bytes to the value.
-   * @returns {number} The value.
+   * @param byteOffset The offset in bytes to the value.
+   * @returns The value.
    */
   getInt64(byteOffset: number): bigint {
     return this._dv.getBigInt64(byteOffset, true);
@@ -188,8 +185,8 @@ export class Segment implements DataView {
   /**
    * Read an int8 value out of this segment.
    *
-   * @param {number} byteOffset The offset in bytes to the value.
-   * @returns {number} The value.
+   * @param byteOffset The offset in bytes to the value.
+   * @returns The value.
    */
   getInt8(byteOffset: number): number {
     return this._dv.getInt8(byteOffset);
@@ -198,8 +195,8 @@ export class Segment implements DataView {
   /**
    * Read a uint16 value out of this segment.
    *
-   * @param {number} byteOffset The offset in bytes to the value.
-   * @returns {number} The value.
+   * @param byteOffset The offset in bytes to the value.
+   * @returns The value.
    */
   getUint16(byteOffset: number): number {
     return this._dv.getUint16(byteOffset, true);
@@ -208,8 +205,8 @@ export class Segment implements DataView {
   /**
    * Read a uint32 value out of this segment.
    *
-   * @param {number} byteOffset The offset in bytes to the value.
-   * @returns {number} The value.
+   * @param byteOffset The offset in bytes to the value.
+   * @returns The value.
    */
   getUint32(byteOffset: number): number {
     return this._dv.getUint32(byteOffset, true);
@@ -219,8 +216,8 @@ export class Segment implements DataView {
    * Read a uint64 value (as a bigint) out of this segment.
    * NOTE: this does not copy the memory region, so updates to the underlying buffer will affect the returned value!
    *
-   * @param {number} byteOffset The offset in bytes to the value.
-   * @returns {number} The value.
+   * @param byteOffset The offset in bytes to the value.
+   * @returns The value.
    */
   getUint64(byteOffset: number): bigint {
     return this._dv.getBigUint64(byteOffset, true);
@@ -229,8 +226,8 @@ export class Segment implements DataView {
   /**
    * Read a uint8 value out of this segment.
    *
-   * @param {number} byteOffset The offset in bytes to the value.
-   * @returns {number} The value.
+   * @param byteOffset The offset in bytes to the value.
+   * @returns The value.
    */
   getUint8(byteOffset: number): number {
     return this._dv.getUint8(byteOffset);
@@ -249,8 +246,8 @@ export class Segment implements DataView {
    *
    * Benchmark: http://jsben.ch/#/Pjooc
    *
-   * @param {number} byteOffset The offset to the word.
-   * @returns {boolean} `true` if the word is zero.
+   * @param byteOffset The offset to the word.
+   * @returns `true` if the word is zero.
    */
   isWordZero(byteOffset: number): boolean {
     return this._dv.getFloat64(byteOffset, NATIVE_LITTLE_ENDIAN) === 0;
@@ -260,8 +257,7 @@ export class Segment implements DataView {
    * Swap out this segment's underlying buffer with a new one. It's assumed that the new buffer has the same content but
    * more free space, otherwise all existing pointers to this segment will be hilariously broken.
    *
-   * @param {ArrayBuffer} buffer The new buffer to use.
-   * @returns {void}
+   * @param buffer The new buffer to use.
    */
   replaceBuffer(buffer: ArrayBuffer): void {
     if (this.buffer === buffer) {
@@ -293,9 +289,8 @@ export class Segment implements DataView {
   /**
    * Write a float32 value to the specified offset.
    *
-   * @param {number} byteOffset The offset from the beginning of the buffer.
-   * @param {number} val The value to store.
-   * @returns {void}
+   * @param byteOffset The offset from the beginning of the buffer.
+   * @param val The value to store.
    */
   setFloat32(byteOffset: number, val: number): void {
     this._dv.setFloat32(byteOffset, val, true);
@@ -304,9 +299,8 @@ export class Segment implements DataView {
   /**
    * Write an float64 value to the specified offset.
    *
-   * @param {number} byteOffset The offset from the beginning of the buffer.
-   * @param {number} val The value to store.
-   * @returns {void}
+   * @param byteOffset The offset from the beginning of the buffer.
+   * @param val The value to store.
    */
   setFloat64(byteOffset: number, val: number): void {
     this._dv.setFloat64(byteOffset, val, true);
@@ -315,9 +309,8 @@ export class Segment implements DataView {
   /**
    * Write an int16 value to the specified offset.
    *
-   * @param {number} byteOffset The offset from the beginning of the buffer.
-   * @param {number} val The value to store.
-   * @returns {void}
+   * @param byteOffset The offset from the beginning of the buffer.
+   * @param val The value to store.
    */
   setInt16(byteOffset: number, val: number): void {
     this._dv.setInt16(byteOffset, val, true);
@@ -326,9 +319,8 @@ export class Segment implements DataView {
   /**
    * Write an int32 value to the specified offset.
    *
-   * @param {number} byteOffset The offset from the beginning of the buffer.
-   * @param {number} val The value to store.
-   * @returns {void}
+   * @param byteOffset The offset from the beginning of the buffer.
+   * @param val The value to store.
    */
   setInt32(byteOffset: number, val: number): void {
     this._dv.setInt32(byteOffset, val, true);
@@ -337,9 +329,8 @@ export class Segment implements DataView {
   /**
    * Write an int8 value to the specified offset.
    *
-   * @param {number} byteOffset The offset from the beginning of the buffer.
-   * @param {number} val The value to store.
-   * @returns {void}
+   * @param byteOffset The offset from the beginning of the buffer.
+   * @param val The value to store.
    */
   setInt8(byteOffset: number, val: number): void {
     this._dv.setInt8(byteOffset, val);
@@ -348,9 +339,8 @@ export class Segment implements DataView {
   /**
    * Write an int64 value to the specified offset.
    *
-   * @param {number} byteOffset The offset from the beginning of the buffer.
-   * @param {bigint} val The value to store.
-   * @returns {void}
+   * @param byteOffset The offset from the beginning of the buffer.
+   * @param val The value to store.
    */
   setInt64(byteOffset: number, val: bigint): void {
     this._dv.setBigInt64(byteOffset, val, true);
@@ -359,9 +349,8 @@ export class Segment implements DataView {
   /**
    * Write a uint16 value to the specified offset.
    *
-   * @param {number} byteOffset The offset from the beginning of the buffer.
-   * @param {number} val The value to store.
-   * @returns {void}
+   * @param byteOffset The offset from the beginning of the buffer.
+   * @param val The value to store.
    */
   setUint16(byteOffset: number, val: number): void {
     this._dv.setUint16(byteOffset, val, true);
@@ -370,9 +359,8 @@ export class Segment implements DataView {
   /**
    * Write a uint32 value to the specified offset.
    *
-   * @param {number} byteOffset The offset from the beginning of the buffer.
-   * @param {number} val The value to store.
-   * @returns {void}
+   * @param byteOffset The offset from the beginning of the buffer.
+   * @param val The value to store.
    */
   setUint32(byteOffset: number, val: number): void {
     this._dv.setUint32(byteOffset, val, true);
@@ -381,9 +369,8 @@ export class Segment implements DataView {
   /**
    * Write a uint64 value to the specified offset.
    *
-   * @param {number} byteOffset The offset from the beginning of the buffer.
-   * @param {bigint} val The value to store.
-   * @returns {void}
+   * @param byteOffset The offset from the beginning of the buffer.
+   * @param val The value to store.
    */
   setUint64(byteOffset: number, val: bigint): void {
     this._dv.setBigUint64(byteOffset, val, true);
@@ -392,9 +379,8 @@ export class Segment implements DataView {
   /**
    * Write a uint8 (byte) value to the specified offset.
    *
-   * @param {number} byteOffset The offset from the beginning of the buffer.
-   * @param {number} val The value to store.
-   * @returns {void}
+   * @param byteOffset The offset from the beginning of the buffer.
+   * @param val The value to store.
    */
   setUint8(byteOffset: number, val: number): void {
     this._dv.setUint8(byteOffset, val);
@@ -406,8 +392,7 @@ export class Segment implements DataView {
    *
    * Benchmark: http://jsben.ch/#/dUdPI
    *
-   * @param {number} byteOffset The offset of the word to set to zero.
-   * @returns {void}
+   * @param byteOffset The offset of the word to set to zero.
    */
   setWordZero(byteOffset: number): void {
     this._dv.setFloat64(byteOffset, 0, NATIVE_LITTLE_ENDIAN);

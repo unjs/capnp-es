@@ -18,8 +18,8 @@ export class Text extends List<string> {
   /**
    * Read a utf-8 encoded string value from this pointer.
    *
-   * @param {number} [index] The index at which to start reading; defaults to zero.
-   * @returns {string} The string value.
+   * @param index The index at which to start reading; defaults to zero.
+   * @returns The string value.
    */
   get(index = 0): string {
     if (isNull(this)) {
@@ -41,7 +41,7 @@ export class Text extends List<string> {
   /**
    * Get the number of utf-8 encoded bytes in this text. This does **not** include the NUL byte.
    *
-   * @returns {number} The number of bytes allocated for the text.
+   * @returns The number of bytes allocated for the text.
    */
   get length(): number {
     return super.length - 1;
@@ -50,10 +50,9 @@ export class Text extends List<string> {
   /**
    * Write a utf-8 encoded string value starting at the specified index.
    *
-   * @param {number} index The index at which to start copying the string. Note that if this is not zero the bytes
+   * @param index The index at which to start copying the string. Note that if this is not zero the bytes
    * before `index` will be left as-is. All bytes after `index` will be overwritten.
-   * @param {string} value The string value to set.
-   * @returns {void}
+   * @param value The string value to set.
    */
   set(index: number, value: string): void {
     const src = textEncoder.encode(value);

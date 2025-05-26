@@ -136,16 +136,12 @@ export function getJsType(
  * Gets all fields that are part of an unnamed union in a struct.
  * An unnamed union is a group of fields where only one can be set at a time.
  *
- * @param node - The schema node to check for unnamed union fields
- * @returns Array of fields that belong to the unnamed union, empty if node is not a struct
+ * @param node - The struct schema node to check for unnamed union fields
+ * @returns Array of fields that belong to the unnamed union
  */
 export function getUnnamedUnionFields(node: schema.Node): schema.Field[] {
-  if (!node._isStruct) {
-    return [];
-  }
-
   return node.struct.fields.filter(
-    (f) => f.discriminantValue !== schema.Field.NO_DISCRIMINANT,
+    (field) => field.discriminantValue !== schema.Field.NO_DISCRIMINANT,
   );
 }
 
@@ -224,8 +220,8 @@ export function lookupNodeSourceInfo(
  * This is currently the case for composite lists
  * (`$.CompositeList`) and lists of lists (`capnp.PointerList`).
  *
- * @param {schema.Field} field The field to check.
- * @returns {boolean} Returns `true` if the field requires a concrete list class initializer.
+ * @param field The field to check.
+ * @returns Returns `true` if the field requires a concrete list class initializer.
  */
 export function needsConcreteListClass(field: schema.Field): boolean {
   if (!field._isSlot) {

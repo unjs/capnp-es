@@ -5,11 +5,8 @@ import { Exception } from "../capnp/rpc";
 import { format } from "../util";
 
 export class RPCError extends Error {
-  exception: Exception;
-
-  constructor(exception: Exception) {
+  constructor(public exception: Exception) {
     super(format(RPC_ERROR, exception.reason));
-    this.exception = exception;
   }
 }
 

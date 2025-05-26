@@ -21,9 +21,6 @@ export enum QuestionState {
 }
 
 export class Question<P extends Struct, R extends Struct> implements Answer<R> {
-  conn: Conn;
-  id: number;
-  method?: Method<P, R>;
   paramCaps: number[] = [];
   state = QuestionState.IN_PROGRESS;
   obj?: R;
@@ -31,11 +28,11 @@ export class Question<P extends Struct, R extends Struct> implements Answer<R> {
   derived: PipelineOp[][] = [];
   deferred = new Deferred<R>();
 
-  constructor(conn: Conn, id: number, method?: Method<P, R>) {
-    this.conn = conn;
-    this.id = id;
-    this.method = method;
-  }
+  constructor(
+    public conn: Conn,
+    public id: number,
+    public method?: Method<P, R>,
+  ) {}
 
   async struct(): Promise<R> {
     return await this.deferred.promise;

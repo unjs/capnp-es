@@ -8,7 +8,7 @@ import {
 import * as util from "../util";
 import type { CodeGeneratorFileContext } from ".";
 import { generateInterfaceClasses } from "./rpc";
-import { createNestedNodeProperty, createValueExpression } from "./struct";
+import { createNestedNodeProperty, createValue } from "./struct";
 import { extractJSDocs } from "./helpers";
 
 /**
@@ -44,7 +44,7 @@ export function generateInterfaceNode(
   members.push(
     ...consts.map((node) => {
       const name = util.c2s(getDisplayNamePrefix(node));
-      const value = createValueExpression(node.const.value);
+      const value = createValue(node.const.value);
       return `static readonly ${name} = ${value}`;
     }),
     ...nestedNodes.map((node) => createNestedNodeProperty(node)),

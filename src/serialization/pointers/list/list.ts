@@ -357,12 +357,11 @@ export class List<T> extends Pointer implements Array<T> {
  * Initialize the list with the given element size and length. This will allocate new space for the list, ideally in
  * the same segment as this pointer.
  *
- * @param {ListElementSize} elementSize The size of each element in the list.
- * @param {number} length The number of elements in the list.
- * @param {List<T>} list The list to initialize.
- * @param {ObjectSize} [compositeSize] The size of each element in a composite list. This value is required for
+ * @param elementSize The size of each element in the list.
+ * @param length The number of elements in the list.
+ * @param list The list to initialize.
+ * @param compositeSize The size of each element in a composite list. This value is required for
  * composite lists.
- * @returns {void}
  */
 export function initList<T>(
   elementSize: ListElementSize,

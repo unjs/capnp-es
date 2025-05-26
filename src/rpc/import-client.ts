@@ -11,14 +11,12 @@ import { RPC_IMPORT_CLOSED } from "../errors";
 
 // An ImportClient implements Client for a remote capability.
 export class ImportClient implements Client {
-  conn: Conn;
-  id: number;
   closed = false;
 
-  constructor(conn: Conn, id: number) {
-    this.conn = conn;
-    this.id = id;
-  }
+  constructor(
+    public conn: Conn,
+    public id: number,
+  ) {}
 
   call<CallParams extends Struct, CallResults extends Struct>(
     cl: Call<CallParams, CallResults>,

@@ -9,11 +9,12 @@ import { Answer } from "./answer";
 
 // A Ref is a single reference to a client wrapped by RefCount.
 export class Ref implements Client {
-  rc: RefCount;
   closeState: { closed: boolean };
 
-  constructor(rc: RefCount, finalize: Finalize) {
-    this.rc = rc;
+  constructor(
+    public rc: RefCount,
+    finalize: Finalize,
+  ) {
     const closeState = { closed: false };
     this.closeState = closeState;
     finalize(this, () => {

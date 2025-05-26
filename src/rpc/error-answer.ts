@@ -7,11 +7,8 @@ import { Call } from "./call";
 import { Answer } from "./answer";
 
 export class ErrorAnswer<T extends Struct> extends FixedAnswer<T> {
-  err: Error;
-
-  constructor(err: Error) {
+  constructor(public err: Error) {
     super();
-    this.err = err;
   }
 
   structSync(): T {

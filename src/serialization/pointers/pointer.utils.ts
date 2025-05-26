@@ -41,8 +41,8 @@ export function adopt<T extends Pointer>(src: Orphan<T>, p: T): void {
  * Call `adopt()` on the orphan with the new target pointer location to move it back into the message; the orphan
  * object is then invalidated after adoption (can only adopt once!).
  *
- * @param {T} p The pointer to turn into an Orphan.
- * @returns {Orphan<T>} An orphaned pointer.
+ * @param p The pointer to turn into an Orphan.
+ * @returns An orphaned pointer.
  */
 
 export function disown<T extends Pointer>(p: T): Orphan<T> {
@@ -57,11 +57,11 @@ export function dump(p: Pointer): string {
  * Get the total number of bytes required to hold a list of the provided size with the given length, rounded up to the
  * nearest word.
  *
- * @param {ListElementSize} elementSize A number describing the size of the list elements.
- * @param {number} length The length of the list.
- * @param {ObjectSize} [compositeSize] The size of each element in a composite list; required if
+ * @param elementSize A number describing the size of the list elements.
+ * @param length The length of the list.
+ * @param compositeSize The size of each element in a composite list; required if
  * `elementSize === ListElementSize.COMPOSITE`.
- * @returns {number} The number of bytes required to hold an element of that size, or `NaN` if that is undefined.
+ * @returns The number of bytes required to hold an element of that size, or `NaN` if that is undefined.
  */
 
 export function getListByteLength(
@@ -103,8 +103,8 @@ export function getListByteLength(
  * Get the number of bytes required to hold a list element of the provided size. `COMPOSITE` elements do not have a
  * fixed size, and `BIT` elements are packed into exactly a single bit, so these both return `NaN`.
  *
- * @param {ListElementSize} elementSize A number describing the size of the list elements.
- * @returns {number} The number of bytes required to hold an element of that size, or `NaN` if that is undefined.
+ * @param elementSize A number describing the size of the list elements.
+ * @returns The number of bytes required to hold an element of that size, or `NaN` if that is undefined.
  */
 
 export function getListElementByteLength(elementSize: ListElementSize): number {
@@ -153,9 +153,9 @@ export function getListElementByteLength(elementSize: ListElementSize): number {
 /**
  * Add an offset to the pointer's offset and return a new Pointer for that address.
  *
- * @param {number} offset The number of bytes to add to the offset.
- * @param {Pointer} p The pointer to add from.
- * @returns {Pointer} A new pointer to the address.
+ * @param offset The number of bytes to add to the offset.
+ * @param p The pointer to add from.
+ * @returns A new pointer to the address.
  */
 
 export function add(offset: number, p: Pointer): Pointer {
@@ -165,9 +165,8 @@ export function add(offset: number, p: Pointer): Pointer {
 /**
  * Replace a pointer with a deep copy of the pointer at `src` and all of its contents.
  *
- * @param {Pointer} src The pointer to copy.
- * @param {Pointer} p The pointer to copy into.
- * @returns {void}
+ * @param src The pointer to copy.
+ * @param p The pointer to copy into.
  */
 
 export function copyFrom(src: Pointer, p: Pointer): void {
@@ -218,8 +217,7 @@ export function copyFrom(src: Pointer, p: Pointer): void {
  *
  * FIXME: This may need protection against infinite recursion...
  *
- * @param {Pointer} p The pointer to erase.
- * @returns {void}
+ * @param p The pointer to erase.
  */
 
 export function erase(p: Pointer): void {
@@ -315,8 +313,7 @@ export function erase(p: Pointer): void {
 /**
  * Set the pointer (and far pointer landing pads, if applicable) to zero. Does not touch the pointer's content.
  *
- * @param {Pointer} p The pointer to erase.
- * @returns {void}
+ * @param p The pointer to erase.
  */
 
 export function erasePointer(p: Pointer): void {
@@ -342,8 +339,8 @@ export function erasePointer(p: Pointer): void {
 /**
  * Interpret the pointer as a far pointer, returning its target segment and offset.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {Pointer} A pointer to the far target.
+ * @param p The pointer to read from.
+ * @returns A pointer to the far target.
  */
 
 export function followFar(p: Pointer): Pointer {
@@ -363,8 +360,8 @@ export function followFar(p: Pointer): Pointer {
  * If the pointer address references a far pointer, follow it to the location where the actual pointer data is written.
  * Otherwise, returns the pointer unmodified.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {Pointer} A new pointer representing the target location, or `p` if it is not a far pointer.
+ * @param p The pointer to read from.
+ * @returns A new pointer representing the target location, or `p` if it is not a far pointer.
  */
 export function followFars(p: Pointer): Pointer {
   if (getPointerType(p) === PointerType.FAR) {
@@ -395,10 +392,10 @@ function isCompositeList(p: Pointer): boolean {
  * Obtain the location of the pointer's content, following far pointers as needed.
  * If the pointer is a struct pointer and `compositeIndex` is set, it will be offset by a multiple of the struct's size.
  *
- * @param {Pointer} p The pointer to read from.
- * @param {boolean} [ignoreCompositeIndex] If true, will not follow the composite struct pointer's composite index and
+ * @param p The pointer to read from.
+ * @param ignoreCompositeIndex If true, will not follow the composite struct pointer's composite index and
  * instead return a pointer to the parent list's contents (also the beginning of the first struct).
- * @returns {Pointer} A pointer to the beginning of the pointer's content.
+ * @returns A pointer to the beginning of the pointer's content.
  */
 export function getContent(
   p: Pointer,
@@ -443,8 +440,8 @@ export function getContent(
 /**
  * Read the target segment ID from a far pointer.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {number} The target segment ID.
+ * @param p The pointer to read from.
+ * @returns The target segment ID.
  */
 export function getFarSegmentId(p: Pointer): number {
   return p.segment.getUint32(p.byteOffset + 4);
@@ -453,8 +450,8 @@ export function getFarSegmentId(p: Pointer): number {
 /**
  * Get a number indicating the size of the list's elements.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {ListElementSize} The size of the list's elements.
+ * @param p The pointer to read from.
+ * @returns The size of the list's elements.
  */
 export function getListElementSize(p: Pointer): ListElementSize {
   return p.segment.getUint32(p.byteOffset + 4) & LIST_SIZE_MASK;
@@ -467,8 +464,8 @@ export function getListElementSize(p: Pointer): ListElementSize {
  * This method does **not** attempt to distinguish between composite and non-composite lists. To get the correct
  * length for composite lists use `getTargetListLength()` instead.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {number} The length of the list, or total number of words for composite lists.
+ * @param p The pointer to read from.
+ * @returns The length of the list, or total number of words for composite lists.
  */
 export function getListLength(p: Pointer): number {
   return p.segment.getUint32(p.byteOffset + 4) >>> 3;
@@ -479,8 +476,8 @@ export function getListLength(p: Pointer): number {
  * beginning of the data section, and for list pointers it is the location of the first element. The value should
  * always be zero for interface pointers.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {number} The offset, in words, from the end of the pointer to the start of the data section.
+ * @param p The pointer to read from.
+ * @returns The offset, in words, from the end of the pointer to the start of the data section.
  */
 export function getOffsetWords(p: Pointer): number {
   const o = p.segment.getInt32(p.byteOffset);
@@ -492,8 +489,8 @@ export function getOffsetWords(p: Pointer): number {
 /**
  * Look up the pointer's type.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {PointerType} The type of pointer.
+ * @param p The pointer to read from.
+ * @returns The type of pointer.
  */
 export function getPointerType(p: Pointer): PointerType {
   return p.segment.getUint32(p.byteOffset) & POINTER_TYPE_MASK;
@@ -502,8 +499,8 @@ export function getPointerType(p: Pointer): PointerType {
 /**
  * Read the number of data words from this struct pointer.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {number} The number of data words in the struct.
+ * @param p The pointer to read from.
+ * @returns The number of data words in the struct.
  */
 export function getStructDataWords(p: Pointer): number {
   return p.segment.getUint16(p.byteOffset + 4);
@@ -512,8 +509,8 @@ export function getStructDataWords(p: Pointer): number {
 /**
  * Read the number of pointers contained in this struct pointer.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {number} The number of pointers in this struct.
+ * @param p The pointer to read from.
+ * @returns The number of pointers in this struct.
  */
 export function getStructPointerLength(p: Pointer): number {
   return p.segment.getUint16(p.byteOffset + 6);
@@ -522,8 +519,8 @@ export function getStructPointerLength(p: Pointer): number {
 /**
  * Get an object describing this struct pointer's size.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {ObjectSize} The size of the struct.
+ * @param p The pointer to read from.
+ * @returns The size of the struct.
  */
 export function getStructSize(p: Pointer): ObjectSize {
   return new ObjectSize(getStructDataWords(p) * 8, getStructPointerLength(p));
@@ -532,8 +529,8 @@ export function getStructSize(p: Pointer): ObjectSize {
 /**
  * Get a pointer to this pointer's composite list tag word, following far pointers as needed.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {Pointer} A pointer to the list's composite tag word.
+ * @param p The pointer to read from.
+ * @returns A pointer to the list's composite tag word.
  */
 export function getTargetCompositeListTag(p: Pointer): Pointer {
   const c = getContent(p);
@@ -548,8 +545,8 @@ export function getTargetCompositeListTag(p: Pointer): Pointer {
 /**
  * Get the object size for the target composite list, following far pointers as needed.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {ObjectSize} An object describing the size of each struct in the list.
+ * @param p The pointer to read from.
+ * @returns An object describing the size of each struct in the list.
  */
 export function getTargetCompositeListSize(p: Pointer): ObjectSize {
   return getStructSize(getTargetCompositeListTag(p));
@@ -558,8 +555,8 @@ export function getTargetCompositeListSize(p: Pointer): ObjectSize {
 /**
  * Get the size of the list elements referenced by this pointer, following far pointers if necessary.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {ListElementSize} The size of the elements in the list.
+ * @param p The pointer to read from.
+ * @returns The size of the elements in the list.
  */
 export function getTargetListElementSize(p: Pointer): ListElementSize {
   return getListElementSize(followFars(p));
@@ -569,8 +566,8 @@ export function getTargetListElementSize(p: Pointer): ListElementSize {
  * Get the length of the list referenced by this pointer, following far pointers if necessary. If the list is a
  * composite list, it will look up the tag word and read the length from there.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {number} The number of elements in the list.
+ * @param p The pointer to read from.
+ * @returns The number of elements in the list.
  */
 export function getTargetListLength(p: Pointer): number {
   const t = followFars(p);
@@ -591,8 +588,8 @@ export function getTargetListLength(p: Pointer): number {
  * The target of a far pointer can never be another far pointer, and this method will throw if such a situation is
  * encountered.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {PointerType} The type of pointer referenced by this pointer.
+ * @param p The pointer to read from.
+ * @returns The type of pointer referenced by this pointer.
  */
 export function getTargetPointerType(p: Pointer): PointerType {
   const t = getPointerType(followFars(p));
@@ -605,8 +602,8 @@ export function getTargetPointerType(p: Pointer): PointerType {
 /**
  * Get the size of the struct referenced by a pointer, following far pointers if necessary.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {ObjectSize} The size of the struct referenced by this pointer.
+ * @param p The pointer to read from.
+ * @returns The size of the struct referenced by this pointer.
  */
 export function getTargetStructSize(p: Pointer): ObjectSize {
   return getStructSize(followFars(p));
@@ -619,10 +616,10 @@ export function getTargetStructSize(p: Pointer): ObjectSize {
  * The return value includes a pointer to write the pointer's actual data to (the eventual far target), and the offset
  * value (in words) to use for that pointer. In the case of double-far pointers this offset will always be zero.
  *
- * @param {Segment} contentSegment The segment containing this pointer's content.
- * @param {number} contentOffset The offset within the content segment for the beginning of this pointer's content.
- * @param {Pointer} p The pointer to initialize.
- * @returns {PointerAllocationResult} An object containing a pointer (where the pointer data should be written), and
+ * @param contentSegment The segment containing this pointer's content.
+ * @param contentOffset The offset within the content segment for the beginning of this pointer's content.
+ * @param p The pointer to initialize.
+ * @returns An object containing a pointer (where the pointer data should be written), and
  * the value to use as the offset for that pointer.
  */
 export function initPointer(
@@ -668,8 +665,8 @@ export function initPointer(
 /**
  * Check if the pointer is a double-far pointer.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {boolean} `true` if it is a double-far pointer, `false` otherwise.
+ * @param p The pointer to read from.
+ * @returns `true` if it is a double-far pointer, `false` otherwise.
  */
 export function isDoubleFar(p: Pointer): boolean {
   return (
@@ -682,8 +679,8 @@ export function isDoubleFar(p: Pointer): boolean {
  * Quickly check to see if the pointer is "null". A "null" pointer is a zero word, equivalent to an empty struct
  * pointer.
  *
- * @param {Pointer} p The pointer to read from.
- * @returns {boolean} `true` if the pointer is "null".
+ * @param p The pointer to read from.
+ * @returns `true` if the pointer is "null".
  */
 export function isNull(p: Pointer): boolean {
   return p.segment.isWordZero(p.byteOffset);
@@ -694,10 +691,9 @@ export function isNull(p: Pointer): boolean {
  * pointers as needed if the content is in a different segment than the destination. After the relocation the source
  * pointer will be erased and is no longer valid.
  *
- * @param {Pointer} dst The desired location for the `src` pointer. Any existing contents will be erased before
+ * @param dst The desired location for the `src` pointer. Any existing contents will be erased before
  * relocating!
- * @param {Pointer} src The pointer to relocate.
- * @returns {void}
+ * @param src The pointer to relocate.
  */
 export function relocateTo(dst: Pointer, src: Pointer): void {
   const t = followFars(src);
@@ -727,11 +723,10 @@ export function relocateTo(dst: Pointer, src: Pointer): void {
 /**
  * Write a far pointer.
  *
- * @param {boolean} doubleFar Set to `true` if this is a double far pointer.
- * @param {number} offsetWords The offset, in words, to the target pointer.
- * @param {number} segmentId The segment the target pointer is located in.
- * @param {Pointer} p The pointer to write to.
- * @returns {void}
+ * @param doubleFar Set to `true` if this is a double far pointer.
+ * @param offsetWords The offset, in words, to the target pointer.
+ * @param segmentId The segment the target pointer is located in.
+ * @param p The pointer to write to.
  */
 export function setFarPointer(
   doubleFar: boolean,
@@ -751,9 +746,8 @@ export function setFarPointer(
 /**
  * Write a raw interface pointer.
  *
- * @param {number} capId The capability ID.
- * @param {Pointer} p The pointer to write to.
- * @returns {void}
+ * @param capId The capability ID.
+ * @param p The pointer to write to.
  */
 export function setInterfacePointer(capId: number, p: Pointer): void {
   p.segment.setUint32(p.byteOffset, PointerType.OTHER);
@@ -763,8 +757,8 @@ export function setInterfacePointer(capId: number, p: Pointer): void {
 /**
  * Reads a raw interface pointer
  *
- * @param {Pointer} p The pointer to read.
- * @returns {number} The capability ID.
+ * @param p The pointer to read.
+ * @returns The capability ID.
  */
 export function getInterfacePointer(p: Pointer): number {
   return p.segment.getUint32(p.byteOffset + 4);
@@ -773,13 +767,12 @@ export function getInterfacePointer(p: Pointer): number {
 /**
  * Write a raw list pointer.
  *
- * @param {number} offsetWords The number of words from the end of this pointer to the beginning of the list content.
- * @param {ListElementSize} size The size of each element in the list.
- * @param {number} length The number of elements in the list.
- * @param {Pointer} p The pointer to write to.
- * @param {ObjectSize} [compositeSize] For composite lists this describes the size of each element in this list. This
+ * @param offsetWords The number of words from the end of this pointer to the beginning of the list content.
+ * @param size The size of each element in the list.
+ * @param length The number of elements in the list.
+ * @param p The pointer to write to.
+ * @param compositeSize For composite lists this describes the size of each element in this list. This
  * is required for composite lists.
- * @returns {void}
  */
 export function setListPointer(
   offsetWords: number,
@@ -808,11 +801,10 @@ export function setListPointer(
 /**
  * Write a raw struct pointer.
  *
- * @param {number} offsetWords The number of words from the end of this pointer to the beginning of the struct's data
+ * @param offsetWords The number of words from the end of this pointer to the beginning of the struct's data
  * section.
- * @param {ObjectSize} size An object describing the size of the struct.
- * @param {Pointer} p The pointer to write to.
- * @returns {void}
+ * @param size An object describing the size of the struct.
+ * @param p The pointer to write to.
  */
 export function setStructPointer(
   offsetWords: number,
@@ -832,11 +824,10 @@ export function setStructPointer(
 /**
  * Read some bits off a pointer to make sure it has the right pointer data.
  *
- * @param {PointerType} pointerType The expected pointer type.
- * @param {Pointer} p The pointer to validate.
- * @param {ListElementSize} [elementSize] For list pointers, the expected element size. Leave this
+ * @param pointerType The expected pointer type.
+ * @param p The pointer to validate.
+ * @param elementSize For list pointers, the expected element size. Leave this
  * undefined for struct pointers.
- * @returns {void}
  */
 export function validate(
   pointerType: PointerType,
@@ -1060,9 +1051,8 @@ export function copyFromStruct(src: Pointer, dst: Pointer): void {
  * This will decrement an internal counter tracking how many bytes have been traversed in the message so far. After
  * a certain limit, this method will throw an error in order to prevent a certain class of DoS attacks.
  *
- * @param {Message} message The message the pointer belongs to.
- * @param {Pointer} p The pointer being allocated.
- * @returns {void}
+ * @param message The message the pointer belongs to.
+ * @param p The pointer being allocated.
  */
 
 export function trackPointerAllocation(message: Message, p: Pointer): void {
@@ -1078,9 +1068,6 @@ export function trackPointerAllocation(message: Message, p: Pointer): void {
  * return values is faster than using an array or anonymous object.
  *
  * http://jsben.ch/#/zTdbD
- *
- * @export
- * @class PointerAllocationResult
  */
 export class PointerAllocationResult {
   constructor(

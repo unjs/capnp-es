@@ -16,11 +16,9 @@ export class PipelineClient<
   Results extends Struct,
 > implements Client
 {
-  pipeline: Pipeline<AnswerResults, ParentResults, Results>;
-
-  constructor(pipeline: Pipeline<AnswerResults, ParentResults, Results>) {
-    this.pipeline = pipeline;
-  }
+  constructor(
+    public pipeline: Pipeline<AnswerResults, ParentResults, Results>,
+  ) {}
 
   transform(): PipelineOp[] {
     return this.pipeline.transform();

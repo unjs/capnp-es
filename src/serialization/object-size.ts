@@ -4,9 +4,6 @@ import * as util from "../util";
 
 /**
  * A simple object that describes the size of a struct.
- *
- * @export
- * @class ObjectSize
  */
 export class ObjectSize {
   /**

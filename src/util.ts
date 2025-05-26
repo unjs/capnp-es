@@ -7,9 +7,8 @@ import { RANGE_INT32_OVERFLOW, RANGE_UINT32_OVERFLOW } from "./errors";
 /**
  * Dump a hex string from the given buffer.
  *
- * @export
- * @param {ArrayBuffer} buffer The buffer to convert.
- * @returns {string} A hexadecimal string representing the buffer.
+ * @param buffer The buffer to convert.
+ * @returns A hexadecimal string representing the buffer.
  */
 export function bufferToHex(buffer: ArrayBufferLike): string {
   const a = new Uint8Array(buffer);
@@ -25,9 +24,8 @@ export function bufferToHex(buffer: ArrayBufferLike): string {
 /**
  * Throw an error if the provided value cannot be represented as a 32-bit integer.
  *
- * @export
- * @param {number} value The number to check.
- * @returns {number} The same number if it is valid.
+ * @param value The number to check.
+ * @returns The same number if it is valid.
  */
 export function checkInt32(value: number): number {
   if (value > MAX_INT32 || value < -MAX_INT32) {
@@ -89,8 +87,8 @@ export function dumpBuffer(buffer: ArrayBuffer | ArrayBufferView): string {
 /**
  * Encode a JavaScript string (UCS-2) to a UTF-8 encoded string inside a Uint8Array.
  *
- * @param {string} src The input string.
- * @returns {Uint8Array} A UTF-8 encoded buffer with the string's contents.
+ * @param src The input string.
+ * @returns A UTF-8 encoded buffer with the string's contents.
  */
 export function encodeUtf8(src: string): Uint8Array {
   return new TextEncoder().encode(src);
@@ -99,8 +97,8 @@ export function encodeUtf8(src: string): Uint8Array {
 /**
  * Decode an UTF-8 encoded string inside a Uint8Array.
  *
- * @param {string} src The input string.
- * @returns {Uint8Array} A UTF-8 encoded buffer with the string's contents.
+ * @param src The input string.
+ * @returns A UTF-8 encoded buffer with the string's contents.
  */
 export function decodeUtf8(src: Uint8Array): string {
   return new TextDecoder().decode(src);
@@ -110,10 +108,10 @@ export function decodeUtf8(src: Uint8Array): string {
  * Produce a `printf`-style string. Nice for providing arguments to `assert` without paying the cost for string
  * concatenation up front. Precision is supported for floating point numbers.
  *
- * @param {string} s The format string. Supported format specifiers: b, c, d, f, j, o, s, x, and X.
- * @param {...any} args Values to be formatted in the string. Arguments beyond what are consumed by the format string
+ * @param s The format string. Supported format specifiers: b, c, d, f, j, o, s, x, and X.
+ * @param args Values to be formatted in the string. Arguments beyond what are consumed by the format string
  * are ignored.
- * @returns {string} The formatted string.
+ * @returns The formatted string.
  */
 export function format(s: string, ...args: unknown[]): string {
   const n = s.length;
@@ -269,9 +267,8 @@ export function pad(v: string, width: number, pad = "0"): string {
 /**
  * Add padding to a number to make it divisible by 8. Typically used to pad byte sizes so they align to a word boundary.
  *
- * @export
- * @param {number} size The number to pad.
- * @returns {number} The padded number.
+ * @param size The number to pad.
+ * @returns The padded number.
  */
 
 export function padToWord(size: number): number {

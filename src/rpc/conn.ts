@@ -85,13 +85,13 @@ export class Conn {
 
   /**
    * Create a new connection
-   * @param {Transport} transport The transport used to receive/send messages.
-   * @param {Finalize} finalize Weak reference implementation. Compatible with
+   * @param transport The transport used to receive/send messages.
+   * @param finalize Weak reference implementation. Compatible with
    * the 'weak' module on node.js (just add weak as a dependency and pass
    * require("weak")), but alternative implementations can be provided for
    * other platforms like Electron. Defaults to using FinalizationRegistry if
    * available.
-   * @returns {Conn} A new connection.
+   * @returns A new connection.
    */
   constructor(
     public transport: Transport,
@@ -140,10 +140,12 @@ export class Conn {
     const ret = newReturnMessage(id);
     ret.return.releaseParamCaps = false;
     const a = this.insertAnswer(id);
-    if (a === null)
+    if (a === null) {
       return this.sendReturnException(id, new Error(RPC_QUESTION_ID_REUSED));
-    if (this.main === undefined)
+    }
+    if (this.main === undefined) {
       return a.reject(new Error(RPC_NO_MAIN_INTERFACE));
+    }
 
     const msg = new Message();
     msg.addCap(this.main);
@@ -151,7 +153,7 @@ export class Conn {
   }
 
   handleFinishMessage(m: RPCMessage): void {
-    const finish = m.finish;
+    const { finish } = m;
     const id = finish.questionId;
     const a = this.popAnswer(id);
     if (a === null) {
@@ -219,11 +221,11 @@ export class Conn {
     switch (ret.which()) {
       case Return.RESULTS: {
         releaseResultCaps = false;
-        const results = ret.results;
+        const { results } = ret;
         // TODO: reply with unimplemented if we have a problem here
         this.populateMessageCapTable(results);
 
-        const content = results.content;
+        const { content } = results;
         q.fulfill(content);
         break;
       }
@@ -627,7 +629,9 @@ export class Conn {
         const m = await this.transport.recvMessage();
         this.handleMessage(m);
       } catch (error_) {
-        if (error_ !== undefined) throw error_;
+        if (error_ !== undefined) {
+          throw error_;
+        }
         this.working = false;
       }
     }

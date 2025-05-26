@@ -8,11 +8,7 @@ import { Call } from "./call";
 import { ErrorAnswer } from "./error-answer";
 
 export class ErrorClient implements Client {
-  err: Error;
-
-  constructor(err: Error) {
-    this.err = err;
-  }
+  constructor(public err: Error) {}
 
   call<P extends Struct, R extends Struct>(_call: Call<P, R>): Answer<R> {
     return new ErrorAnswer(this.err);
@@ -24,6 +20,5 @@ export class ErrorClient implements Client {
 }
 
 export function clientOrNull(client: Client | null): Client {
-  // eslint-disable-next-line unicorn/prefer-logical-operator-over-ternary
-  return client ? client : new ErrorClient(new Error(RPC_NULL_CLIENT));
+  return client ?? new ErrorClient(new Error(RPC_NULL_CLIENT));
 }

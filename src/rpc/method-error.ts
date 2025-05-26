@@ -6,9 +6,10 @@ import { format } from "../util";
 import { RPC_METHOD_ERROR } from "../errors";
 
 export class MethodError<P extends Struct, R extends Struct> extends Error {
-  method: Method<P, R>;
-
-  constructor(method: Method<P, R>, message: string) {
+  constructor(
+    public method: Method<P, R>,
+    message: string,
+  ) {
     super(
       format(
         RPC_METHOD_ERROR,
@@ -17,6 +18,5 @@ export class MethodError<P extends Struct, R extends Struct> extends Error {
         message,
       ),
     );
-    this.method = method;
   }
 }
