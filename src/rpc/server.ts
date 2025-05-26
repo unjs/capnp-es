@@ -24,14 +24,10 @@ export interface ServerCall<P extends Struct, R extends Struct>
 
 // A server is a locally implemented interface
 export class Server implements Client {
-  target: any;
-
-  methods: Array<ServerMethod<any, any>>;
-
-  constructor(target: any, methods: Array<ServerMethod<any, any>>) {
-    this.target = target;
-    this.methods = methods;
-  }
+  constructor(
+    public target: any,
+    public methods: Array<ServerMethod<any, any>>,
+  ) {}
 
   startCall<P extends Struct, R extends Struct>(call: ServerCall<P, R>): void {
     const msg = new Message();

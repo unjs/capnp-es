@@ -6,8 +6,9 @@ import {
   getFullClassName,
   getJsType,
   lookupNode,
+  lookupNodeSourceInfo,
 } from "../node-util";
-import { createBigIntExpression } from "./helpers";
+import { createBigIntExpression, extractJSDocs } from "./helpers";
 import * as util from "../util";
 import * as E from "../errors";
 import { format } from "../../util";
@@ -30,13 +31,23 @@ export function generateInterfaceClasses(
   ctx: CodeGeneratorFileContext,
   node: schema.Node,
 ): void {
-  // Generate the parameter and result structs first
   generateMethodStructs(ctx, node);
-
-  // Now generate the client & server classes
   generateClient(ctx, node);
   generateServer(ctx, node);
 }
+
+/**
+ * Generates TypeScript structs for RPC method parameters and results.
+ *
+ * This function generates the necessary struct classes for each method in a Cap'n Proto
+ * RPC interface:
+ * - Parameter structs that hold method arguments
+ * - Result struct that hold method return values
+ * - Promise wrappers for result struct to handle async responses
+ *
+ * @param ctx - The code generator context
+ * @param node - The interface node containing the methods
+ */
 export function generateMethodStructs(
   ctx: CodeGeneratorFileContext,
   node: schema.Node,
@@ -159,8 +170,7 @@ export function generateClient(
   const methodDefs: string[] = [];
   const methodDefTypes: string[] = [];
 
-  let index = 0;
-  for (const method of node.interface.methods) {
+  for (let index = 0; index < node.interface.methods.length; index++) {
     generateClientMethod(
       ctx,
       node,
@@ -168,10 +178,8 @@ export function generateClient(
       methods,
       methodDefs,
       methodDefTypes,
-      method,
       index,
     );
-    index++;
   }
 
   members.push(`
@@ -297,7 +305,6 @@ export function generateResultPromise(
  * @param methodsCode - Array to append method implementations to
  * @param methodDefs - Array to append method definitions to
  * @param methodDefTypes - Array to append method type declarations to
- * @param method - The RPC method definition from the schema
  * @param index - Index of this method in the interface's method list
  */
 export function generateClientMethod(
@@ -307,9 +314,9 @@ export function generateClientMethod(
   methodsCode: string[],
   methodDefs: string[],
   methodDefTypes: string[],
-  method: schema.Method,
   index: number,
 ): void {
+  const method = node.interface.methods[index];
   const { name } = method;
 
   const paramTypeName = getFullClassName(
@@ -332,8 +339,13 @@ export function generateClientMethod(
     methodName: "${method.name}"
   }`);
 
+  const docComment = extractJSDocs(
+    lookupNodeSourceInfo(ctx, node)?.members.at(index),
+  );
+
   // Add method implementation to members
   methodsCode.push(`
+    ${docComment}
     ${name}(paramsFunc?: (params: ${paramTypeName}) => void): ${resultTypeName}$Promise {
       const answer = this.client.call({
         method: ${clientName}.methods[${index}],
