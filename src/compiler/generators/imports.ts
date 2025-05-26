@@ -63,7 +63,15 @@ export function generateNestedImports(ctx: CodeGeneratorFileContext): void {
     const importNode = lookupNode(ctx, imp);
 
     const imports = getImportNodes(ctx, importNode)
-      .map((n) => getFullClassName(n))
+      .flatMap((node) => {
+        const fullClassName = getFullClassName(node);
+        if (node._isInterface) {
+          // The client is required for imported interfaces.
+          return [fullClassName, `${fullClassName}$Client`];
+        }
+        return fullClassName;
+      })
+      .sort()
       .join(", ");
 
     if (imports.length === 0) {
@@ -75,28 +83,33 @@ export function generateNestedImports(ctx: CodeGeneratorFileContext): void {
 }
 
 /**
- * Recursively collects structs and enums from a schema node and its nested nodes.
+ * Recursively collects structs, enums, and interfaces from a schema node and its nested nodes.
  *
  * @param ctx - The file context containing schema information
  * @param node - The root node to start collecting imports from
- * @returns Array of Node objects that can be imported (structs and enums only)
+ * @param visitedIds - The ids of the nodes that have been visited (internal use)
+ * @returns Array of transitively imported nodes
  */
 export function getImportNodes(
   ctx: CodeGeneratorFileContext,
   node: schema.Node,
+  visitedIds = new Set<bigint>(),
 ): schema.Node[] {
-  return (
-    lookupNode(ctx, node)
-      .nestedNodes.filter((n) => hasNode(ctx, n))
-      .map((n) => lookupNode(ctx, n))
-      // eslint-disable-next-line unicorn/no-array-reduce
-      .reduce(
-        (a, n) => [...a, n, ...getImportNodes(ctx, n)],
-        new Array<schema.Node>(),
-      )
-      .filter((n) => {
-        const node = lookupNode(ctx, n);
-        return node._isStruct || node._isEnum;
-      })
+  visitedIds.add(node.id);
+
+  // Filter out the node that are not available in the current context.
+  const nestedNodes = node.nestedNodes.filter(({ id }) => hasNode(ctx, id));
+
+  // Filter out visited nodes.
+  const newNestedNodes = nestedNodes.filter(({ id }) => !visitedIds.has(id));
+
+  // Only consider structs, enums, and interfaces.
+  const nodes = newNestedNodes
+    .map(({ id }) => lookupNode(ctx, id))
+    .filter((node) => node._isStruct || node._isEnum || node._isInterface);
+
+  // Recurse on the nested nodes.
+  return nodes.concat(
+    nodes.flatMap((node) => getImportNodes(ctx, node, visitedIds)),
   );
 }
