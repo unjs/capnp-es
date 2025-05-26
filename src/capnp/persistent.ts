@@ -83,6 +83,12 @@ export class Persistent$Client {
       methodName: "save"
     }
   ];
+  /**
+* Save a capability persistently so that it can be restored by a future connection.  Not all
+* capabilities can be saved -- application interfaces should define which capabilities support
+* this and which do not.
+*
+*/
   save(paramsFunc?: (params: Persistent_SaveParams) => void): Persistent_SaveResults$Promise {
     const answer = this.client.call({
       method: Persistent$Client.methods[0],

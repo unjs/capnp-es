@@ -5714,6 +5714,12 @@ export class TestCallOrder$Client {
       methodName: "getCallSequence"
     }
   ];
+  /**
+* First call returns 0, next returns 1, ...
+*
+* The input `expected` is ignored but useful for disambiguating debug logs.
+*
+*/
   getCallSequence(paramsFunc?: (params: TestCallOrder_GetCallSequence$Params) => void): TestCallOrder_GetCallSequence$Results$Promise {
     const answer = this.client.call({
       method: TestCallOrder$Client.methods[0],
@@ -6577,6 +6583,10 @@ export class TestMoreStuff$Client {
       methodName: "methodWithNullDefault"
     }
   ];
+  /**
+* Call `cap.foo()`, check the result, and return "bar".
+*
+*/
   callFoo(paramsFunc?: (params: TestMoreStuff_CallFoo$Params) => void): TestMoreStuff_CallFoo$Results$Promise {
     const answer = this.client.call({
       method: TestMoreStuff$Client.methods[0],
@@ -6585,6 +6595,10 @@ export class TestMoreStuff$Client {
     const pipeline = new $.Pipeline(TestMoreStuff_CallFoo$Results, answer);
     return new TestMoreStuff_CallFoo$Results$Promise(pipeline);
   }
+  /**
+* Like callFoo but waits for `cap` to resolve first.
+*
+*/
   callFooWhenResolved(paramsFunc?: (params: TestMoreStuff_CallFooWhenResolved$Params) => void): TestMoreStuff_CallFooWhenResolved$Results$Promise {
     const answer = this.client.call({
       method: TestMoreStuff$Client.methods[1],
@@ -6593,6 +6607,10 @@ export class TestMoreStuff$Client {
     const pipeline = new $.Pipeline(TestMoreStuff_CallFooWhenResolved$Results, answer);
     return new TestMoreStuff_CallFooWhenResolved$Results$Promise(pipeline);
   }
+  /**
+* Doesn't return.  You should cancel it.
+*
+*/
   neverReturn(paramsFunc?: (params: TestMoreStuff_NeverReturn$Params) => void): TestMoreStuff_NeverReturn$Results$Promise {
     const answer = this.client.call({
       method: TestMoreStuff$Client.methods[2],
@@ -6601,6 +6619,10 @@ export class TestMoreStuff$Client {
     const pipeline = new $.Pipeline(TestMoreStuff_NeverReturn$Results, answer);
     return new TestMoreStuff_NeverReturn$Results$Promise(pipeline);
   }
+  /**
+* Returns immediately but holds on to the capability.
+*
+*/
   hold(paramsFunc?: (params: TestMoreStuff_Hold$Params) => void): TestMoreStuff_Hold$Results$Promise {
     const answer = this.client.call({
       method: TestMoreStuff$Client.methods[3],
@@ -6609,6 +6631,10 @@ export class TestMoreStuff$Client {
     const pipeline = new $.Pipeline(TestMoreStuff_Hold$Results, answer);
     return new TestMoreStuff_Hold$Results$Promise(pipeline);
   }
+  /**
+* Calls the capability previously held using `hold` (and keeps holding it).
+*
+*/
   callHeld(paramsFunc?: (params: TestMoreStuff_CallHeld$Params) => void): TestMoreStuff_CallHeld$Results$Promise {
     const answer = this.client.call({
       method: TestMoreStuff$Client.methods[4],
@@ -6617,6 +6643,10 @@ export class TestMoreStuff$Client {
     const pipeline = new $.Pipeline(TestMoreStuff_CallHeld$Results, answer);
     return new TestMoreStuff_CallHeld$Results$Promise(pipeline);
   }
+  /**
+* Returns the capability previously held using `hold` (and keeps holding it).
+*
+*/
   getHeld(paramsFunc?: (params: TestMoreStuff_GetHeld$Params) => void): TestMoreStuff_GetHeld$Results$Promise {
     const answer = this.client.call({
       method: TestMoreStuff$Client.methods[5],
@@ -6625,6 +6655,10 @@ export class TestMoreStuff$Client {
     const pipeline = new $.Pipeline(TestMoreStuff_GetHeld$Results, answer);
     return new TestMoreStuff_GetHeld$Results$Promise(pipeline);
   }
+  /**
+* Just returns the input cap.
+*
+*/
   echo(paramsFunc?: (params: TestMoreStuff_Echo$Params) => void): TestMoreStuff_Echo$Results$Promise {
     const answer = this.client.call({
       method: TestMoreStuff$Client.methods[6],
@@ -6633,6 +6667,10 @@ export class TestMoreStuff$Client {
     const pipeline = new $.Pipeline(TestMoreStuff_Echo$Results, answer);
     return new TestMoreStuff_Echo$Results$Promise(pipeline);
   }
+  /**
+* evalLater()-loops forever, holding `cap`.  Must be canceled.
+*
+*/
   expectCancel(paramsFunc?: (params: TestMoreStuff_ExpectCancel$Params) => void): TestMoreStuff_ExpectCancel$Results$Promise {
     const answer = this.client.call({
       method: TestMoreStuff$Client.methods[7],
@@ -6649,6 +6687,11 @@ export class TestMoreStuff$Client {
     const pipeline = new $.Pipeline(TestMoreStuff_MethodWithDefaults$Results, answer);
     return new TestMoreStuff_MethodWithDefaults$Results$Promise(pipeline);
   }
+  /**
+* Get a new handle. Tests have an out-of-band way to check the current number of live handles, so
+* this can be used to test garbage collection.
+*
+*/
   getHandle(paramsFunc?: (params: TestMoreStuff_GetHandle$Params) => void): TestMoreStuff_GetHandle$Results$Promise {
     const answer = this.client.call({
       method: TestMoreStuff$Client.methods[9],
@@ -6657,6 +6700,10 @@ export class TestMoreStuff$Client {
     const pipeline = new $.Pipeline(TestMoreStuff_GetHandle$Results, answer);
     return new TestMoreStuff_GetHandle$Results$Promise(pipeline);
   }
+  /**
+* Always returns a null capability.
+*
+*/
   getNull(paramsFunc?: (params: TestMoreStuff_GetNull$Params) => void): TestMoreStuff_GetNull$Results$Promise {
     const answer = this.client.call({
       method: TestMoreStuff$Client.methods[10],
@@ -6665,6 +6712,10 @@ export class TestMoreStuff$Client {
     const pipeline = new $.Pipeline(TestMoreStuff_GetNull$Results, answer);
     return new TestMoreStuff_GetNull$Results$Promise(pipeline);
   }
+  /**
+* Attempts to return an 100MB string. Should always fail.
+*
+*/
   getEnormousString(paramsFunc?: (params: TestMoreStuff_GetEnormousString$Params) => void): TestMoreStuff_GetEnormousString$Results$Promise {
     const answer = this.client.call({
       method: TestMoreStuff$Client.methods[11],
