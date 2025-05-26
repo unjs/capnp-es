@@ -13,7 +13,6 @@ import * as util from "../util";
 import { generateEnumNode } from "./enum";
 import type { CodeGeneratorFileContext } from ".";
 import { createBigIntExpression, extractJSDocs } from "./helpers";
-import { generateInterfaceClasses } from "./rpc";
 import { Primitives, ConcreteListType } from "../constants";
 import * as E from "../errors";
 import {
@@ -25,7 +24,7 @@ import * as capnp from "../..";
 import { format, pad } from "../../util";
 
 /**
- * Generates TypeScript class definition for a Cap'n Proto struct or interface node.
+ * Generates TypeScript class definition for a Cap'n Proto struct.
  * Creates class members, properties, methods and nested type definitions.
  *
  * @param ctx - The file context containing schema information and output statements
@@ -35,15 +34,12 @@ import { format, pad } from "../../util";
  * - Generates enum definitions for unnamed unions if present
  * - Creates static properties for constants and nested types
  * - Generates getter/setter methods for all fields
- * - Handles special cases for interfaces (Client/Server classes)
  * - Preserves documentation comments from schema
  */
 export function generateStructNode(
   ctx: CodeGeneratorFileContext,
   node: schema.Node,
 ): void {
-  const type = node.which() === schema.Node.STRUCT ? "struct" : "interface";
-
   const displayNamePrefix = getDisplayNamePrefix(node);
   const fullClassName = getFullClassName(node);
   const nestedNodes = node.nestedNodes
@@ -53,13 +49,11 @@ export function generateStructNode(
   const nodeIdHex = nodeId.toString(16);
   const unionFields = getUnnamedUnionFields(node);
 
-  const struct = type === "struct" ? node.struct : undefined;
-  const dataWordCount = struct ? struct.dataWordCount : 0;
-  const dataByteLength = struct ? dataWordCount * 8 : 0;
-  const discriminantCount = struct ? struct.discriminantCount : 0;
-  const discriminantOffset = struct ? struct.discriminantOffset : 0;
-  const fields = struct?.fields.toArray() ?? [];
-  const pointerCount = struct ? struct.pointerCount : 0;
+  const { struct } = node;
+  const { dataWordCount, discriminantCount, discriminantOffset, pointerCount } =
+    struct;
+  const dataByteLength = dataWordCount * 8;
+  const fields = struct.fields.toArray();
 
   // List of field indexes in code order
   const fieldIndexInCodeOrder = fields
@@ -91,13 +85,6 @@ export function generateStructNode(
       .map((field) => createUnionConstProperty(fullClassName, field)),
     ...nestedNodes.map((node) => createNestedNodeProperty(node)),
   );
-
-  if (type === "interface") {
-    members.push(`
-      static readonly Client = ${fullClassName}$Client;
-      static readonly Server = ${fullClassName}$Server;
-      `);
-  }
 
   const defaultValues: string[] = [];
   for (const index of fieldIndexInCodeOrder) {
@@ -144,14 +131,9 @@ export function generateStructNode(
 
   const classCode = `
   ${docComment}
-  export class ${fullClassName} extends ${type === "interface" ? "$.Interface" : "$.Struct"} {
+  export class ${fullClassName} extends $.Struct {
     ${members.join("\n")}
   }`;
-
-  // Make sure the interface classes are generated first.
-  if (type === "interface") {
-    generateInterfaceClasses(ctx, node);
-  }
 
   ctx.codeParts.push(classCode);
 

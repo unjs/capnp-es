@@ -3,6 +3,7 @@ import { format } from "../../util";
 import * as E from "../errors";
 import { lookupNode, getFullClassName } from "../node-util";
 import { generateEnumNode } from "./enum";
+import { generateInterfaceNode } from "./interface";
 import { generateStructNode } from "./struct";
 
 /**
@@ -74,7 +75,7 @@ export function generateNode(
     }
 
     case schema.Node.INTERFACE: {
-      generateStructNode(ctx, node);
+      generateInterfaceNode(ctx, node);
       break;
     }
 
