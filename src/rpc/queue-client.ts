@@ -14,7 +14,7 @@ import { Fulfiller } from "./fulfiller/fulfiller";
 import { copyCall, Call } from "./call";
 import { ErrorAnswer } from "./error-answer";
 import { Queue } from "./queue";
-import { QCallSlot } from "./qcalls";
+import { Qcalls, QCallSlot } from "./qcalls";
 import { RPC_CALL_QUEUE_FULL } from "../errors";
 import { MessageTarget, Disembargo_Context_Which } from "../capnp/rpc";
 import { newDisembargoMessage } from "./capability";
@@ -25,14 +25,16 @@ export const callQueueSize = 64;
 
 export class QueueClient implements Client {
   _client: Client;
+  calls: Qcalls;
   q: Queue;
 
   constructor(
     public conn: Conn,
     client: Client,
-    public calls: AnswerQCall[],
+    calls: AnswerQCall[],
   ) {
     this._client = client;
+    this.calls = Qcalls.copyOf(calls);
     this.q = new Queue(calls, callQueueSize);
   }
 

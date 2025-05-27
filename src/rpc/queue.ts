@@ -2,7 +2,7 @@
 
 // A Queue wraps a QueueStorage to provide queue operations.
 export class Queue {
-  start: number;
+  start: number = 0;
   cap: number;
 
   // creates a new queue that starts with n elements.
@@ -12,7 +12,6 @@ export class Queue {
     public q: QueueStorage,
     public n: number,
   ) {
-    this.start = 0;
     this.cap = q.len();
   }
 
