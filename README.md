@@ -41,6 +41,12 @@ Use `npx capnp-es --help` for full usage info.
 
 See [playground](./playground/) for examples and learn more about `.capnp` schema in [language docs](https://capnproto.org/language.html).
 
+---
+
+You can also use `capnp-es` as a compiler plugin for `capnpc`.
+
+When doing so, you can set the output format using the env var `CAPNP_ES_OUT_FORMAT=js,ts,dts`. This takes the same options and format as the `-o` flag.
+
 ### Reading Messages
 
 Here's a quick usage example:
