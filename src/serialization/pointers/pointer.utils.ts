@@ -594,7 +594,9 @@ export function getTargetListLength(p: Pointer): number {
 export function getTargetPointerType(p: Pointer): PointerType {
   const t = getPointerType(followFars(p));
 
-  if (t === PointerType.FAR) throw new Error(format(PTR_INVALID_FAR_TARGET, p));
+  if (t === PointerType.FAR) {
+    throw new Error(format(PTR_INVALID_FAR_TARGET, p));
+  }
 
   return t;
 }
