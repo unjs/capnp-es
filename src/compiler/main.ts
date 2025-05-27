@@ -16,7 +16,7 @@ const capnpcOptions = [
   "--verbose",
 ];
 
-const uage = `
+const usage = `
 Usage: capnp-es [<option>...] <source>...
 
 Compiles Cap'n Proto schema files and generates corresponding source code for javascript and typescript.
@@ -37,12 +37,12 @@ Options:
 const sources: string[] = [];
 const options: string[] = [];
 
-let outFormats: string[] = ["ts"];
+let outFormats: string[] = ["js"];
 let outDir: string | undefined;
 
 for (const arg of process.argv.slice(2)) {
   if (arg === "--help") {
-    console.log(uage);
+    console.log(usage);
     process.exit(0);
   }
   if (!arg.startsWith("-")) {
@@ -62,6 +62,14 @@ for (const arg of process.argv.slice(2)) {
   } else if (capnpcOptions.some((opt) => arg.startsWith(opt))) {
     options.push(arg);
   }
+}
+
+if (process.env.CAPNP_ES_OUT_FORMAT) {
+  outFormats = [
+    ...new Set(
+      outFormats.concat(process.env.CAPNP_ES_OUT_FORMAT.split(",") ?? []),
+    ),
+  ];
 }
 
 try {
