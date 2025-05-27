@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-import { main } from "./capnp-es";
+import { main } from "./cli";
 
 await main("js");
