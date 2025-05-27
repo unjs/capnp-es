@@ -2,18 +2,16 @@
 
 // A Queue wraps a QueueStorage to provide queue operations.
 export class Queue {
-  q: QueueStorage;
-  start: number;
-  n: number;
+  start: number = 0;
   cap: number;
 
   // creates a new queue that starts with n elements.
   // The interface's length must not change over the course of
   // the queue's usage.
-  constructor(q: QueueStorage, n: number) {
-    this.q = q;
-    this.start = 0;
-    this.n = n;
+  constructor(
+    public q: QueueStorage,
+    public n: number,
+  ) {
     this.cap = q.len();
   }
 

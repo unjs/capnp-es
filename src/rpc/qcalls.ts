@@ -5,11 +5,7 @@ import { AnswerQCall } from "./answer";
 export type QCallSlot = AnswerQCall | null;
 
 export class Qcalls {
-  data: QCallSlot[];
-
-  constructor(data: QCallSlot[]) {
-    this.data = data;
-  }
+  constructor(public data: QCallSlot[]) {}
 
   static copyOf(data: QCallSlot[]): Qcalls {
     return new Qcalls([...data]);

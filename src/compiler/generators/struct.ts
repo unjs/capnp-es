@@ -12,7 +12,7 @@ import {
 import * as util from "../util";
 import { generateEnumNode } from "./enum";
 import type { CodeGeneratorFileContext } from ".";
-import { createBigIntExpression, extractJSDocs } from "./helpers";
+import { createBigInt, extractJSDocs } from "./helpers";
 import { Primitives, ConcreteListType } from "../constants";
 import * as E from "../errors";
 import {
@@ -43,8 +43,8 @@ export function generateStructNode(
   const displayNamePrefix = getDisplayNamePrefix(node);
   const fullClassName = getFullClassName(node);
   const nestedNodes = node.nestedNodes
-    .map((n) => lookupNode(ctx, n))
-    .filter((n) => !n._isConst && !n._isAnnotation);
+    .map(({ id }) => lookupNode(ctx, id))
+    .filter((node) => !node._isConst && !node._isAnnotation);
   const nodeId = node.id;
   const nodeIdHex = nodeId.toString(16);
   const unionFields = getUnnamedUnionFields(node);
@@ -62,9 +62,11 @@ export function generateStructNode(
     .map(({ fieldIndex }) => fieldIndex);
 
   const concreteLists = fields
-    .filter((f) => needsConcreteListClass(f))
+    .filter((field) => needsConcreteListClass(field))
     .sort(compareCodeOrder);
-  const consts = ctx.nodes.filter((n) => n.scopeId === nodeId && n._isConst);
+  const consts = ctx.nodes.filter(
+    (node) => node.scopeId === nodeId && node._isConst,
+  );
   const hasUnnamedUnion = discriminantCount !== 0;
 
   if (hasUnnamedUnion) {
@@ -77,7 +79,7 @@ export function generateStructNode(
   members.push(
     ...consts.map((node) => {
       const name = util.c2s(getDisplayNamePrefix(node));
-      const value = createValueExpression(node.const.value);
+      const value = createValue(node.const.value);
       return `static readonly ${name} = ${value}`;
     }),
     ...unionFields
@@ -170,7 +172,7 @@ export function generateStructFieldMethods(
   fieldIndex: number,
 ): void {
   let jsType: string;
-  let whichType: schema.Type_Which | string;
+  let whichType: schema.Type_Which | "group";
 
   if (field._isSlot) {
     const slotType = field.slot.type;
@@ -204,8 +206,8 @@ export function generateStructFieldMethods(
 
   let adopt = false;
   let disown = false;
-  let init;
   let has = false;
+  let init;
   let get;
   let set;
 
@@ -259,17 +261,17 @@ export function generateStructFieldMethods(
     }
 
     case schema.Type.LIST: {
-      const whichElementType = field.slot.type.list.elementType.which();
-      let listClass = ConcreteListType[whichElementType];
+      const elementType = field.slot.type.list.elementType.which();
+      let listClass = ConcreteListType[elementType];
 
       if (
-        whichElementType === schema.Type.LIST ||
-        whichElementType === schema.Type.STRUCT
+        elementType === schema.Type.LIST ||
+        elementType === schema.Type.STRUCT
       ) {
         listClass = `${fullClassName}._${capitalizedName}`;
       } else if (listClass === undefined) {
         throw new Error(
-          format(E.GEN_UNSUPPORTED_LIST_ELEMENT_TYPE, whichElementType),
+          format(E.GEN_UNSUPPORTED_LIST_ELEMENT_TYPE, elementType),
         );
       }
 
@@ -279,7 +281,7 @@ export function generateStructFieldMethods(
       get = `$.utils.getList(${offset}, ${listClass}, this${maybeDefaultArg})`;
       set = `$.utils.copyFrom(value, $.utils.getPointer(${offset}, this))`;
       init = `$.utils.initList(${offset}, ${listClass}, length, this)`;
-      if (whichElementType === schema.Type.ENUM) {
+      if (elementType === schema.Type.ENUM) {
         get = `${get} as ${jsType}`;
         init = `${init} as ${jsType}`;
       }
@@ -417,7 +419,7 @@ export function generateDefaultValue(field: schema.Field): string {
     case schema.Type_Which.LIST:
     case schema.Type_Which.STRUCT:
     case schema.Type_Which.INTERFACE: {
-      initializer = createValueExpression(slot.defaultValue);
+      initializer = createValue(slot.defaultValue);
       break;
     }
 
@@ -427,7 +429,7 @@ export function generateDefaultValue(field: schema.Field): string {
     }
 
     case schema.Type_Which.BOOL: {
-      const value = createValueExpression(slot.defaultValue);
+      const value = createValue(slot.defaultValue);
       const bitOffset = slot.offset % 8;
       initializer = `$.${primitive.mask}(${value}, ${bitOffset})`;
       break;
@@ -444,7 +446,7 @@ export function generateDefaultValue(field: schema.Field): string {
     case schema.Type_Which.UINT32:
     case schema.Type_Which.UINT64:
     case schema.Type_Which.UINT8: {
-      const value = createValueExpression(slot.defaultValue);
+      const value = createValue(slot.defaultValue);
       initializer = `$.${primitive.mask}(${value})`;
 
       break;
@@ -482,7 +484,7 @@ export function createUnionConstProperty(
   return `static readonly ${name} = ${initializer};`;
 }
 
-export function createValueExpression(value: schema.Value): string {
+export function createValue(value: schema.Value): string {
   let p: capnp.Pointer;
 
   switch (value.which()) {
@@ -515,7 +517,7 @@ export function createValueExpression(value: schema.Value): string {
     }
 
     case schema.Value.INT64: {
-      return createBigIntExpression(value.int64);
+      return createBigInt(value.int64);
     }
 
     case schema.Value.UINT8: {
@@ -531,7 +533,7 @@ export function createValueExpression(value: schema.Value): string {
     }
 
     case schema.Value.UINT64: {
-      return createBigIntExpression(value.uint64);
+      return createBigInt(value.uint64);
     }
 
     case schema.Value.TEXT: {

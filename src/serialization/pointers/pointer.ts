@@ -40,9 +40,6 @@ export interface _Pointer {
 /**
  * A pointer referencing a single byte location in a segment. This is typically used for Cap'n Proto pointers, but is
  * also sometimes used to reference an offset to a pointer's content or tag words.
- *
- * @export
- * @class Pointer
  */
 export class Pointer<T extends _Pointer = _Pointer> {
   static readonly _capnp: _PointerCtor = {

@@ -5,7 +5,7 @@ import { type _StructCtor, Struct } from "./struct";
 
 export class Void extends Struct {
   static readonly _capnp: _StructCtor = {
-    displayName: "Void" as string,
+    displayName: "Void",
     id: "0",
     size: new ObjectSize(0, 0),
   };

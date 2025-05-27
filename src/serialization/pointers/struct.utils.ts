@@ -50,9 +50,8 @@ const TMP_WORD = new DataView(new ArrayBuffer(8));
  * Initialize a struct with the provided object size. This will allocate new space for the struct contents, ideally in
  * the same segment as this pointer.
  *
- * @param {ObjectSize} size An object describing the size of the struct's data and pointer sections.
- * @param {Struct} s The struct to initialize.
- * @returns {void}
+ * @param size An object describing the size of the struct's data and pointer sections.
+ * @param s The struct to initialize.
  */
 export function initStruct(size: ObjectSize, s: Struct): void {
   if (s._capnp.compositeIndex !== undefined) {
@@ -111,9 +110,8 @@ export function getInterfaceClientOrNull(p: Pointer): Client {
  *
  * WARNING: This method can cause data loss if `dstSize` is smaller than the original size!
  *
- * @param {ObjectSize} dstSize The desired size for the struct contents.
- * @param {Struct} s The struct to resize.
- * @returns {void}
+ * @param dstSize The desired size for the struct contents.
+ * @param s The struct to resize.
  */
 export function resize(dstSize: ObjectSize, s: Struct): void {
   const srcSize = getSize(s);
@@ -190,11 +188,9 @@ export function resize(dstSize: ObjectSize, s: Struct): void {
 /**
  * Convert a struct to a struct of the provided class. Particularly useful when casting to nested group types.
  *
- * @protected
- * @template T
- * @param {StructCtor<T>} StructClass The struct class to convert to. Not particularly useful if `Struct`.
- * @param {Struct} s The struct to convert.
- * @returns {T} A new instance of the desired struct class pointing to the same location.
+ * @param StructClass The struct class to convert to. Not particularly useful if `Struct`.
+ * @param s The struct to convert.
+ * @returns A new instance of the desired struct class pointing to the same location.
  */
 export function getAs<T extends Struct>(
   StructClass: StructCtor<T>,
@@ -211,11 +207,10 @@ export function getAs<T extends Struct>(
 /**
  * Read a boolean (bit) value out of a struct.
  *
- * @protected
- * @param {number} bitOffset The offset in **bits** from the start of the data section.
- * @param {Struct} s The struct to read from.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {boolean} The value.
+ * @param bitOffset The offset in **bits** from the start of the data section.
+ * @param s The struct to read from.
+ * @param defaultMask The default value as a DataView.
+ * @returns The value.
  */
 export function getBit(
   bitOffset: number,
@@ -270,10 +265,10 @@ export function getDataSection(s: Struct): Pointer {
 /**
  * Read a float32 value out of a struct.
  *
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {Struct} s The struct to read from.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {number} The value.
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param s The struct to read from.
+ * @param defaultMask The default value as a DataView.
+ * @returns The value.
  */
 export function getFloat32(
   byteOffset: number,
@@ -298,10 +293,10 @@ export function getFloat32(
 /**
  * Read a float64 value out of this segment.
  *
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {Struct} s The struct to read from.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {number} The value.
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param s The struct to read from.
+ * @param defaultMask The default value as a DataView.
+ * @returns The value.
  */
 export function getFloat64(
   byteOffset: number,
@@ -330,10 +325,10 @@ export function getFloat64(
 /**
  * Read an int16 value out of this segment.
  *
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {Struct} s The struct to read from.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {number} The value.
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param s The struct to read from.
+ * @param defaultMask The default value as a DataView.
+ * @returns The value.
  */
 export function getInt16(
   byteOffset: number,
@@ -358,10 +353,10 @@ export function getInt16(
 /**
  * Read an int32 value out of this segment.
  *
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {Struct} s The struct to read from.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {number} The value.
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param s The struct to read from.
+ * @param defaultMask The default value as a DataView.
+ * @returns The value.
  */
 export function getInt32(
   byteOffset: number,
@@ -386,10 +381,10 @@ export function getInt32(
 /**
  * Read an int64 value out of this segment.
  *
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {Struct} s The struct to read from.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {bigint} The value.
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param s The struct to read from.
+ * @param defaultMask The default value as a DataView.
+ * @returns The value.
  */
 export function getInt64(
   byteOffset: number,
@@ -418,10 +413,10 @@ export function getInt64(
 /**
  * Read an int8 value out of this segment.
  *
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {Struct} s The struct to read from.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {number} The value.
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param s The struct to read from.
+ * @param defaultMask The default value as a DataView.
+ * @returns The value.
  */
 export function getInt8(
   byteOffset: number,
@@ -662,10 +657,10 @@ export function getText(
 /**
  * Read an uint16 value out of a struct..
  *
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {Struct} s The struct to read from.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {number} The value.
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param s The struct to read from.
+ * @param defaultMask The default value as a DataView.
+ * @returns The value.
  */
 export function getUint16(
   byteOffset: number,
@@ -689,10 +684,10 @@ export function getUint16(
 /**
  * Read an uint32 value out of a struct.
  *
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {Struct} s The struct to read from.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {number} The value.
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param s The struct to read from.
+ * @param defaultMask The default value as a DataView.
+ * @returns The value.
  */
 export function getUint32(
   byteOffset: number,
@@ -716,10 +711,10 @@ export function getUint32(
 /**
  * Read an uint64 value out of a struct.
  *
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {Struct} s The struct to read from.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {bigint} The value.
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param s The struct to read from.
+ * @param defaultMask The default value as a DataView.
+ * @returns The value.
  */
 export function getUint64(
   byteOffset: number,
@@ -748,10 +743,10 @@ export function getUint64(
 /**
  * Read an uint8 value out of a struct.
  *
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {Struct} s The struct to read from.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {number} The value.
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param s The struct to read from.
+ * @param defaultMask The default value as a DataView.
+ * @returns The value.
  */
 export function getUint8(
   byteOffset: number,
@@ -811,12 +806,10 @@ export function initList<T>(
 /**
  * Write a boolean (bit) value to the struct.
  *
- * @protected
- * @param {number} bitOffset The offset in **bits** from the start of the data section.
- * @param {boolean} value The value to write (writes a 0 for `false`, 1 for `true`).
- * @param {Struct} s The struct to write to.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {void}
+ * @param bitOffset The offset in **bits** from the start of the data section.
+ * @param value The value to write (writes a 0 for `false`, 1 for `true`).
+ * @param s The struct to write to.
+ * @param defaultMask The default value as a DataView.
  */
 
 export function setBit(
@@ -849,12 +842,10 @@ export function setBit(
 /**
  * Write a primitive float32 value to the struct.
  *
- * @protected
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {number} value The value to write.
- * @param {Struct} s The struct to write to.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {void}
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param value The value to write.
+ * @param s The struct to write to.
+ * @param defaultMask The default value as a DataView.
  */
 export function setFloat32(
   byteOffset: number,
@@ -882,12 +873,10 @@ export function setFloat32(
 /**
  * Write a primitive float64 value to the struct.
  *
- * @protected
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {number} value The value to write.
- * @param {Struct} s The struct to write to.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {void}
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param value The value to write.
+ * @param s The struct to write to.
+ * @param defaultMask The default value as a DataView.
  */
 export function setFloat64(
   byteOffset: number,
@@ -919,12 +908,10 @@ export function setFloat64(
 /**
  * Write a primitive int16 value to the struct.
  *
- * @protected
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {number} value The value to write.
- * @param {Struct} s The struct to write to.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {void}
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param value The value to write.
+ * @param s The struct to write to.
+ * @param defaultMask The default value as a DataView.
  */
 export function setInt16(
   byteOffset: number,
@@ -952,12 +939,10 @@ export function setInt16(
 /**
  * Write a primitive int32 value to the struct.
  *
- * @protected
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {number} value The value to write.
- * @param {Struct} s The struct to write to.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {void}
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param value The value to write.
+ * @param s The struct to write to.
+ * @param defaultMask The default value as a DataView.
  */
 export function setInt32(
   byteOffset: number,
@@ -985,12 +970,10 @@ export function setInt32(
 /**
  * Write a primitive int64 value to the struct.
  *
- * @protected
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {bigint} value The value to write.
- * @param {Struct} s The struct to write to.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {void}
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param value The value to write.
+ * @param s The struct to write to.
+ * @param defaultMask The default value as a DataView.
  */
 export function setInt64(
   byteOffset: number,
@@ -1022,12 +1005,10 @@ export function setInt64(
 /**
  * Write a primitive int8 value to the struct.
  *
- * @protected
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {number} value The value to write.
- * @param {Struct} s The struct to write to.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {void}
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param value The value to write.
+ * @param s The struct to write to.
+ * @param defaultMask The default value as a DataView.
  */
 export function setInt8(
   byteOffset: number,
@@ -1057,12 +1038,10 @@ export function setText(index: number, value: string, s: Struct): void {
 /**
  * Write a primitive uint16 value to the struct.
  *
- * @protected
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {number} value The value to write.
- * @param {Struct} s The struct to write to.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {void}
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param value The value to write.
+ * @param s The struct to write to.
+ * @param defaultMask The default value as a DataView.
  */
 export function setUint16(
   byteOffset: number,
@@ -1084,12 +1063,10 @@ export function setUint16(
 /**
  * Write a primitive uint32 value to the struct.
  *
- * @protected
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {number} value The value to write.
- * @param {Struct} s The struct to write to.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {void}
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param value The value to write.
+ * @param s The struct to write to.
+ * @param defaultMask The default value as a DataView.
  */
 export function setUint32(
   byteOffset: number,
@@ -1111,12 +1088,10 @@ export function setUint32(
 /**
  * Write a primitive uint64 value to the struct.
  *
- * @protected
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {bigint} value The value to write.
- * @param {Struct} s The struct to write to.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {void}
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param value The value to write.
+ * @param s The struct to write to.
+ * @param defaultMask The default value as a DataView.
  */
 export function setUint64(
   byteOffset: number,
@@ -1148,12 +1123,10 @@ export function setUint64(
 /**
  * Write a primitive uint8 value to the struct.
  *
- * @protected
- * @param {number} byteOffset The offset in bytes from the start of the data section.
- * @param {number} value The value to write.
- * @param {Struct} s The struct to write to.
- * @param {DataView} [defaultMask] The default value as a DataView.
- * @returns {void}
+ * @param byteOffset The offset in bytes from the start of the data section.
+ * @param value The value to write.
+ * @param s The struct to write to.
+ * @param defaultMask The default value as a DataView.
  */
 export function setUint8(
   byteOffset: number,

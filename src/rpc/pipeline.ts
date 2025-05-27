@@ -21,23 +21,17 @@ export class Pipeline<
   ParentResults extends Struct,
   Results extends Struct,
 > {
-  ResultsClass: StructCtor<Results>;
-  answer: Answer<AnswerResults>;
   op: PipelineOp;
-  parent?: Pipeline<AnswerResults, Struct, ParentResults>;
   pipelineClient?: PipelineClient<AnswerResults, ParentResults, Results>;
 
   // Returns a new Pipeline based on an answer
   constructor(
-    ResultsClass: StructCtor<Results>,
-    answer: Answer<AnswerResults>,
+    public ResultsClass: StructCtor<Results>,
+    public answer: Answer<AnswerResults>,
     op?: PipelineOp,
-    parent?: Pipeline<AnswerResults, Struct, ParentResults>,
+    public parent?: Pipeline<AnswerResults, Struct, ParentResults>,
   ) {
-    this.ResultsClass = ResultsClass;
-    this.answer = answer;
     this.op = op || { field: 0 };
-    this.parent = parent;
   }
 
   // transform returns the operations needed to transform the root answer

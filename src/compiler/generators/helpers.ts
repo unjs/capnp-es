@@ -1,6 +1,6 @@
 import * as schema from "../../capnp/schema";
 
-export function createBigIntExpression(value: bigint): string {
+export function createBigInt(value: bigint): string {
   let v = value.toString(16);
   let sign = "";
   if (v[0] === "-") {

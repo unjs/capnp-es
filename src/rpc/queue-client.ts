@@ -25,12 +25,14 @@ export const callQueueSize = 64;
 
 export class QueueClient implements Client {
   _client: Client;
-  conn: Conn;
   calls: Qcalls;
   q: Queue;
 
-  constructor(conn: Conn, client: Client, calls: AnswerQCall[]) {
-    this.conn = conn;
+  constructor(
+    public conn: Conn,
+    client: Client,
+    calls: AnswerQCall[],
+  ) {
     this._client = client;
     this.calls = Qcalls.copyOf(calls);
     this.q = new Queue(this.calls, callQueueSize);

@@ -12,13 +12,10 @@ import { NOT_IMPLEMENTED } from "../errors";
  * A localAnswerClient is used to provide a pipelined client of an answer.
  */
 export class LocalAnswerClient<T extends Struct> implements Client {
-  a: AnswerEntry<T>;
-  transform: PipelineOp[];
-
-  constructor(a: AnswerEntry<T>, transform: PipelineOp[]) {
-    this.a = a;
-    this.transform = transform;
-  }
+  constructor(
+    public a: AnswerEntry<T>,
+    public transform: PipelineOp[],
+  ) {}
 
   call<P extends Struct, R extends Struct>(call: Call<P, R>): Answer<R> {
     if (this.a.done) {
@@ -26,8 +23,7 @@ export class LocalAnswerClient<T extends Struct> implements Client {
         call,
       );
     }
-    const f = new Fulfiller<R>();
-    return f;
+    return new Fulfiller<R>();
   }
 
   close(): void {

@@ -8,7 +8,7 @@ import {
   lookupNode,
   lookupNodeSourceInfo,
 } from "../node-util";
-import { createBigIntExpression, extractJSDocs } from "./helpers";
+import { createBigInt, extractJSDocs } from "./helpers";
 import * as util from "../util";
 import * as E from "../errors";
 import { format } from "../../util";
@@ -160,7 +160,7 @@ export function generateClient(
   // Add client property
   members.push(`
     client: $.Client;
-    static readonly interfaceId: bigint = ${createBigIntExpression(node.id)};
+    static readonly interfaceId: bigint = ${createBigInt(node.id)};
     constructor(client: $.Client) {
       this.client = client;
     }

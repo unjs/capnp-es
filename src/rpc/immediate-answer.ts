@@ -10,11 +10,8 @@ import { Answer } from "./answer";
 import { getInterfaceClientOrNull } from "../serialization/pointers/struct.utils";
 
 export class ImmediateAnswer<R extends Struct> extends FixedAnswer<R> {
-  s: R;
-
-  constructor(s: R) {
+  constructor(public s: R) {
     super();
-    this.s = s;
   }
 
   structSync(): R {

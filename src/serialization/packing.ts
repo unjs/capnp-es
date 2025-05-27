@@ -46,8 +46,8 @@ const enum PackedTag {
  *
  * WARNING: Using this with floating point numbers will void your warranty.
  *
- * @param {number} x A real integer.
- * @returns {number} The hamming weight (integer).
+ * @param x A real integer.
+ * @returns The hamming weight (integer).
  */
 export function getHammingWeight(x: number): number {
   // Thanks, HACKMEM!
@@ -62,15 +62,15 @@ export type byte = number;
 /**
  * Compute the tag byte from the 8 bytes of a 64-bit word.
  *
- * @param {byte} a The first byte.
- * @param {byte} b The second byte.
- * @param {byte} c The third byte.
- * @param {byte} d The fourth byte.
- * @param {byte} e The fifth byte.
- * @param {byte} f The sixth byte.
- * @param {byte} g The seventh byte.
- * @param {byte} h The eighth byte (phew!).
- * @returns {number} The tag byte.
+ * @param a The first byte.
+ * @param b The second byte.
+ * @param c The third byte.
+ * @param d The fourth byte.
+ * @param e The fifth byte.
+ * @param f The sixth byte.
+ * @param g The seventh byte.
+ * @param h The eighth byte (phew!).
+ * @returns The tag byte.
  */
 export function getTagByte(
   a: byte,
@@ -99,9 +99,9 @@ export function getTagByte(
 /**
  * Efficiently calculate the length of a packed Cap'n Proto message.
  *
- * @export
- * @param {ArrayBuffer} packed The packed message.
- * @returns {number} The length of the unpacked message in bytes.
+ *
+ * @param packed The packed message.
+ * @returns The length of the unpacked message in bytes.
  */
 
 export function getUnpackedByteLength(packed: ArrayBuffer): number {
@@ -139,15 +139,15 @@ export function getUnpackedByteLength(packed: ArrayBuffer): number {
 /**
  * Compute the number of zero bytes that occur in a given 64-bit word, provided as eight separate bytes.
  *
- * @param {byte} a The first byte.
- * @param {byte} b The second byte.
- * @param {byte} c The third byte.
- * @param {byte} d The fourth byte.
- * @param {byte} e The fifth byte.
- * @param {byte} f The sixth byte.
- * @param {byte} g The seventh byte.
- * @param {byte} h The eighth byte (phew!).
- * @returns {number} The number of these bytes that are zero.
+ * @param a The first byte.
+ * @param b The second byte.
+ * @param c The third byte.
+ * @param d The fourth byte.
+ * @param e The fifth byte.
+ * @param f The sixth byte.
+ * @param g The seventh byte.
+ * @param h The eighth byte (phew!).
+ * @returns The number of these bytes that are zero.
  */
 
 export function getZeroByteCount(
@@ -182,11 +182,10 @@ export function getZeroByteCount(
  * This should be decent on CPU time but does require quite a lot of memory (a normal array is filled up with each
  * packed byte until the packing is complete).
  *
- * @export
- * @param {ArrayBuffer} unpacked The message to pack.
- * @param {number} [byteOffset] Starting byte offset to read bytes from, defaults to 0.
- * @param {number} [byteLength] Total number of bytes to read, defaults to the remainder of the buffer contents.
- * @returns {ArrayBuffer} A packed version of the message.
+ * @param unpacked The message to pack.
+ * @param byteOffset Starting byte offset to read bytes from, defaults to 0.
+ * @param byteLength Total number of bytes to read, defaults to the remainder of the buffer contents.
+ * @returns A packed version of the message.
  */
 
 export function pack(
@@ -194,7 +193,9 @@ export function pack(
   byteOffset = 0,
   byteLength?: number,
 ): ArrayBuffer {
-  if (unpacked.byteLength % 8 !== 0) throw new Error(MSG_PACK_NOT_WORD_ALIGNED);
+  if (unpacked.byteLength % 8 !== 0) {
+    throw new Error(MSG_PACK_NOT_WORD_ALIGNED);
+  }
 
   const src = new Uint8Array(unpacked, byteOffset, byteLength);
 
@@ -290,7 +291,9 @@ export function pack(
     }
 
     // A goto is fast, idk why people keep hatin'.
-    if (skipWriteWord) continue;
+    if (skipWriteWord) {
+      continue;
+    }
 
     dst.push(tag);
     lastTag = tag;
@@ -330,9 +333,8 @@ export function pack(
  * Unlike the `pack` function, this is able to efficiently determine the exact size needed for the output buffer and
  * runs considerably more efficiently.
  *
- * @export
- * @param {ArrayBuffer} packed An array buffer containing the packed message.
- * @returns {ArrayBuffer} The unpacked message.
+ * @param packed An array buffer containing the packed message.
+ * @returns The unpacked message.
  */
 
 export function unpack(packed: ArrayBuffer): ArrayBuffer {
@@ -382,7 +384,9 @@ export function unpack(packed: ArrayBuffer): ArrayBuffer {
       for (let i = 1; i <= 0b1000_0000; i <<= 1) {
         // We only need to actually touch `dst` if there's a nonzero byte (it's already initialized to zeroes).
 
-        if ((tag & i) !== 0) dst[dstByteOffset] = src[srcByteOffset++];
+        if ((tag & i) !== 0) {
+          dst[dstByteOffset] = src[srcByteOffset++];
+        }
 
         dstByteOffset++;
       }

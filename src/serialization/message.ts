@@ -51,9 +51,7 @@ export class Message {
    * The constructor method creates a new Message, optionally using a provided arena for segment allocation, or a buffer
    * to read from.
    *
-   * @constructor {Message}
-   *
-   * @param {AnyArena|ArrayBufferView|ArrayBuffer} [src] The source for the message.
+   * @param src The source for the message.
    * A value of `undefined` will cause the message to initialize with a single segment arena only big enough for the
    * root pointer; it will expand as you go. This is a reasonable choice for most messages.
    *
@@ -63,10 +61,10 @@ export class Message {
    * Passing an array buffer view (like `DataView`, `Uint8Array` or `Buffer`) will create a **copy** of the source
    * buffer; beware of the potential performance cost!
    *
-   * @param {boolean} [packed] Whether or not the message is packed. If `true` (the default), the message will be
+   * @param packed Whether or not the message is packed. If `true` (the default), the message will be
    * unpacked.
    *
-   * @param {boolean} [singleSegment] If true, `src` will be treated as a message consisting of a single segment without
+   * @param singleSegment If true, `src` will be treated as a message consisting of a single segment without
    * a framing header.
    *
    */
@@ -100,7 +98,7 @@ export class Message {
    *
    * WARNING: Do not call this method on large messages!
    *
-   * @returns {string} A big steaming pile of pretty hex digits.
+   * @returns A big steaming pile of pretty hex digits.
    */
   dump(): string {
     return dump(this);
@@ -110,9 +108,8 @@ export class Message {
    * Get a struct pointer for the root of this message. This is primarily used when reading a message; it will not
    * overwrite existing data.
    *
-   * @template T
-   * @param {StructCtor<T>} RootStruct The struct type to use as the root.
-   * @returns {T} A struct representing the root of the message.
+   * @param RootStruct The struct type to use as the root.
+   * @returns A struct representing the root of the message.
    */
   getRoot<T extends Struct>(RootStruct: StructCtor<T>): T {
     return getRoot(RootStruct, this);
@@ -123,8 +120,8 @@ export class Message {
    *
    * This will lazily allocate the first segment if it doesn't already exist.
    *
-   * @param {number} id The segment id.
-   * @returns {Segment} The requested segment.
+   * @param id The segment id.
+   * @returns The requested segment.
    */
 
   getSegment(id: number): Segment {
@@ -134,9 +131,8 @@ export class Message {
   /**
    * Initialize a new message using the provided struct type as the root.
    *
-   * @template T
-   * @param {StructCtor<T>} RootStruct The struct type to use as the root.
-   * @returns {T} An initialized struct pointing to the root of the message.
+   * @param RootStruct The struct type to use as the root.
+   * @returns An initialized struct pointing to the root of the message.
    */
   initRoot<T extends Struct>(RootStruct: StructCtor<T>): T {
     return initRoot(RootStruct, this);
@@ -146,8 +142,7 @@ export class Message {
    * Set the root of the message to a copy of the given pointer. Used internally
    * to make copies of pointers for default values.
    *
-   * @param {Pointer} src The source pointer to copy.
-   * @returns {void}
+   * @param src The source pointer to copy.
    */
   setRoot(src: Pointer): void {
     setRoot(src, this);
@@ -157,7 +152,7 @@ export class Message {
    * Combine the contents of this message's segments into a single array buffer and prepend a stream framing header
    * containing information about the following segment data.
    *
-   * @returns {ArrayBuffer} An ArrayBuffer with the contents of this message.
+   * @returns An ArrayBuffer with the contents of this message.
    */
   toArrayBuffer(): ArrayBuffer {
     return toArrayBuffer(this);
@@ -167,7 +162,7 @@ export class Message {
    * Like `toArrayBuffer()`, but also applies the packing algorithm to the output. This is typically what you want to
    * use if you're sending the message over a network link or other slow I/O interface where size matters.
    *
-   * @returns {ArrayBuffer} A packed message.
+   * @returns A packed message.
    */
   toPackedArrayBuffer(): ArrayBuffer {
     return toPackedArrayBuffer(this);
@@ -243,9 +238,8 @@ export function initMessage(
  *
  * This method is not typically called directly, but can be useful in certain cases.
  *
- * @static
- * @param {ArrayBuffer} message An unpacked message with a framing header.
- * @returns {ArrayBuffer[]} An array of buffers containing the segment data.
+ * @param message An unpacked message with a framing header.
+ * @returns An array of buffers containing the segment data.
  */
 export function getFramedSegments(message: ArrayBuffer): ArrayBuffer[] {
   const dv = new DataView(message);
@@ -283,8 +277,7 @@ export function getFramedSegments(message: ArrayBuffer): ArrayBuffer[] {
  * Technically speaking, the message's segments will be "full" after calling this function. Calling this on your own
  * may void your warranty.
  *
- * @param {Message} m The message to allocate.
- * @returns {void}
+ * @param m The message to allocate.
  */
 export function preallocateSegments(m: Message): void {
   const numSegments = Arena.getNumSegments(m._capnp.arena);
@@ -438,8 +431,8 @@ export function initRoot<T extends Struct>(
  * This is typically used by the compiler to load default values, but can be
  * useful to work with messages with an unknown schema.
  *
- * @param {ArrayBuffer} data The raw data to read.
- * @returns {Pointer} A root pointer.
+ * @param data The raw data to read.
+ * @returns A root pointer.
  */
 export function readRawPointer(data: ArrayBuffer): Pointer {
   return new Pointer(new Message(data).getSegment(0), 0);
