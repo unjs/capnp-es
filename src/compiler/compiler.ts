@@ -59,12 +59,15 @@ export async function compileAll(
     tsCompile(files, opts?.tsconfig, opts?.dts);
   }
 
-  // Remove .ts entries if ts option was not set
-  if (!opts?.ts) {
-    for (const [fileName] of files) {
-      if (fileName.endsWith(".ts")) {
-        files.delete(fileName);
-      }
+  // Remove corresponding entries if format option was not set
+
+  for (const [fileName] of files) {
+    if (
+      (fileName.endsWith(".ts") && !fileName.endsWith(".d.ts") && !opts?.ts) ||
+      (fileName.endsWith(".d.ts") && !opts?.dts) ||
+      (fileName.endsWith(".js") && !opts?.js)
+    ) {
+      files.delete(fileName);
     }
   }
 
