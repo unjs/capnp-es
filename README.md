@@ -43,7 +43,7 @@ See [playground](./playground/) for examples and learn more about `.capnp` schem
 
 ---
 
-You can also use `capnp-es` as a compiler plugin for `capnpc`.
+You can also use `capnp-es` as a [capnp compiler plugin](https://capnproto.org/capnp-tool.html#compiling-schemas).
 
 When doing so, you can set the output format using the env var `CAPNP_ES_OUT_FORMAT=js,ts,dts`. This takes the same options and format as the `-o` flag.
 

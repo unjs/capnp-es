@@ -64,13 +64,9 @@ for (const arg of process.argv.slice(2)) {
   }
 }
 
-if (process.env.CAPNP_ES_OUT_FORMAT) {
-  outFormats = [
-    ...new Set(
-      outFormats.concat(process.env.CAPNP_ES_OUT_FORMAT.split(",") ?? []),
-    ),
-  ];
-}
+outFormats = process.env.CAPNP_ES_OUT_FORMAT
+  ? process.env.CAPNP_ES_OUT_FORMAT.split(",").map((x) => x.trim())
+  : outFormats;
 
 try {
   let dataBuf: Buffer = await readStdin(); // feed from stdin from capnpc
