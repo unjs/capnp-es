@@ -23,14 +23,16 @@ export function messageToString(
     capnpPath,
     format,
     schemaPath,
-  }: { capnpPath?: string; format?: "text" | "json"; schemaPath?: string } = {},
+  }: {
+    capnpPath?: string;
+    format?: "capnp" | "json";
+    schemaPath?: string;
+  } = {},
 ): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     if (schemaPath === undefined || !existsSync(schemaPath)) {
       throw new Error(`Schema not found at "${schemaPath}"`);
     }
-
-    const command = capnpPath ?? "capnp";
 
     const anyStruct = struct as any;
     const type = anyStruct?._capnp?.displayName ?? struct;
@@ -40,9 +42,11 @@ export function messageToString(
       throw new Error("Can not determine the struct type");
     }
 
-    const args = ["convert", `binary:${format ?? "text"}`, schemaPath, type];
+    const outputFormat = format === "json" ? "json" : "text";
 
-    const process = spawn(command, args);
+    const args = ["convert", `binary:${outputFormat}`, schemaPath, type];
+
+    const process = spawn(capnpPath ?? "capnp", args);
 
     let stdout = "";
     let stderr = "";

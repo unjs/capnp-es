@@ -26,11 +26,11 @@ describe("messageToString", () => {
     phone.type = Person_PhoneNumber_Type.MOBILE;
     person.employment.unemployed = true;
   });
-  test("text", async () => {
+  test("capnp", async () => {
     expect(
       await capnp.messageToString(message, Person, {
         schemaPath,
-        format: "text",
+        format: "capnp",
       }),
     ).toMatchInlineSnapshot(`
       "( id = 123,
