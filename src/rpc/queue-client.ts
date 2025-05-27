@@ -35,7 +35,7 @@ export class QueueClient implements Client {
   ) {
     this._client = client;
     this.calls = Qcalls.copyOf(calls);
-    this.q = new Queue(calls, callQueueSize);
+    this.q = new Queue(this.calls, callQueueSize);
   }
 
   pushCall<P extends Struct, R extends Struct>(call: Call<P, R>): Answer<R> {
