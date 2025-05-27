@@ -56,18 +56,16 @@ export async function compileAll(
 
   // Transpile .d.ts and .js files
   if (opts?.js || opts?.dts) {
-    tsCompile(files, opts?.tsconfig, opts?.dts);
+    tsCompile(files, opts?.tsconfig, opts?.js);
   }
 
-  // Remove corresponding entries if format option was not set
+  // Remove .ts entries if ts option was not set
 
-  for (const [fileName] of files) {
-    if (
-      (fileName.endsWith(".ts") && !fileName.endsWith(".d.ts") && !opts?.ts) ||
-      (fileName.endsWith(".d.ts") && !opts?.dts) ||
-      (fileName.endsWith(".js") && !opts?.js)
-    ) {
-      files.delete(fileName);
+  if (!opts?.ts) {
+    for (const [fileName] of files) {
+      if (fileName.endsWith(".ts") && !fileName.endsWith(".d.ts")) {
+        files.delete(fileName);
+      }
     }
   }
 
@@ -127,16 +125,16 @@ export function printSourceFiles(ctx: CodeGeneratorContext): string[] {
  *
  * @param files Map of file names to file content.
  * @param tsconfig TypeScript compiler options.
- * @param declaration Whether to generate declaration files.
+ * @param js Whether to generate JavaScript files.
  */
 function tsCompile(
   files: Map<string, string>,
   tsconfig?: ts.CompilerOptions,
-  declaration?: boolean,
+  js?: boolean,
 ): void {
   const compileOptions: ts.CompilerOptions = {
     noEmit: false,
-    declaration: declaration ?? false,
+    emitDeclarationOnly: !js,
     moduleResolution: ts.ModuleResolutionKind.Bundler,
     target: ts.ScriptTarget.ESNext,
     noEmitOnError: false,
