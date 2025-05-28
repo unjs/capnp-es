@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-import { main } from "./cli";
+import { cliMain } from "./cli";
 
-await main("dts");
+await cliMain("dts");
