@@ -16,7 +16,7 @@ const capnpcOptions = [
   "--verbose",
 ];
 
-const uage = `
+const usage = `
 Usage: capnp-es [<option>...] <source>...
 
 Compiles Cap'n Proto schema files and generates corresponding source code for javascript and typescript.
@@ -42,7 +42,7 @@ let outDir: string | undefined;
 
 for (const arg of process.argv.slice(2)) {
   if (arg === "--help") {
-    console.log(uage);
+    console.log(usage);
     process.exit(0);
   }
   if (!arg.startsWith("-")) {
@@ -63,6 +63,10 @@ for (const arg of process.argv.slice(2)) {
     options.push(arg);
   }
 }
+
+outFormats = process.env.CAPNP_ES_OUT_FORMAT
+  ? process.env.CAPNP_ES_OUT_FORMAT.split(",").map((x) => x.trim())
+  : outFormats;
 
 try {
   let dataBuf: Buffer = await readStdin(); // feed from stdin from capnpc
