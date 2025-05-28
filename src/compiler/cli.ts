@@ -21,17 +21,13 @@ export async function cliMain(outFormat: "js" | "ts" | "dts") {
   let outFormats: string[] = [outFormat];
   let outDir: string | undefined;
   try {
-    let dataBuf: Buffer;
-    if (process.stdin.isTTY) {
-      // invoked via the capnp-es
+    let dataBuf: Buffer = await readStdin();
+    if (dataBuf.length === 0) {
       const parsedOptions = parseOptions();
       outFormats = parsedOptions.outFormats;
       outDir = parsedOptions.outDir;
       const { sources, options } = parsedOptions;
       dataBuf = await execCapnpc(sources, options, outDir);
-    } else {
-      // invoked as a plugin, read from stdin
-      dataBuf = await readStdin();
     }
     const { files } = await compileAll(dataBuf, {
       ts: outFormats.includes("ts"),
@@ -112,7 +108,7 @@ async function execCapnpc(
   }
   const cmd = `capnpc ${options.join(" ")} ${sources.join(" ")}`;
   console.log(`[capnp-es] ${cmd}`);
-  return await new Promise<Buffer>((resolve) => {
+  return new Promise<Buffer>((resolve) => {
     exec(cmd, { encoding: "buffer" }, (error, stdout, stderr) => {
       if (stderr.length > 0) {
         process.stderr.write(stderr);
