@@ -24,7 +24,10 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "bin": {
-    "capnp-es": "./dist/compiler/main.mjs"
+    "capnp-es": "./dist/compiler/capnpc-js.mjs",
+    "capnpc-js": "./dist/compiler/capnpc-js.mjs",
+    "capnpc-dts": "./dist/compiler/capnpc-dts.mjs",
+    "capnpc-ts": "./dist/compiler/capnpc-ts.mjs"
   },
   "files": [
     "dist"
@@ -34,7 +37,7 @@
     "bench:node": "node --import jiti/register ./test/bench/bench.ts",
     "build": "pnpm build:std && unbuild",
     "build:std": "unbuild --stub && pnpm capnp-es src/capnp/_capnp/*.capnp --src-prefix=src/capnp/_capnp -ots:./src/capnp && prettier -w ./src/capnp",
-    "capnp-es": "node --import jiti/register ./src/compiler/main.ts",
+    "capnp-es": "node --import jiti/register ./src/compiler/capnpc-js.ts",
     "dev": "vitest dev",
     "lint": "eslint . && prettier -c .",
     "lint:fix": "automd && eslint . --fix && prettier -w .",
