@@ -55,14 +55,12 @@ export async function compileAll(
   );
 
   // Transpile .d.ts and .js files
-  if (opts?.js || opts?.dts) {
-    tsCompile(files, opts?.tsconfig, opts?.dts);
-  }
+  tsCompile(files, opts?.dts === true, opts?.js === true, opts?.tsconfig);
 
   // Remove .ts entries if ts option was not set
   if (!opts?.ts) {
     for (const [fileName] of files) {
-      if (fileName.endsWith(".ts")) {
+      if (fileName.endsWith(".ts") && !fileName.endsWith(".d.ts")) {
         files.delete(fileName);
       }
     }
@@ -123,17 +121,21 @@ export function printSourceFiles(ctx: CodeGeneratorContext): string[] {
  * Uses provided compiler options and declarations, throws an error if compilation fails.
  *
  * @param files Map of file names to file content.
+ * @param dts Whether to generate .d.ts files.
+ * @param js Whether to generate .js files.
  * @param tsconfig TypeScript compiler options.
- * @param declaration Whether to generate declaration files.
  */
 function tsCompile(
   files: Map<string, string>,
+  dts: boolean,
+  js: boolean,
   tsconfig?: ts.CompilerOptions,
-  declaration?: boolean,
 ): void {
+  if (!dts && !js) {
+    return;
+  }
+
   const compileOptions: ts.CompilerOptions = {
-    noEmit: false,
-    declaration: declaration ?? false,
     moduleResolution: ts.ModuleResolutionKind.Bundler,
     target: ts.ScriptTarget.ESNext,
     noEmitOnError: false,
@@ -147,6 +149,8 @@ function tsCompile(
     sourceMap: false,
     strict: true,
     ...tsconfig,
+    emitDeclarationOnly: dts && !js,
+    declaration: dts,
   };
 
   const compilerHost = ts.createCompilerHost(compileOptions);
