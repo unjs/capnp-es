@@ -18,6 +18,10 @@
     "./capnp/*": {
       "types": "./dist/capnp/*.d.mts",
       "default": "./dist/capnp/*.mjs"
+    },
+    "./debug": {
+      "types": "./dist/debug/index.d.mts",
+      "default": "./dist/debug/index.mjs"
     }
   },
   "main": "./dist/index.mjs",
