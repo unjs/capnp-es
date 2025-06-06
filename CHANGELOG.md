@@ -1,5 +1,40 @@
 # Changelog
 
+## v0.0.11
+
+[compare changes](https://github.com/unjs/capnp-es/compare/v0.0.8...v0.0.11)
+
+### 🚀 Enhancements
+
+- Add `messageToString` to dump messages ([#39](https://github.com/unjs/capnp-es/pull/39))
+- Expose capnpc-ts, capnpc-dts, capnpc-js ([#41](https://github.com/unjs/capnp-es/pull/41))
+
+### 🩹 Fixes
+
+- **enum:** Fix enum value ([#36](https://github.com/unjs/capnp-es/pull/36))
+- **interface:** Import the class and client of interfaces ([#37](https://github.com/unjs/capnp-es/pull/37))
+- **interface:** Add JSDoc to methods ([#35](https://github.com/unjs/capnp-es/pull/35))
+- Only output files in specified formats ([#40](https://github.com/unjs/capnp-es/pull/40))
+
+### 💅 Refactors
+
+- Generate TS source code without using AST ([#27](https://github.com/unjs/capnp-es/pull/27))
+- **compiler:** Split the code generator into multiple files ([#31](https://github.com/unjs/capnp-es/pull/31))
+- **interface:** Extract interface generation to a separate function/file ([#34](https://github.com/unjs/capnp-es/pull/34))
+- Make sure runtimes beside node are supported ([#42](https://github.com/unjs/capnp-es/pull/42))
+
+### 🏡 Chore
+
+- **release:** V0.0.8 ([52b88bb](https://github.com/unjs/capnp-es/commit/52b88bb))
+- **release:** V0.0.9 ([e084451](https://github.com/unjs/capnp-es/commit/e084451))
+- **release:** V0.0.10 ([0a5d789](https://github.com/unjs/capnp-es/commit/0a5d789))
+
+### ❤️ Contributors
+
+- Victor Berchet ([@vicb](http://github.com/vicb))
+- Emily-shen ([@emily-shen](http://github.com/emily-shen))
+- Samuel Macleod <smacleod@cloudflare.com>
+
 ## v0.0.10
 
 [compare changes](https://github.com/unjs/capnp-es/compare/v0.0.8...v0.0.10)
