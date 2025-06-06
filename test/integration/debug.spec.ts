@@ -1,4 +1,5 @@
 import * as capnp from "capnp-es";
+import { messageToString } from "../../src/debug";
 
 import { test, describe, beforeAll, expect } from "vitest";
 import {
@@ -28,7 +29,7 @@ describe("messageToString", () => {
   });
   test("capnp", async () => {
     expect(
-      await capnp.messageToString(message, Person, {
+      await messageToString(message, Person, {
         schemaPath,
         format: "capnp",
       }),
@@ -43,7 +44,7 @@ describe("messageToString", () => {
 
   test("json", async () => {
     expect(
-      await capnp.messageToString(message, Person, {
+      await messageToString(message, Person, {
         schemaPath,
         format: "json",
       }),
