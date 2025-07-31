@@ -1,6 +1,11 @@
 import type { CodeGeneratorFileContext } from ".";
 import { TS_FILE_ID } from "../constants";
-import { getFullClassName, hasNode, lookupNode, tryLookupNode } from "../node-util";
+import {
+  getFullClassName,
+  hasNode,
+  lookupNode,
+  tryLookupNode,
+} from "../node-util";
 import * as util from "../util";
 import type * as schema from "../../capnp/schema";
 

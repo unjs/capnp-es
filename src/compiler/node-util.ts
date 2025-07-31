@@ -31,13 +31,12 @@ export function getConcreteListType(
   } else if (elementTypeWhich === schema.Type.STRUCT) {
     const structNode = tryLookupNode(ctx, elementType.struct.typeId);
 
-    if (structNode) {
-      if (
-        structNode.struct.preferredListEncoding !==
+    if (
+      structNode &&
+      structNode.struct.preferredListEncoding !==
         schema.ElementSize.INLINE_COMPOSITE
-      ) {
-        throw new Error(E.GEN_FIELD_NON_INLINE_STRUCT_LIST);
-      }
+    ) {
+      throw new Error(E.GEN_FIELD_NON_INLINE_STRUCT_LIST);
     }
 
     return `$.CompositeList(${getJsType(ctx, elementType, false)})`;
