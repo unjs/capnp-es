@@ -1,11 +1,7 @@
 // Based on https://github.com/jdiaz5513/capnp-ts (MIT - Julián Díaz)
 
 import { MAX_BUFFER_DUMP_BYTES, MAX_INT32, MAX_UINT32 } from "./constants";
-import {
-  RANGE_INT32_OVERFLOW,
-  RANGE_INVALID_UTF8,
-  RANGE_UINT32_OVERFLOW,
-} from "./errors";
+import { RANGE_INT32_OVERFLOW, RANGE_UINT32_OVERFLOW } from "./errors";
 
 /**
  * Dump a hex string from the given buffer.
@@ -85,51 +81,6 @@ export function dumpBuffer(buffer: ArrayBuffer | ArrayBufferView): string {
   }
 
   return r;
-}
-
-/**
- * Encode a JavaScript string (UCS-2) to a UTF-8 encoded string inside a Uint8Array.
- *
- * Note: we do not want to use the Node builtin to support other runtimes.
- *
- * @param src The input string.
- * @returns A UTF-8 encoded buffer with the string's contents.
- */
-export function encodeUtf8(src: string): Uint8Array {
-  const l = src.length;
-  const dst = new Uint8Array(new ArrayBuffer(l * 4));
-  let j = 0;
-
-  for (let i = 0; i < l; i++) {
-    const c = src.charCodeAt(i);
-
-    if (c <= 0x7f) {
-      dst[j++] = c;
-    } else if (c <= 0x07_ff) {
-      dst[j++] = 0b1100_0000 | (c >>> 6);
-      dst[j++] = 0b1000_0000 | ((c >>> 0) & 0b0011_1111);
-    } else if (c <= 0xd7_ff || c >= 0xe0_00) {
-      dst[j++] = 0b1110_0000 | (c >>> 12);
-      dst[j++] = 0b1000_0000 | ((c >>> 6) & 0b0011_1111);
-      dst[j++] = 0b1000_0000 | ((c >>> 0) & 0b0011_1111);
-    } else {
-      // Make sure the surrogate pair is complete.
-      /* istanbul ignore next */
-      if (i + 1 >= l) throw new RangeError(RANGE_INVALID_UTF8);
-
-      // I cast thee back into the astral plane.
-      const hi = c - 0xd8_00;
-      const lo = src.charCodeAt(++i) - 0xdc_00;
-      const cp = ((hi << 10) | lo) + 0x00_01_00_00;
-
-      dst[j++] = 0b1111_0000 | (cp >>> 18);
-      dst[j++] = 0b1000_0000 | ((cp >>> 12) & 0b0011_1111);
-      dst[j++] = 0b1000_0000 | ((cp >>> 6) & 0b0011_1111);
-      dst[j++] = 0b1000_0000 | ((cp >>> 0) & 0b0011_1111);
-    }
-  }
-
-  return dst.subarray(0, j);
 }
 
 /**

@@ -2,7 +2,6 @@
 
 import { test, assert as t } from "vitest";
 import * as C from "src/constants";
-// import { RANGE_INVALID_UTF8 } from "src/errors";
 import * as util from "src/util";
 
 test("bufferToHex()", () => {
