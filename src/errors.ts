@@ -119,9 +119,6 @@ export const RANGE_INT32_OVERFLOW =
 export const RANGE_INT64_UNDERFLOW =
   "CAPNP-TS030 Buffer is not large enough to hold a word.";
 
-export const RANGE_INVALID_UTF8 =
-  "CAPNP-TS031 Invalid UTF-8 code sequence detected.";
-
 export const RANGE_SIZE_OVERFLOW = `CAPNP-TS032 Size %x exceeds maximum ${MAX_SEGMENT_LENGTH.toString(16)}.`;
 
 export const RANGE_UINT32_OVERFLOW =
