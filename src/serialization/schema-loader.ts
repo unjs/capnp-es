@@ -95,6 +95,7 @@ interface FieldInfo {
   offset: number;
   type: number; // Type enum value
   structTypeId?: bigint;
+  enumTypeId?: bigint;
   listElementType?: number;
   listElementStructTypeId?: bigint;
 }
@@ -122,6 +123,51 @@ interface FieldInfo {
  */
 export class SchemaLoader {
   private schemas: Map<string, LoadedSchema> = new Map();
+  private enumMaps: Map<string, Map<number, string>> = new Map(); // enumTypeId -> (value -> name)
+  private structEnumFields: Map<string, Map<string, bigint>> = new Map(); // structId -> (fieldName -> enumTypeId)
+
+  /**
+   * Load an enum node to enable enum name lookups.
+   * Call this before loading structs that use the enum.
+   */
+  loadEnum(node: Node): void {
+    if (!node._isEnum) {
+      return;
+    }
+
+    const enumId = node.id.toString();
+    const valueToName = new Map<number, string>();
+    const enumNode = node.enum;
+
+    for (let i = 0; i < enumNode.enumerants.length; i++) {
+      const enumerant = enumNode.enumerants.get(i);
+      valueToName.set(i, enumerant.name);
+    }
+
+    this.enumMaps.set(enumId, valueToName);
+  }
+
+  /**
+   * Get the name of an enum value.
+   * @param enumTypeId - The ID of the enum type
+   * @param value - The numeric enum value
+   * @returns The enum name, or undefined if not found
+   */
+  getEnumName(enumTypeId: bigint, value: number): string | undefined {
+    const enumMap = this.enumMaps.get(enumTypeId.toString());
+    return enumMap?.get(value);
+  }
+
+  /**
+   * Get the enum type ID for a field in a struct.
+   * @param structId - The ID of the struct type
+   * @param fieldName - The name of the field
+   * @returns The enum type ID, or undefined if the field is not an enum
+   */
+  getFieldEnumType(structId: string, fieldName: string): bigint | undefined {
+    const fields = this.structEnumFields.get(structId);
+    return fields?.get(fieldName);
+  }
 
   /**
    * Load a schema node dynamically.
@@ -137,6 +183,18 @@ export class SchemaLoader {
     const structInfo = node.struct;
     const size = new ObjectSize(structInfo.dataWordCount * 8, structInfo.pointerCount);
     const fields = this.parseFields(structInfo.fields);
+
+    // Track which fields are enums
+    const enumFields = new Map<string, bigint>();
+    for (const field of fields) {
+      if (field.type === Type.ENUM && field.enumTypeId !== undefined) {
+        enumFields.set(field.name, field.enumTypeId);
+      }
+    }
+    if (enumFields.size > 0) {
+      this.structEnumFields.set(id.toString(), enumFields);
+    }
+
     const structCtor = this.createDynamicStruct(id.toString(16), displayName, size, fields);
 
     const schema: LoadedSchema = { id, displayName, size, structCtor };
@@ -189,6 +247,8 @@ export class SchemaLoader {
 
       if (type === Type.STRUCT) {
         fieldInfo.structTypeId = fieldType.struct.typeId;
+      } else if (type === Type.ENUM) {
+        fieldInfo.enumTypeId = fieldType.enum.typeId;
       } else if (type === Type.LIST) {
         const elementType = fieldType.list.elementType;
         const elementTypeWhich = elementType.which();
