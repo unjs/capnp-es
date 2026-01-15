@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.0.14
+
+[compare changes](https://github.com/unjs/capnp-es/compare/v0.0.13...v0.0.14)
+
+### 🩹 Fixes
+
+- Revert TS peer dependency to ^5.7.3 ([#65](https://github.com/unjs/capnp-es/pull/65))
+
+### ❤️ Contributors
+
+- Victor Berchet ([@vicb](https://github.com/vicb))
+
 ## v0.0.13
 
 [compare changes](https://github.com/unjs/capnp-es/compare/v0.0.12...v0.0.13)
