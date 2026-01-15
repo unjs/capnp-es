@@ -56,27 +56,27 @@
   "devDependencies": {
     "@types/benchmark": "^2.1.5",
     "@types/hex2dec": "^1.1.4",
-    "@types/node": "^22.13.0",
+    "@types/node": "^22.19.6",
     "@vitest/coverage-v8": "^4.0.17",
-    "automd": "^0.3.12",
+    "automd": "^0.4.2",
     "benchmark": "^2.1.4",
     "capnp-ts": "^0.7.0",
-    "changelogen": "^0.5.7",
-    "esbuild": "^0.24.2",
-    "eslint": "^9.19.0",
-    "eslint-config-unjs": "^0.4.2",
+    "changelogen": "^0.6.2",
+    "esbuild": "^0.27.2",
+    "eslint": "^9.39.2",
+    "eslint-config-unjs": "^0.6.2",
     "hex2dec": "^1.1.2",
-    "jiti": "^2.4.2",
-    "mitata": "^1.0.33",
-    "prettier": "^3.4.2",
+    "jiti": "^2.6.1",
+    "mitata": "^1.0.34",
+    "prettier": "^3.8.0",
     "protobufjs": "^8.0.0",
-    "typescript": "^5.7.3",
-    "unbuild": "^3.3.1",
+    "typescript": "^5.9.3",
+    "unbuild": "^3.6.1",
     "vite-tsconfig-paths": "^6.0.4",
     "vitest": "^4.0.17"
   },
   "peerDependencies": {
-    "typescript": "^5.7.3"
+    "typescript": "^5.9.3"
   },
   "peerDependenciesMeta": {
     "typescript": {
