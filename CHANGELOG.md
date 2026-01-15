@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.0.13
+
+[compare changes](https://github.com/unjs/capnp-es/compare/v0.0.12...v0.0.13)
+
+### 🏡 Chore
+
+- update all non-major dependencies ([#63](https://github.com/unjs/capnp-es/pull/63))
+
+### ❤️ Contributors
+
+- Victor Berchet ([@vicb](https://github.com/vicb))
+
 ## v0.0.12
 
 [compare changes](https://github.com/unjs/capnp-es/compare/v0.0.11...v0.0.12)
