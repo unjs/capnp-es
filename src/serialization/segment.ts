@@ -135,6 +135,8 @@ export class Segment implements DataView {
   /**
    * Read a float16 value out of this segment.
    *
+   * NOTE: Non functional, added to allow compilation with TS 5.9+
+   *
    * @param byteOffset The offset in bytes to the value.
    * @returns The value.
    */
@@ -298,6 +300,8 @@ export class Segment implements DataView {
 
   /**
    * Write a float16 value to the specified offset.
+   *
+   * NOTE: Non functional, added to allow compilation with TS 5.9+
    *
    * @param byteOffset The offset from the beginning of the buffer.
    * @param val The value to store.
