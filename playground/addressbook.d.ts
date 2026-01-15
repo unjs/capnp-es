@@ -27,6 +27,10 @@ export declare const Person_Employment_Which: {
   readonly UNEMPLOYED: 0;
   readonly EMPLOYER: 1;
   readonly SCHOOL: 2;
+  /**
+* We assume that a person is only one of these.
+*
+*/
   readonly SELF_EMPLOYED: 3;
 };
 export type Person_Employment_Which = (typeof Person_Employment_Which)[keyof typeof Person_Employment_Which];
