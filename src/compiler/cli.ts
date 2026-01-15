@@ -27,7 +27,7 @@ export async function cliMain(outFormat: "js" | "ts" | "dts") {
       outFormats = parsedOptions.outFormats;
       outDir = parsedOptions.outDir;
       const { sources, options } = parsedOptions;
-      dataBuf = await execCapnpc(sources, options, outDir);
+      dataBuf = await execCapnpc(sources, options);
     }
     const { files } = await compileAll(dataBuf, {
       ts: outFormats.includes("ts"),
@@ -99,14 +99,9 @@ function parseOptions() {
 async function execCapnpc(
   sources: string[],
   options: string[],
-  outDir: string | undefined,
 ): Promise<Buffer> {
-  if (outDir) {
-    options.push(`-o-:${outDir}`);
-  } else {
-    options.push("-o-");
-  }
-  const cmd = `capnpc ${options.join(" ")} ${sources.join(" ")}`;
+  // Uses -o- to output to stdout
+  const cmd = `capnpc -o- ${options.join(" ")} ${sources.join(" ")}`;
   console.log(`[capnp-es] ${cmd}`);
   return new Promise<Buffer>((resolve) => {
     exec(cmd, { encoding: "buffer" }, (error, stdout, stderr) => {
