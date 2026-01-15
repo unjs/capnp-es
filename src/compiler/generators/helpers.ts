@@ -7,7 +7,7 @@ export function createBigInt(value: bigint): string {
     v = v.slice(1);
     sign = "-";
   }
-  return `${sign}BigInt("0x${v}")`;
+  return `${sign}0x${v}n`;
 }
 
 /**

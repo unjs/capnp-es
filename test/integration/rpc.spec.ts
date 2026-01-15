@@ -59,7 +59,7 @@ describe("rpc", () => {
 
             write: (p) =>
               new Promise((resolve, reject) =>
-                hash.write(p.data.toUint8Array(), undefined, (err) =>
+                hash.write(p.data.toUint8Array(), "utf8", (err) =>
                   err ? reject(err) : resolve(),
                 ),
               ),

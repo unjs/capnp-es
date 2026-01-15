@@ -8,6 +8,6 @@ import type { CodeGeneratorFileContext } from ".";
 
 export function generateFileId(ctx: CodeGeneratorFileContext): void {
   ctx.codeParts.push(
-    `export const _capnpFileId = BigInt("0x${ctx.file.id.toString(16)}");`,
+    `export const _capnpFileId = 0x${ctx.file.id.toString(16)}n;`,
   );
 }

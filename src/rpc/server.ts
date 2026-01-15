@@ -11,13 +11,17 @@ import { ErrorAnswer } from "./error-answer";
 import { MethodError } from "./method-error";
 import { RPC_METHOD_NOT_IMPLEMENTED } from "../errors";
 
-export interface ServerMethod<P extends Struct, R extends Struct>
-  extends Method<P, R> {
+export interface ServerMethod<
+  P extends Struct,
+  R extends Struct,
+> extends Method<P, R> {
   impl(params: P, results: R): Promise<void>;
 }
 
-export interface ServerCall<P extends Struct, R extends Struct>
-  extends DataCall<P, R> {
+export interface ServerCall<
+  P extends Struct,
+  R extends Struct,
+> extends DataCall<P, R> {
   serverMethod: ServerMethod<P, R>;
   answer: Fulfiller<R>;
 }

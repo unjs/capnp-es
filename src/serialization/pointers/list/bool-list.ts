@@ -11,7 +11,7 @@ export class BoolList extends List<boolean> {
   };
 
   get(index: number): boolean {
-    const bitMask = 1 << index % 8;
+    const bitMask = 1 << (index % 8);
     const byteOffset = index >>> 3;
     const c = getContent(this);
     const v = c.segment.getUint8(c.byteOffset + byteOffset);
@@ -20,7 +20,7 @@ export class BoolList extends List<boolean> {
   }
 
   set(index: number, value: boolean): void {
-    const bitMask = 1 << index % 8;
+    const bitMask = 1 << (index % 8);
     const c = getContent(this);
     const byteOffset = c.byteOffset + (index >>> 3);
     const v = c.segment.getUint8(byteOffset);
