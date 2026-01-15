@@ -14,8 +14,7 @@ export class PipelineClient<
   AnswerResults extends Struct,
   ParentResults extends Struct,
   Results extends Struct,
-> implements Client
-{
+> implements Client {
   constructor(
     public pipeline: Pipeline<AnswerResults, ParentResults, Results>,
   ) {}

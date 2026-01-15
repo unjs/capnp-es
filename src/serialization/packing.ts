@@ -350,7 +350,6 @@ export function unpack(packed: ArrayBuffer): ArrayBuffer {
   for (
     let srcByteOffset = 0, dstByteOffset = 0;
     srcByteOffset < src.byteLength;
-
   ) {
     const tag = src[srcByteOffset];
 

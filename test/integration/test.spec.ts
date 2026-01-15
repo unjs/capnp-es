@@ -33,8 +33,8 @@ test("TestAllTypes", () => {
   allTypes.int32Field = -1_000_000;
   t.equal(allTypes.int32Field, -1_000_000);
 
-  allTypes.int64Field = BigInt(-0xc5_4c_72_d9);
-  t.equal(allTypes.int64Field, BigInt(-0xc5_4c_72_d9));
+  allTypes.int64Field = -0xc5_4c_72_d9n;
+  t.equal(allTypes.int64Field, -0xc5_4c_72_d9n);
 
   allTypes.uInt8Field = 8;
   t.equal(allTypes.uInt8Field, 8);
@@ -45,8 +45,8 @@ test("TestAllTypes", () => {
   allTypes.uInt32Field = 99_999_999;
   t.equal(allTypes.uInt32Field, 99_999_999);
 
-  allTypes.uInt64Field = BigInt(1_099_511_627_775);
-  t.equal(allTypes.uInt64Field, BigInt(1_099_511_627_775));
+  allTypes.uInt64Field = 1_099_511_627_775n;
+  t.equal(allTypes.uInt64Field, 1_099_511_627_775n);
 
   allTypes.float32Field = -9.999;
   t.ok(Math.abs(allTypes.float32Field - -9.999) < FLOAT_TOLERANCE);
@@ -78,8 +78,8 @@ test("TestAllTypes", () => {
   allTypes._initInt32List(3).set(2, -888);
   t.equal(allTypes.int32List.get(2), -888);
 
-  allTypes._initInt64List(3).set(2, BigInt(-8888));
-  t.equal(allTypes.int64List.get(2), BigInt(-8888));
+  allTypes._initInt64List(3).set(2, -8888n);
+  t.equal(allTypes.int64List.get(2), -8888n);
 
   allTypes._initUInt8List(3).set(2, 8);
   t.equal(allTypes.uInt8List.get(2), 8);
@@ -90,8 +90,8 @@ test("TestAllTypes", () => {
   allTypes._initUInt32List(3).set(2, 888);
   t.equal(allTypes.uInt32List.get(2), 888);
 
-  allTypes._initUInt64List(3).set(2, BigInt(8888));
-  t.equal(allTypes.uInt64List.get(2), BigInt(8888));
+  allTypes._initUInt64List(3).set(2, 8888n);
+  t.equal(allTypes.uInt64List.get(2), 8888n);
 
   allTypes._initTextList(4).set(2, "hi");
   t.equal(allTypes.textList.get(2), "hi");

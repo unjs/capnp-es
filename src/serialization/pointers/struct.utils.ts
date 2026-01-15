@@ -218,7 +218,7 @@ export function getBit(
   defaultMask?: DataView,
 ): boolean {
   const byteOffset = Math.floor(bitOffset / 8);
-  const bitMask = 1 << bitOffset % 8;
+  const bitMask = 1 << (bitOffset % 8);
 
   checkDataBounds(byteOffset, 1, s);
 
@@ -819,7 +819,7 @@ export function setBit(
   defaultMask?: DataView,
 ): void {
   const byteOffset = Math.floor(bitOffset / 8);
-  const bitMask = 1 << bitOffset % 8;
+  const bitMask = 1 << (bitOffset % 8);
 
   checkDataBounds(byteOffset, 1, s);
 

@@ -78,12 +78,12 @@ test("1 of each list", () => {
     int8List.set(0, 1);
     int16List.set(0, 1);
     int32List.set(0, 1);
-    int64List.set(0, BigInt(1));
+    int64List.set(0, 1n);
     textList.set(0, "hi");
     uint8List.set(0, 1);
     uint16List.set(0, 1);
     uint32List.set(0, 1);
-    uint64List.set(0, BigInt(1));
+    uint64List.set(0, 1n);
 
     capnp.utils.disown(boolList).dispose();
     capnp.utils.disown(compositeList).dispose();

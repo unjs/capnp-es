@@ -7,7 +7,7 @@ import { readFileBuffer } from "test/utils";
 
 const SCHEMA_MESSAGE = readFileBuffer("test/fixtures/data/schema.bin");
 
-const SCHEMA_FILE_ID = BigInt("0xa93fc509624c72d9");
+const SCHEMA_FILE_ID = 0xa9_3f_c5_09_62_4c_72_d9n;
 
 test("schema roundtrip", () => {
   const message = new capnp.Message(SCHEMA_MESSAGE, false);

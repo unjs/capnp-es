@@ -8,13 +8,13 @@ import { BigIntBag } from "../fixtures/bigintbag.ts";
 test("64 bit with bigint support", () => {
   const message = new capnp.Message();
   const b = message.initRoot(BigIntBag);
-  const unsigned = BigInt("999999");
-  const signed = BigInt("-999999");
+  const unsigned = 999_999n;
+  const signed = -999_999n;
 
-  t.equal(b.signed, BigInt(0));
-  t.equal(b.unsigned, BigInt(0));
-  t.equal(b.defaultSigned, BigInt("-987654321987654321"));
-  t.equal(b.defaultUnsigned, BigInt("987654321987654321"));
+  t.equal(b.signed, 0n);
+  t.equal(b.unsigned, 0n);
+  t.equal(b.defaultSigned, -987_654_321_987_654_321n);
+  t.equal(b.defaultUnsigned, 987_654_321_987_654_321n);
 
   b.signed = signed;
   b.unsigned = unsigned;
