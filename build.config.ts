@@ -9,6 +9,7 @@ export default defineBuildConfig({
     "./src/compiler/capnpc-dts.ts",
     "./src/compiler/capnpc-ts.ts",
     "./src/debug/index.ts",
+    "./src/serialization/schema-loader.ts",
     ...["cpp", "persistent", "rpc-twoparty", "rpc", "schema", "ts"].map(
       (n) => `./src/capnp/${n}.ts`,
     ),
