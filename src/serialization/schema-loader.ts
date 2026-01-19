@@ -39,11 +39,16 @@ const PRIMITIVE_LIST_CLASSES = new Map<number, ListCtor<any>>([
 
 const TYPE_SIZES = new Map<number, number>([
   [Type.BOOL, 0], // Special case: bit offset
-  [Type.INT8, 1], [Type.UINT8, 1],
-  [Type.INT16, 2], [Type.UINT16, 2],
-  [Type.INT32, 4], [Type.UINT32, 4],
-  [Type.INT64, 8], [Type.UINT64, 8],
-  [Type.FLOAT32, 4], [Type.FLOAT64, 8],
+  [Type.INT8, 1],
+  [Type.UINT8, 1],
+  [Type.INT16, 2],
+  [Type.UINT16, 2],
+  [Type.INT32, 4],
+  [Type.UINT32, 4],
+  [Type.INT64, 8],
+  [Type.UINT64, 8],
+  [Type.FLOAT32, 4],
+  [Type.FLOAT64, 8],
   [Type.ENUM, 2], // Enums are 16-bit unsigned integers
 ]);
 
@@ -62,7 +67,10 @@ const PRIMITIVE_GETTERS = new Map<number, (offset: number, s: Struct) => any>([
   [Type.ENUM, utils.getUint16], // Enums are uint16
 ]);
 
-const PRIMITIVE_SETTERS = new Map<number, (offset: number, value: any, s: Struct) => void>([
+const PRIMITIVE_SETTERS = new Map<
+  number,
+  (offset: number, value: any, s: Struct) => void
+>([
   [Type.BOOL, utils.setBit],
   [Type.INT8, utils.setInt8],
   [Type.INT16, utils.setInt16],
@@ -181,7 +189,10 @@ export class SchemaLoader {
     }
 
     const structInfo = node.struct;
-    const size = new ObjectSize(structInfo.dataWordCount * 8, structInfo.pointerCount);
+    const size = new ObjectSize(
+      structInfo.dataWordCount * 8,
+      structInfo.pointerCount,
+    );
     const fields = this.parseFields(structInfo.fields);
 
     // Track which fields are enums
@@ -195,7 +206,12 @@ export class SchemaLoader {
       this.structEnumFields.set(id.toString(), enumFields);
     }
 
-    const structCtor = this.createDynamicStruct(id.toString(16), displayName, size, fields);
+    const structCtor = this.createDynamicStruct(
+      id.toString(16),
+      displayName,
+      size,
+      fields,
+    );
 
     const schema: LoadedSchema = { id, displayName, size, structCtor };
     this.schemas.set(id.toString(), schema);
@@ -208,7 +224,9 @@ export class SchemaLoader {
   get(id: bigint): LoadedSchema {
     const schema = this.schemas.get(id.toString());
     if (!schema) {
-      throw new Error(`Schema with ID ${id} not found. Did you call loadDynamic()?`);
+      throw new Error(
+        `Schema with ID ${id} not found. Did you call loadDynamic()?`,
+      );
     }
     return schema;
   }
@@ -245,16 +263,23 @@ export class SchemaLoader {
         type,
       };
 
-      if (type === Type.STRUCT) {
-        fieldInfo.structTypeId = fieldType.struct.typeId;
-      } else if (type === Type.ENUM) {
-        fieldInfo.enumTypeId = fieldType.enum.typeId;
-      } else if (type === Type.LIST) {
-        const elementType = fieldType.list.elementType;
-        const elementTypeWhich = elementType.which();
-        fieldInfo.listElementType = elementTypeWhich;
-        if (elementTypeWhich === Type.STRUCT) {
-          fieldInfo.listElementStructTypeId = elementType.struct.typeId;
+      switch (type) {
+        case Type.STRUCT: {
+          fieldInfo.structTypeId = fieldType.struct.typeId;
+          break;
+        }
+        case Type.ENUM: {
+          fieldInfo.enumTypeId = fieldType.enum.typeId;
+          break;
+        }
+        case Type.LIST: {
+          const elementType = fieldType.list.elementType;
+          const elementTypeWhich = elementType.which();
+          fieldInfo.listElementType = elementTypeWhich;
+          if (elementTypeWhich === Type.STRUCT) {
+            fieldInfo.listElementStructTypeId = elementType.struct.typeId;
+          }
+          break;
         }
       }
 
@@ -271,7 +296,7 @@ export class SchemaLoader {
     id: string,
     displayName: string,
     size: ObjectSize,
-    fields: FieldInfo[]
+    fields: FieldInfo[],
   ): StructCtor<any> {
     const DynamicStruct = class extends Struct {
       static readonly _capnp = { displayName, id, size };
@@ -292,30 +317,42 @@ export class SchemaLoader {
    */
   private addFieldAccessor(prototype: any, field: FieldInfo): void {
     const schemas = this.schemas;
-    const descriptor: PropertyDescriptor = { enumerable: true, configurable: true };
+    const descriptor: PropertyDescriptor = {
+      enumerable: true,
+      configurable: true,
+    };
 
     const primitiveGetter = PRIMITIVE_GETTERS.get(field.type);
     if (primitiveGetter) {
       // Primitive type
-      const byteOffset = field.type === Type.BOOL ? field.offset : field.offset * (TYPE_SIZES.get(field.type) || 8);
-      descriptor.get = function(this: Struct) {
+      const byteOffset =
+        field.type === Type.BOOL
+          ? field.offset
+          : field.offset * (TYPE_SIZES.get(field.type) || 8);
+      descriptor.get = function (this: Struct) {
         return primitiveGetter(byteOffset, this);
       };
       const primitiveSetter = PRIMITIVE_SETTERS.get(field.type);
       if (primitiveSetter) {
-        descriptor.set = function(this: Struct, value: any) {
+        descriptor.set = function (this: Struct, value: any) {
           primitiveSetter(byteOffset, value, this);
         };
       }
     } else {
       switch (field.type) {
         case Type.TEXT: {
-          descriptor.get = function(this: Struct) { return utils.getText(field.offset, this); };
-          descriptor.set = function(this: Struct, value: string) { utils.setText(field.offset, value, this); };
+          descriptor.get = function (this: Struct) {
+            return utils.getText(field.offset, this);
+          };
+          descriptor.set = function (this: Struct, value: string) {
+            utils.setText(field.offset, value, this);
+          };
           break;
         }
         case Type.DATA: {
-          descriptor.get = function(this: Struct) { return utils.getData(field.offset, this); };
+          descriptor.get = function (this: Struct) {
+            return utils.getData(field.offset, this);
+          };
           break;
         }
         case Type.LIST: {
@@ -327,7 +364,9 @@ export class SchemaLoader {
           break;
         }
         default: {
-          descriptor.get = function(this: Struct) { return utils.getPointer(field.offset, this); };
+          descriptor.get = function (this: Struct) {
+            return utils.getPointer(field.offset, this);
+          };
         }
       }
     }
@@ -338,17 +377,25 @@ export class SchemaLoader {
   /**
    * Create a getter function for a list field
    */
-  private createListGetter(field: FieldInfo, schemas: Map<string, LoadedSchema>): (this: Struct) => any {
+  private createListGetter(
+    field: FieldInfo,
+    schemas: Map<string, LoadedSchema>,
+  ): (this: Struct) => any {
     const { listElementType, listElementStructTypeId } = field;
 
     // Struct list - resolve constructor at runtime
-    if (listElementType === Type.STRUCT && listElementStructTypeId !== undefined) {
+    if (
+      listElementType === Type.STRUCT &&
+      listElementStructTypeId !== undefined
+    ) {
       let cachedListClass: ListCtor<any> | null = null;
-      return function(this: Struct) {
+      return function (this: Struct) {
         if (!cachedListClass) {
           const elementSchema = schemas.get(listElementStructTypeId.toString());
           if (!elementSchema) {
-            throw new Error(`Schema for list element type ${listElementStructTypeId} not found`);
+            throw new Error(
+              `Schema for list element type ${listElementStructTypeId} not found`,
+            );
           }
           cachedListClass = CompositeList(elementSchema.structCtor);
         }
@@ -358,20 +405,20 @@ export class SchemaLoader {
 
     // Primitive list
     if (listElementType === undefined) {
-      return function(this: Struct) {
+      return function (this: Struct) {
         return utils.getPointer(field.offset, this);
       };
     }
 
     const listClass = PRIMITIVE_LIST_CLASSES.get(listElementType);
     if (listClass) {
-      return function(this: Struct) {
+      return function (this: Struct) {
         return utils.getList(field.offset, listClass, this);
       };
     }
 
     // Fallback
-    return function(this: Struct) {
+    return function (this: Struct) {
       return utils.getPointer(field.offset, this);
     };
   }
@@ -379,12 +426,15 @@ export class SchemaLoader {
   /**
    * Create a getter function for a struct field
    */
-  private createStructGetter(field: FieldInfo, schemas: Map<string, LoadedSchema>): (this: Struct) => any {
+  private createStructGetter(
+    field: FieldInfo,
+    schemas: Map<string, LoadedSchema>,
+  ): (this: Struct) => any {
     const { structTypeId } = field;
 
     if (structTypeId !== undefined) {
       let cachedStructCtor: StructCtor<any> | null = null;
-      return function(this: Struct) {
+      return function (this: Struct) {
         if (!cachedStructCtor) {
           const schema = schemas.get(structTypeId.toString());
           if (!schema) {
@@ -396,7 +446,7 @@ export class SchemaLoader {
       };
     }
 
-    return function(this: Struct) {
+    return function (this: Struct) {
       return utils.getPointer(field.offset, this);
     };
   }
