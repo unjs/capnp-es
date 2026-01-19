@@ -16,7 +16,7 @@ exports.Person =
 const capnp = require("capnp-ts");
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const capnp_ts_1 = require("capnp-ts");
-exports._capnpFileId = BigInt("0xb597bf4897e54f89");
+exports._capnpFileId = 0xb5_97_bf_48_97_e5_4f_89n;
 class AddressBook extends capnp_ts_1.Struct {
   adoptPeople(value) {
     capnp_ts_1.Struct.adopt(value, capnp_ts_1.Struct.getPointer(0, this));

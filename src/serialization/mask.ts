@@ -64,7 +64,7 @@ export function getBitMask(value: boolean, bitOffset: number): DataView {
     return dv;
   }
 
-  dv.setUint8(0, 1 << bitOffset % 8);
+  dv.setUint8(0, 1 << (bitOffset % 8));
   return dv;
 }
 

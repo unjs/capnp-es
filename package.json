@@ -1,6 +1,6 @@
 {
   "name": "capnp-es",
-  "version": "0.0.12",
+  "version": "0.0.15",
   "description": "TypeScript implementation of the Cap'n Proto serialization.",
   "repository": "unjs/capnp-es",
   "license": "MIT",
@@ -45,7 +45,7 @@
     "bench:node": "node --import jiti/register ./test/bench/bench.ts",
     "build": "pnpm build:std && unbuild",
     "build:std": "unbuild --stub && pnpm capnp-es src/capnp/_capnp/*.capnp --src-prefix=src/capnp/_capnp -ots:./src/capnp && prettier -w ./src/capnp",
-    "capnp-es": "node --import jiti/register ./src/compiler/capnpc-js.ts",
+    "capnp-es": "jiti ./src/compiler/capnpc-js.ts",
     "dev": "vitest dev",
     "lint": "eslint . && prettier -c .",
     "lint:fix": "automd && eslint . --fix && prettier -w .",
@@ -60,24 +60,24 @@
   "devDependencies": {
     "@types/benchmark": "^2.1.5",
     "@types/hex2dec": "^1.1.4",
-    "@types/node": "^22.13.0",
-    "@vitest/coverage-v8": "^3.0.4",
-    "automd": "^0.3.12",
+    "@types/node": "^22.19.6",
+    "@vitest/coverage-v8": "^4.0.17",
+    "automd": "^0.4.2",
     "benchmark": "^2.1.4",
     "capnp-ts": "^0.7.0",
-    "changelogen": "^0.5.7",
-    "esbuild": "^0.24.2",
-    "eslint": "^9.19.0",
-    "eslint-config-unjs": "^0.4.2",
+    "changelogen": "^0.6.2",
+    "esbuild": "^0.27.2",
+    "eslint": "^9.39.2",
+    "eslint-config-unjs": "^0.6.2",
     "hex2dec": "^1.1.2",
-    "jiti": "^2.4.2",
-    "mitata": "^1.0.33",
-    "prettier": "^3.4.2",
-    "protobufjs": "^7.4.0",
-    "typescript": "^5.7.3",
-    "unbuild": "^3.3.1",
-    "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.0.4"
+    "jiti": "^2.6.1",
+    "mitata": "^1.0.34",
+    "prettier": "^3.8.0",
+    "protobufjs": "^8.0.0",
+    "typescript": "^5.9.3",
+    "unbuild": "^3.6.1",
+    "vite-tsconfig-paths": "^6.0.4",
+    "vitest": "^4.0.17"
   },
   "peerDependencies": {
     "typescript": "^5.7.3"
@@ -87,5 +87,5 @@
       "optional": true
     }
   },
-  "packageManager": "pnpm@9.15.4"
+  "packageManager": "pnpm@10.28.0"
 }

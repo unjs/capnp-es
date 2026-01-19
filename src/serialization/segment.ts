@@ -133,6 +133,18 @@ export class Segment implements DataView {
   }
 
   /**
+   * Read a float16 value out of this segment.
+   *
+   * NOTE: Non functional, added to allow compilation with TS 5.9+
+   *
+   * @param byteOffset The offset in bytes to the value.
+   * @returns The value.
+   */
+  getFloat16(_byteOffset: number): number {
+    throw new Error("Not implemented");
+  }
+
+  /**
    * Read a float32 value out of this segment.
    *
    * @param byteOffset The offset in bytes to the value.
@@ -284,6 +296,18 @@ export class Segment implements DataView {
     littleEndian?: boolean,
   ): void {
     this._dv.setBigUint64(byteOffset, value, littleEndian);
+  }
+
+  /**
+   * Write a float16 value to the specified offset.
+   *
+   * NOTE: Non functional, added to allow compilation with TS 5.9+
+   *
+   * @param byteOffset The offset from the beginning of the buffer.
+   * @param val The value to store.
+   */
+  setFloat16(_byteOffset: number, _val: number): void {
+    throw new Error("Not implemented");
   }
 
   /**

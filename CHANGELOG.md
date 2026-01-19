@@ -1,5 +1,49 @@
 # Changelog
 
+## v0.0.14
+
+[compare changes](https://github.com/unjs/capnp-es/compare/v0.0.13...v0.0.14)
+
+### 🩹 Fixes
+
+- Revert TS peer dependency to ^5.7.3 ([#65](https://github.com/unjs/capnp-es/pull/65))
+
+### ❤️ Contributors
+
+- Victor Berchet ([@vicb](https://github.com/vicb))
+
+## v0.0.13
+
+[compare changes](https://github.com/unjs/capnp-es/compare/v0.0.12...v0.0.13)
+
+### 🏡 Chore
+
+- update all non-major dependencies ([#63](https://github.com/unjs/capnp-es/pull/63))
+
+### ❤️ Contributors
+
+- Victor Berchet ([@vicb](https://github.com/vicb))
+
+## v0.0.12
+
+[compare changes](https://github.com/unjs/capnp-es/compare/v0.0.11...v0.0.12)
+
+### 🩹 Fixes
+
+- Do not pass the output directory to capnpc ([#61](https://github.com/unjs/capnp-es/pull/61))
+
+### 💅 Refactors
+
+- Drop encodeUtf8 in favor of TextEncoder ([#49](https://github.com/unjs/capnp-es/pull/49))
+
+### 🏡 Chore
+
+- Update generated files ([#62](https://github.com/unjs/capnp-es/pull/62))
+
+### ❤️ Contributors
+
+- Victor Berchet ([@vicb](http://github.com/vicb))
+
 ## v0.0.11
 
 [compare changes](https://github.com/unjs/capnp-es/compare/v0.0.8...v0.0.11)

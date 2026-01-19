@@ -51,7 +51,7 @@ export class Question<P extends Struct, R extends Struct> implements Answer<R> {
     if (this.state !== QuestionState.IN_PROGRESS) {
       throw new Error(RPC_FULFILL_ALREADY_CALLED);
     }
-    // eslint-disable-next-line unicorn/prefer-ternary
+
     if (this.method) {
       this.obj = getAs(this.method.ResultsClass, obj);
     } else {
