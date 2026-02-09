@@ -56,13 +56,13 @@
   "devDependencies": {
     "@types/benchmark": "^2.1.5",
     "@types/hex2dec": "^1.1.4",
-    "@types/node": "^22.19.7",
+    "@types/node": "^22.19.10",
     "@vitest/coverage-v8": "^4.0.18",
     "automd": "^0.4.3",
     "benchmark": "^2.1.4",
     "capnp-ts": "^0.7.0",
     "changelogen": "^0.6.2",
-    "esbuild": "^0.27.2",
+    "esbuild": "^0.27.3",
     "eslint": "^9.39.2",
     "eslint-config-unjs": "^0.6.2",
     "hex2dec": "^1.1.2",
@@ -72,7 +72,7 @@
     "protobufjs": "^8.0.0",
     "typescript": "^5.9.3",
     "unbuild": "^3.6.1",
-    "vite-tsconfig-paths": "^6.0.5",
+    "vite-tsconfig-paths": "^6.1.0",
     "vitest": "^4.0.18"
   },
   "peerDependencies": {
@@ -83,5 +83,5 @@
       "optional": true
     }
   },
-  "packageManager": "pnpm@10.28.2"
+  "packageManager": "pnpm@10.29.2"
 }
