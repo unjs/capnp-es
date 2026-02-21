@@ -84,6 +84,19 @@ test("schema-loader: round-trip AddressBook", () => {
   expect(aliceDynamic.phones.get(1).number).toBe("555-5678");
   expect(aliceDynamic.phones.get(1).type).toBe(Person_PhoneNumber_Type.HOME);
 
+  // Validate Alice's employment group and union
+  const aliceEmployment = aliceDynamic.employment;
+  expect(aliceEmployment).toBeDefined();
+  expect(aliceEmployment.which()).toBe(1); // EMPLOYER = 1
+  expect(aliceEmployment._isEmployer).toBe(true);
+  expect(aliceEmployment._isSchool).toBe(false);
+  expect(aliceEmployment._isUnemployed).toBe(false);
+  expect(aliceEmployment._isSelfEmployed).toBe(false);
+  expect(aliceEmployment.employer).toBe("Acme Corp");
+
+  // Accessing wrong union field should throw
+  expect(() => aliceEmployment.school).toThrow();
+
   // Validate Bob
   const bobDynamic = peopleDynamic.get(1);
   expect(bobDynamic.id).toBe(456);
@@ -92,4 +105,15 @@ test("schema-loader: round-trip AddressBook", () => {
   expect(bobDynamic.phones.length).toBe(1);
   expect(bobDynamic.phones.get(0).number).toBe("555-9999");
   expect(bobDynamic.phones.get(0).type).toBe(Person_PhoneNumber_Type.WORK);
+
+  // Validate Bob's employment group and union
+  const bobEmployment = bobDynamic.employment;
+  expect(bobEmployment).toBeDefined();
+  expect(bobEmployment.which()).toBe(2); // SCHOOL = 2
+  expect(bobEmployment._isSchool).toBe(true);
+  expect(bobEmployment._isEmployer).toBe(false);
+  expect(bobEmployment.school).toBe("State University");
+
+  // Accessing wrong union field should throw
+  expect(() => bobEmployment.employer).toThrow();
 });

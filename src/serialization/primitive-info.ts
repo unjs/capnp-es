@@ -5,6 +5,7 @@
 import { Type } from "../capnp/schema";
 import { Struct } from "./pointers/struct";
 import * as utils from "./pointers/utils";
+import * as masks from "./mask";
 import { ListCtor } from "./pointers/list/list";
 import { BoolList } from "./pointers/list/bool-list";
 import { Float32List } from "./pointers/list/float32-list";
@@ -85,4 +86,22 @@ export const PRIMITIVE_SETTERS = new Map<
   [Type.FLOAT32, utils.setFloat32],
   [Type.FLOAT64, utils.setFloat64],
   [Type.ENUM, utils.setUint16], // Enums are uint16
+]);
+
+export const PRIMITIVE_MASK_FUNCTIONS = new Map<
+  number,
+  (...args: any[]) => DataView
+>([
+  [Type.BOOL, masks.getBitMask],
+  [Type.INT8, masks.getInt8Mask],
+  [Type.INT16, masks.getInt16Mask],
+  [Type.INT32, masks.getInt32Mask],
+  [Type.INT64, masks.getInt64Mask],
+  [Type.UINT8, masks.getUint8Mask],
+  [Type.UINT16, masks.getUint16Mask],
+  [Type.UINT32, masks.getUint32Mask],
+  [Type.UINT64, masks.getUint64Mask],
+  [Type.FLOAT32, masks.getFloat32Mask],
+  [Type.FLOAT64, masks.getFloat64Mask],
+  [Type.ENUM, masks.getUint16Mask], // Enums are uint16
 ]);
