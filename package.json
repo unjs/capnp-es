@@ -23,7 +23,7 @@
       "types": "./dist/debug/index.d.mts",
       "default": "./dist/debug/index.mjs"
     },
-    "./serialization/schema-loader": {
+    "./schema-loader": {
       "types": "./dist/serialization/schema-loader.d.mts",
       "default": "./dist/serialization/schema-loader.mjs"
     }

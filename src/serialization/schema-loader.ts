@@ -5,85 +5,13 @@ import { Struct, StructCtor } from "./pointers/struct";
 import * as utils from "./pointers/utils";
 import { Node, Type } from "../capnp/schema";
 import { CompositeList } from "./pointers/list/composite-list";
-import { Float32List } from "./pointers/list/float32-list";
-import { Float64List } from "./pointers/list/float64-list";
-import { Int8List } from "./pointers/list/int8-list";
-import { Int16List } from "./pointers/list/int16-list";
-import { Int32List } from "./pointers/list/int32-list";
-import { Int64List } from "./pointers/list/int64-list";
-import { Uint8List } from "./pointers/list/uint8-list";
-import { Uint16List } from "./pointers/list/uint16-list";
-import { Uint32List } from "./pointers/list/uint32-list";
-import { Uint64List } from "./pointers/list/uint64-list";
-import { TextList } from "./pointers/list/text-list";
-import { DataList } from "./pointers/list/data-list";
-import { BoolList } from "./pointers/list/bool-list";
 import { ListCtor } from "./pointers/list/list";
-
-// Lookup maps for primitive types
-const PRIMITIVE_LIST_CLASSES = new Map<number, ListCtor<any>>([
-  [Type.BOOL, BoolList],
-  [Type.INT8, Int8List],
-  [Type.INT16, Int16List],
-  [Type.INT32, Int32List],
-  [Type.INT64, Int64List],
-  [Type.UINT8, Uint8List],
-  [Type.UINT16, Uint16List],
-  [Type.UINT32, Uint32List],
-  [Type.UINT64, Uint64List],
-  [Type.FLOAT32, Float32List],
-  [Type.FLOAT64, Float64List],
-  [Type.TEXT, TextList],
-  [Type.DATA, DataList],
-]);
-
-const TYPE_SIZES = new Map<number, number>([
-  [Type.BOOL, 0], // Special case: bit offset
-  [Type.INT8, 1],
-  [Type.UINT8, 1],
-  [Type.INT16, 2],
-  [Type.UINT16, 2],
-  [Type.INT32, 4],
-  [Type.UINT32, 4],
-  [Type.INT64, 8],
-  [Type.UINT64, 8],
-  [Type.FLOAT32, 4],
-  [Type.FLOAT64, 8],
-  [Type.ENUM, 2], // Enums are 16-bit unsigned integers
-]);
-
-const PRIMITIVE_GETTERS = new Map<number, (offset: number, s: Struct) => any>([
-  [Type.BOOL, utils.getBit],
-  [Type.INT8, utils.getInt8],
-  [Type.INT16, utils.getInt16],
-  [Type.INT32, utils.getInt32],
-  [Type.INT64, utils.getInt64],
-  [Type.UINT8, utils.getUint8],
-  [Type.UINT16, utils.getUint16],
-  [Type.UINT32, utils.getUint32],
-  [Type.UINT64, utils.getUint64],
-  [Type.FLOAT32, utils.getFloat32],
-  [Type.FLOAT64, utils.getFloat64],
-  [Type.ENUM, utils.getUint16], // Enums are uint16
-]);
-
-const PRIMITIVE_SETTERS = new Map<
-  number,
-  (offset: number, value: any, s: Struct) => void
->([
-  [Type.BOOL, utils.setBit],
-  [Type.INT8, utils.setInt8],
-  [Type.INT16, utils.setInt16],
-  [Type.INT32, utils.setInt32],
-  [Type.INT64, utils.setInt64],
-  [Type.UINT8, utils.setUint8],
-  [Type.UINT16, utils.setUint16],
-  [Type.UINT32, utils.setUint32],
-  [Type.UINT64, utils.setUint64],
-  [Type.FLOAT32, utils.setFloat32],
-  [Type.FLOAT64, utils.setFloat64],
-  [Type.ENUM, utils.setUint16], // Enums are uint16
-]);
+import {
+  PRIMITIVE_LIST_CLASSES,
+  PRIMITIVE_GETTERS,
+  PRIMITIVE_SETTERS,
+  TYPE_SIZES,
+} from "./primitive-info";
 
 /**
  * Information about a loaded schema
@@ -140,7 +68,9 @@ export class SchemaLoader {
    */
   loadEnum(node: Node): void {
     if (!node._isEnum) {
-      return;
+      throw new Error(
+        `Node ${node.displayName} (${node.id}) is not an enum node`,
+      );
     }
 
     const enumId = node.id.toString();
@@ -303,13 +233,13 @@ export class SchemaLoader {
       toString(): string {
         return `${displayName}_${super.toString()}`;
       }
-    };
+    } satisfies StructCtor<any>;
 
     for (const field of fields) {
       this.addFieldAccessor(DynamicStruct.prototype, field);
     }
 
-    return DynamicStruct as StructCtor<any>;
+    return DynamicStruct;
   }
 
   /**
