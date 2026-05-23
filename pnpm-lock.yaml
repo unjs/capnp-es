@@ -9,64 +9,64 @@ importers:
   .:
     devDependencies:
       '@types/benchmark':
-        specifier: ^2.1.5
+        specifier: 2.1.5
         version: 2.1.5
       '@types/hex2dec':
-        specifier: ^1.1.4
+        specifier: 1.1.4
         version: 1.1.4
       '@types/node':
-        specifier: ^22.19.19
+        specifier: 22.19.19
         version: 22.19.19
       '@vitest/coverage-v8':
-        specifier: ^4.1.6
+        specifier: 4.1.6
         version: 4.1.6(vitest@4.1.6)
       automd:
-        specifier: ^0.4.3
+        specifier: 0.4.3
         version: 0.4.3(magicast@0.5.2)
       benchmark:
-        specifier: ^2.1.4
+        specifier: 2.1.4
         version: 2.1.4
       capnp-ts:
-        specifier: ^0.7.0
+        specifier: 0.7.0
         version: 0.7.0
       changelogen:
-        specifier: ^0.6.2
+        specifier: 0.6.2
         version: 0.6.2(magicast@0.5.2)
       esbuild:
-        specifier: ^0.28.0
+        specifier: 0.28.0
         version: 0.28.0
       eslint:
-        specifier: ^9.39.4
+        specifier: 9.39.4
         version: 9.39.4(jiti@2.7.0)
       eslint-config-unjs:
-        specifier: ^0.6.2
+        specifier: 0.6.2
         version: 0.6.2(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
       hex2dec:
-        specifier: ^1.1.2
+        specifier: 1.1.2
         version: 1.1.2
       jiti:
-        specifier: ^2.7.0
+        specifier: 2.7.0
         version: 2.7.0
       mitata:
-        specifier: ^1.0.34
+        specifier: 1.0.34
         version: 1.0.34
       prettier:
-        specifier: ^3.8.3
+        specifier: 3.8.3
         version: 3.8.3
       protobufjs:
-        specifier: ^8.3.0
+        specifier: 8.3.0
         version: 8.3.0
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
       unbuild:
-        specifier: ^3.6.1
+        specifier: 3.6.1
         version: 3.6.1(typescript@5.9.3)
       vite-tsconfig-paths:
-        specifier: ^6.1.1
+        specifier: 6.1.1
         version: 6.1.1(typescript@5.9.3)(vite@7.3.1(@types/node@22.19.19)(jiti@2.7.0)(tsx@4.21.0))
       vitest:
-        specifier: ^4.1.6
+        specifier: 4.1.6
         version: 4.1.6(@types/node@22.19.19)(@vitest/coverage-v8@4.1.6)(vite@7.3.1(@types/node@22.19.19)(jiti@2.7.0)(tsx@4.21.0))
 
 packages:
@@ -592,10 +592,6 @@ packages:
 
   '@eslint/eslintrc@3.3.5':
     resolution: {integrity: sha512-4IlJx0X0qftVsN5E+/vGujTRIFtwuLbNsVUe7TO6zYPDR1O6nFwvwhIKEKSrl6dZchmYBITazxKoUYOjdtjlRg==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@eslint/js@9.39.2':
-    resolution: {integrity: sha512-q1mjIoW1VX4IvSocvM/vbTiveKC4k9eLrajNEuSsmjymSDEbpGddtpfOoN7YGAqBK3NG+uqo8ia4PDTt8buCYA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/js@9.39.4':
@@ -2796,8 +2792,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@eslint/js@9.39.2': {}
-
   '@eslint/js@9.39.4': {}
 
   '@eslint/markdown@7.5.1':
@@ -3648,7 +3642,7 @@ snapshots:
 
   eslint-config-unjs@0.6.2(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3):
     dependencies:
-      '@eslint/js': 9.39.2
+      '@eslint/js': 9.39.4
       '@eslint/markdown': 7.5.1
       eslint: 9.39.4(jiti@2.7.0)
       eslint-plugin-unicorn: 62.0.0(eslint@9.39.4(jiti@2.7.0))
