@@ -109,7 +109,7 @@ export function getUnpackedByteLength(packed: ArrayBuffer): number {
   let wordCount = 0;
   let lastTag = PackedTag.NONZERO_NONSPAN;
 
-  for (let i = 0; i < p.byteLength; ) {
+  for (let i = 0; i < p.byteLength;) {
     const tag = p[i];
 
     if (lastTag === PackedTag.ZERO) {

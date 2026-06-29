@@ -565,7 +565,7 @@ export class Conn {
   // table if necessary.  The caller must be holding onto c.mu.
   descriptorForClient(desc: CapDescriptor, _client: Client): void {
     {
-      dig: for (let client = _client; ; ) {
+      dig: for (let client = _client; ;) {
         // cf. https://sourcegraph.com/github.com/capnproto/go-capnproto2@e1ae1f982d9908a41db464f02861a850a0880a5a/-/blob/rpc/introspect.go#L113
         // TODO: fulfiller.EmbargoClient
         // TODO: embargoClient
