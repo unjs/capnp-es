@@ -8,8 +8,7 @@ import { initStruct } from "../serialization/pointers/struct.utils";
 
 // The Call type holds the record for an outgoing interface call.
 export type Call<P extends Struct, R extends Struct> =
-  | FuncCall<P, R>
-  | DataCall<P, R>;
+  FuncCall<P, R> | DataCall<P, R>;
 
 export interface BaseCall<P extends Struct, R extends Struct> {
   // Method is the interface ID and method ID, along with the optional name, of
