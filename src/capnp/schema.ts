@@ -480,38 +480,10 @@ export class Node_Annotation extends $.Struct {
 }
 export const Node_Which = {
   FILE: 0,
-  /**
-* Name to present to humans to identify this Node.  You should not attempt to parse this.  Its
-* format could change.  It is not guaranteed to be unique.
-*
-* (On Zooko's triangle, this is the node's nickname.)
-*
-*/
   STRUCT: 1,
-  /**
-* If you want a shorter version of `displayName` (just naming this node, without its surrounding
-* scope), chop off this many characters from the beginning of `displayName`.
-*
-*/
   ENUM: 2,
-  /**
-* ID of the lexical parent node.  Typically, the scope node will have a NestedNode pointing back
-* at this node, but robust code should avoid relying on this (and, in fact, group nodes are not
-* listed in the outer struct's nestedNodes, since they are listed in the fields).  `scopeId` is
-* zero if the node has no parent, which is normally only the case with files, but should be
-* allowed for any kind of node (in order to make runtime type generation easier).
-*
-*/
   INTERFACE: 3,
-  /**
-* List of nodes nested within this node, along with the names under which they were declared.
-*
-*/
   CONST: 4,
-  /**
-* Annotations applied to this node.
-*
-*/
   ANNOTATION: 5
 } as const;
 export type Node_Which = (typeof Node_Which)[keyof typeof Node_Which];
@@ -879,15 +851,18 @@ export class Field_Ordinal extends $.Struct {
     return $.utils.getUint16(10, this) as Field_Ordinal_Which;
   }
 }
+/**
+* Schema for a field of a struct.
+*
+*/
 export const Field_Which = {
+  /**
+* A regular, non-group, non-fixed-list field.
+*
+*/
   SLOT: 0,
   /**
-* Indicates where this member appeared in the code, relative to other members.
-* Code ordering may have semantic relevance -- programmers tend to place related fields
-* together.  So, using code ordering makes sense in human-readable formats where ordering is
-* otherwise irrelevant, like JSON.  The values of codeOrder are tightly-packed, so the maximum
-* value is count(members) - 1.  Fields that are members of a union are only ordered relative to
-* the other members of that union, so the maximum value there is count(union.members).
+* A group.
 *
 */
   GROUP: 1
@@ -1349,6 +1324,14 @@ export class Type_Interface extends $.Struct {
   }
   toString(): string { return "Type_Interface_" + super.toString(); }
 }
+/**
+* A regular AnyPointer.
+*
+* The name "unconstrained" means as opposed to constraining it to match a type parameter.
+* In retrospect this name is probably a poor choice given that it may still be constrained
+* to be a struct, list, or capability.
+*
+*/
 export const Type_AnyPointer_Unconstrained_Which = {
   /**
 * truly AnyPointer
@@ -1567,6 +1550,10 @@ export class Type_AnyPointer extends $.Struct {
     return $.utils.getUint16(8, this) as Type_AnyPointer_Which;
   }
 }
+/**
+* Represents a type expression.
+*
+*/
 export const Type_Which = {
   VOID: 0,
   BOOL: 1,
@@ -1779,12 +1766,26 @@ export class Type extends $.Struct {
 }
 export const Brand_Scope_Which = {
   /**
-* ID of the scope to which these params apply.
+* List of parameter bindings.
 *
 */
   BIND: 0,
   /**
-* List of parameter bindings.
+* The place where the Brand appears is within this scope or a sub-scope, and bindings
+* for this scope are deferred to later Brand applications. This is equivalent to a
+* pass-through binding list, where each of this scope's parameters is bound to itself.
+* For example:
+*
+*   struct Outer(T) {
+*     struct Inner {
+*       value @0 :T;
+*     }
+*     innerInherit @0 :Inner;            # Outer Brand.Scope is `inherit`.
+*     innerBindSelf @1 :Outer(T).Inner;  # Outer Brand.Scope explicitly binds T to T.
+*   }
+*
+* The innerInherit and innerBindSelf fields have equivalent types, but different Brand
+* styles.
 *
 */
   INHERIT: 1
@@ -1938,6 +1939,10 @@ export class Brand extends $.Struct {
   }
   toString(): string { return "Brand_" + super.toString(); }
 }
+/**
+* Represents a value, e.g. a field default value, constant value, or annotation value.
+*
+*/
 export const Value_Which = {
   VOID: 0,
   BOOL: 1,
@@ -2307,6 +2312,11 @@ export class Annotation extends $.Struct {
   }
   toString(): string { return "Annotation_" + super.toString(); }
 }
+/**
+* Possible element sizes for encoded lists.  These correspond exactly to the possible values of
+* the 3-bit element size component of a list pointer.
+*
+*/
 export const ElementSize = {
   /**
 * aka "void", but that's a keyword.
