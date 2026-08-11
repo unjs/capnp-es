@@ -24,22 +24,55 @@ export function generateEnumNode(
     .map(({ fieldIndex }) => fieldIndex);
 
   const sourceInfo = lookupNodeSourceInfo(ctx, parentNode);
+  const nodeComment = extractJSDocs(sourceInfo);
 
   const propInits = fieldIndexInCodeOrder.map((index) => {
     const field = fields[index];
-    const docComment = extractJSDocs(sourceInfo?.members.at(index));
     const key = util.c2s(field.name);
     const val = (field as schema.Field).discriminantValue || index;
     return `
-      ${docComment}
+      ${getJSCommentForField(parentNode, fields, index, sourceInfo)}
       ${key}: ${val}`;
   });
 
   ctx.codeParts.push(`
+    ${nodeComment}
     export const ${className} = {
       ${propInits.join(",\n")}
     } as const;
 
     export type ${className} = (typeof ${className})[keyof typeof ${className}];
   `);
+}
+
+/**
+ * Retrieves the JSDoc comment for a specific enum or union field.
+ *
+ * For plain enums the field index directly maps to `sourceInfo.members`.
+ * For unnamed unions the passed `fields` are a filtered subset of
+ * `struct.fields`, so the original index is recovered by matching the field
+ * name against the full struct field list.
+ *
+ * @param parentNode - The parent node (enum or struct) owning the fields
+ * @param fields - The array of fields passed to `generateEnumNode`
+ * @param fieldIndex - Index of the field within `fields`
+ * @param sourceInfo - Source info for the parent node, if available
+ * @returns Formatted JSDoc comment string, or an empty string if none exists
+ */
+function getJSCommentForField(
+  parentNode: schema.Node,
+  fields: (schema.Enumerant | schema.Field)[],
+  fieldIndex: number,
+  sourceInfo: schema.Node_SourceInfo | undefined,
+): string {
+  if (parentNode._isEnum) {
+    return extractJSDocs(sourceInfo?.members.at(fieldIndex));
+  }
+
+  const structFields = parentNode.struct.fields;
+  const fieldName = fields[fieldIndex].name;
+  const fieldIndexInStruct = structFields.findIndex(
+    (f) => f.name === fieldName,
+  );
+  return extractJSDocs(sourceInfo?.members.at(fieldIndexInStruct));
 }
