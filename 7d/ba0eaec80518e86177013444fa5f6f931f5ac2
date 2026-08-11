@@ -1,0 +1,19 @@
+test/compiler/enum-jsdoc.spec.ts
+  s_94ddf0cfb5431a::t_bd557f2f44e48d 1-104
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "7dba0eaec80518e86177013444fa5f6f931f5ac2",
+  "prompts": {},
+  "sessions": {
+    "s_94ddf0cfb5431a": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_01043a8b6ffe3UOmc0a2WBfaL7",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Victor Berchet <victor@suumit.com>"
+    }
+  }
+}
