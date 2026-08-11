@@ -59,6 +59,45 @@ Experimental [RPC protocol](https://capnproto.org/rpc.html) is supported ([level
 
 See [tests](./test/integration/rpc.spec.ts) for some examples.
 
+### Dynamic Schema Loading
+
+When you receive Cap'n Proto messages with schemas embedded at runtime (e.g., from MCAP files or other sources), you can use `SchemaLoader` to dynamically create struct constructors without pre-compiled TypeScript definitions.
+
+```ts
+import { Message } from "capnp-es";
+import { CodeGeneratorRequest } from "capnp-es/capnp/schema";
+import { SchemaLoader } from "capnp-es/serialization/schema-loader";
+
+// Schema data is typically a CodeGeneratorRequest from `capnp compile -o-`
+const schemaMessage = new Message(schemaBuffer, false);
+const request = schemaMessage.getRoot(CodeGeneratorRequest);
+
+// Load all struct types from the schema
+const loader = new SchemaLoader();
+const structCtors = new Map<string, any>();
+
+for (let i = 0; i < request.nodes.length; i++) {
+  const node = request.nodes.get(i);
+  if (!node._isStruct) continue;
+
+  const loaded = loader.loadDynamic(node);
+  const name = (node.displayName || "").split(":").pop();
+  if (name) {
+    structCtors.set(name, loaded.structCtor);
+  }
+}
+
+// Decode messages using the dynamic constructor
+const MyStruct = structCtors.get("MyStruct")!;
+const message = new Message(messageBuffer, false);
+const root = message.getRoot(MyStruct);
+
+// Access fields dynamically (properties are created at runtime)
+console.log((root as any).someField);
+```
+
+See [tests](./test/integration/schema-loader.spec.ts) for a complete example.
+
 ## Status
 
 This project is a rework of [jdiaz5513/capnp-ts](https://github.com/jdiaz5513/capnp-ts/) by [Julián Díaz](https://github.com/jdiaz5513) and is under development.
