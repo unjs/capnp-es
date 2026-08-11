@@ -1063,6 +1063,10 @@ export class TestOutOfOrder extends $.Struct {
   }
   toString(): string { return "TestOutOfOrder_" + super.toString(); }
 }
+/**
+* Pack union 0 under ideal conditions: there is no unused padding space prior to it.
+*
+*/
 export const TestUnion_Union0_Which = {
   U0F0S0: 0,
   U0F0S1: 1,
@@ -1253,6 +1257,10 @@ export class TestUnion_Union0 extends $.Struct {
     return $.utils.getUint16(0, this) as TestUnion_Union0_Which;
   }
 }
+/**
+* Pack pathologically bad case.  Each field takes up new space.
+*
+*/
 export const TestUnion_Union1_Which = {
   U1F0S0: 0,
   U1F0S1: 1,
@@ -4387,6 +4395,10 @@ export class TestImplicitMethodParamsInGeneric extends $.Interface {
   };
   toString(): string { return "TestImplicitMethodParamsInGeneric_" + super.toString(); }
 }
+/**
+* At one point this failed to compile.
+*
+*/
 export const TestGenericsUnion_Which = {
   FOO: 0,
   BAR: 1
