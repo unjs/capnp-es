@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.0.15
+
+[compare changes](https://github.com/unjs/capnp-es/compare/697a54c...v0.0.15)
+
+### 🩹 Fixes
+
+- Generated JS comments on enum/struct ([#81](https://github.com/unjs/capnp-es/pull/81))
+
+### 🏡 Chore
+
+- Ignore typescript in renovate config ([#67](https://github.com/unjs/capnp-es/pull/67))
+- Update generated artifacts following #81 ([#82](https://github.com/unjs/capnp-es/pull/82), [#81](https://github.com/unjs/capnp-es/issues/81))
+
+### ❤️ Contributors
+
+- Victor Berchet ([@vicb](https://github.com/vicb))
+
 ## v0.0.14
 
 [compare changes](https://github.com/unjs/capnp-es/compare/v0.0.13...v0.0.14)
