@@ -1,0 +1,45 @@
+name: Install capnp
+description: Install the Cap'n Proto tools, reusing a cached build when one is available.
+
+inputs:
+  version:
+    description: The Cap'n Proto C++ release to install.
+    required: false
+    default: "1.0.2"
+
+runs:
+  using: composite
+  steps:
+    - name: Restore capnp
+      id: cache
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ~/.local/capnp
+        key: capnp-${{ runner.os }}-${{ runner.arch }}-${{ inputs.version }}
+
+    # Installed under $HOME rather than /usr/local so that the whole tree can be cached.
+    - name: Build capnp ${{ inputs.version }}
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        cd /tmp
+        curl -O "https://capnproto.org/capnproto-c++-${{ inputs.version }}.tar.gz"
+        tar zxf "capnproto-c++-${{ inputs.version }}.tar.gz"
+        cd "capnproto-c++-${{ inputs.version }}"
+        ./configure --prefix="$HOME/.local/capnp"
+        make -j"$(nproc)"
+        make install
+        cd /tmp
+        rm -rf "capnproto-c++-${{ inputs.version }}" "capnproto-c++-${{ inputs.version }}.tar.gz"
+
+    - name: Add capnp to the environment
+      shell: bash
+      run: |
+        echo "$HOME/.local/capnp/bin" >> "$GITHUB_PATH"
+        echo "LD_LIBRARY_PATH=$HOME/.local/capnp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" >> "$GITHUB_ENV"
+
+    - name: Verify capnp
+      shell: bash
+      run: |
+        capnp --version
+        capnpc --version

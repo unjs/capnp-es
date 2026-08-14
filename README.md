@@ -59,6 +59,18 @@ Experimental [RPC protocol](https://capnproto.org/rpc.html) is supported ([level
 
 See [tests](./test/integration/rpc.spec.ts) for some examples.
 
+### TypeScript compatibility
+
+TypeScript `5.7.3` and later, including `6.x`, are supported and covered by CI. That range applies to:
+
+- the schema compiler (`capnp-es/compiler` and the `capnpc-*` binaries), which uses the TypeScript compiler API to format the generated code and to transpile the `.js` and `.d.ts` output;
+- the TypeScript you use to type check the generated `.ts` files and the declarations shipped with this package.
+
+TypeScript is declared as an optional peer dependency because the runtime (`capnp-es`) never imports it, only the schema compiler does. Generated `.ts` files can also be run with a strip-only loader, such as Node.js type stripping or esbuild, which does not need the `typescript` package at all.
+
+> [!NOTE]
+> TypeScript `7.x` is not supported yet. It is a native (Go) compiler and its npm package no longer exposes the compiler API that the schema compiler relies on. It will be re-introduced from version 7.1.
+
 ## Status
 
 This project is a rework of [jdiaz5513/capnp-ts](https://github.com/jdiaz5513/capnp-ts/) by [Julián Díaz](https://github.com/jdiaz5513) and is under development.
