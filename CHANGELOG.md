@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.0.16
+
+[compare changes](https://github.com/unjs/capnp-es/compare/bd9d6866...v0.0.16)
+
+### 🚀 Enhancements
+
+- Add support for Typescript 6 ([#84](https://github.com/unjs/capnp-es/pull/84))
+
+### ❤️ Contributors
+
+- Victor Berchet ([@vicb](https://github.com/vicb))
+
 ## v0.0.15
 
 [compare changes](https://github.com/unjs/capnp-es/compare/697a54c...v0.0.15)
