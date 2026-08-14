@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.0.16
+
+[compare changes](https://github.com/unjs/capnp-es/compare/bd9d6866e2edb7a6e234d136f4adbd24428a9413...v0.0.16)
+
 ## v0.0.15
 
 [compare changes](https://github.com/unjs/capnp-es/compare/697a54c...v0.0.15)
