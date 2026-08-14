@@ -2,12 +2,14 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
     "noEmit": true,
     "allowImportingTsExtensions": true,
+    // TypeScript 6 no longer includes `@types/*` packages automatically.
+    "types": ["node"],
     "paths": {
       "capnp-es": ["./src/index.ts"],
       "capnp-es/compiler": ["./src/compiler/index.ts"],

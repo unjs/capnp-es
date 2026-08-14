@@ -1,4 +1,7 @@
 {
   "extends": ["github>unjs/renovate-config"],
+  "description": [
+    "TypeScript is bumped manually: the devDependency is capped by unbuild (peer ^5.9.2) and typescript-eslint (peer <6.1.0), and any bump must be kept in sync with peerDependencies.typescript and the typescript matrix in .github/workflows/ci.yml."
+  ],
   "ignoreDeps": ["typescript"]
 }
