@@ -29,11 +29,12 @@ export function getConcreteListType(
   if (elementTypeWhich === schema.Type.LIST) {
     return `$.PointerList(${getConcreteListType(ctx, elementType)})`;
   } else if (elementTypeWhich === schema.Type.STRUCT) {
-    const structNode = lookupNode(ctx, elementType.struct.typeId);
+    const structNode = tryLookupNode(ctx, elementType.struct.typeId);
 
     if (
+      structNode &&
       structNode.struct.preferredListEncoding !==
-      schema.ElementSize.INLINE_COMPOSITE
+        schema.ElementSize.INLINE_COMPOSITE
     ) {
       throw new Error(E.GEN_FIELD_NON_INLINE_STRUCT_LIST);
     }
@@ -85,7 +86,12 @@ export function getJsType(
     }
 
     case schema.Type.ENUM: {
-      return getFullClassName(lookupNode(ctx, type.enum.typeId));
+      const node = tryLookupNode(ctx, type.enum.typeId);
+      if (!node) {
+        // External enum type - generate a placeholder type name
+        return `Enum_${type.enum.typeId.toString(16)}`;
+      }
+      return getFullClassName(node);
     }
 
     case schema.Type.FLOAT32:
@@ -105,7 +111,12 @@ export function getJsType(
     }
 
     case schema.Type.INTERFACE: {
-      return getFullClassName(lookupNode(ctx, type.interface.typeId));
+      const node = tryLookupNode(ctx, type.interface.typeId);
+      if (!node) {
+        // External interface type - generate a placeholder type name
+        return `Interface_${type.interface.typeId.toString(16)}`;
+      }
+      return getFullClassName(node);
     }
 
     case schema.Type.LIST: {
@@ -113,8 +124,13 @@ export function getJsType(
     }
 
     case schema.Type.STRUCT: {
-      const c = getFullClassName(lookupNode(ctx, type.struct.typeId));
-
+      const node = tryLookupNode(ctx, type.struct.typeId);
+      if (!node) {
+        // External struct type - generate a placeholder type name
+        const c = `Struct_${type.struct.typeId.toString(16)}`;
+        return constructor ? `$.StructCtor<${c}>` : c;
+      }
+      const c = getFullClassName(node);
       return constructor ? `$.StructCtor<${c}>` : c;
     }
 
@@ -194,6 +210,21 @@ export function lookupNode(
   }
 
   return node;
+}
+
+/**
+ * Attempts to look up a Node in the schema by its ID without throwing.
+ *
+ * @param ctx - The file context containing all nodes from the schema
+ * @param lookup - Either a Node ID as a bigint, or an object containing an ID field
+ * @returns The found Node from the schema, or undefined if not found
+ */
+export function tryLookupNode(
+  ctx: CodeGeneratorFileContext,
+  lookup: { readonly id: bigint } | bigint,
+): schema.Node | undefined {
+  const id = typeof lookup === "bigint" ? lookup : lookup.id;
+  return ctx.nodes.find((n) => n.id === id);
 }
 
 /**
