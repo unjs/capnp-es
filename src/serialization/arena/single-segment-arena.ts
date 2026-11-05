@@ -43,7 +43,12 @@ export function allocate(
       ? MIN_SINGLE_SEGMENT_GROWTH
       : padToWord(minSize);
 
-  s.buffer = new ArrayBuffer(srcBuffer.byteLength + minSize);
+  // Grow by at least the current size, so that building a message from many small writes copies the buffer a
+  // logarithmic number of times instead of once per write. The extra space is not part of the output:
+  // `toArrayBuffer()` only copies the used part of the segment.
+  s.buffer = new ArrayBuffer(
+    srcBuffer.byteLength + Math.max(minSize, srcBuffer.byteLength),
+  );
 
   // PERF: Assume that the source and destination buffers are word-aligned and use Float64Array to copy them one word
   // at a time.

@@ -11,6 +11,7 @@ import {
 } from "src/serialization/message";
 
 import { Person } from "test/fixtures/serialization-demo";
+import { ListMania } from "test/fixtures/list-mania";
 
 const SEGMENTED_PACKED = readFileBuffer(
   "test/fixtures/data/segmented-packed.bin",
@@ -132,11 +133,11 @@ test("Message.allocateSegment()", () => {
 
   t.throws(() => m1.getSegment(1));
 
-  // Single segment arenas always grow by slightly more than what was allocated.
+  // Single segment arenas grow by at least their current size: 4096 -> 8192 -> 16384.
 
   t.equal(
     m1.getSegment(0).buffer.byteLength,
-    length * 2 + C.MIN_SINGLE_SEGMENT_GROWTH,
+    length * 4,
     "should replace existing segments",
   );
 
@@ -149,6 +150,28 @@ test("Message.allocateSegment()", () => {
     m2.getSegment(1).buffer.byteLength,
     length,
     "should allocate new segments",
+  );
+});
+
+test("single segment arena grows geometrically", () => {
+  const m = new Message();
+  const list = m.initRoot(ListMania)._initTextList(2000);
+
+  let reallocations = 0;
+  let buffer = m.getSegment(0).buffer;
+  for (let i = 0; i < 2000; i++) {
+    list.set(i, "x".repeat(1000));
+    if (m.getSegment(0).buffer !== buffer) {
+      buffer = m.getSegment(0).buffer;
+      reallocations++;
+    }
+  }
+
+  // Growing by only the requested size reallocated (and copied) the whole buffer every few writes.
+  t.isBelow(reallocations, 20);
+  t.isBelow(
+    buffer.byteLength,
+    m.getSegment(0).byteLength * 2 + C.MIN_SINGLE_SEGMENT_GROWTH,
   );
 });
 
