@@ -154,25 +154,32 @@ test("Message.allocateSegment()", () => {
 });
 
 test("single segment arena grows geometrically", () => {
+  const count = 2000;
+  const text = "x".repeat(1000);
   const m = new Message();
-  const list = m.initRoot(ListMania)._initTextList(2000);
+  const list = m.initRoot(ListMania)._initTextList(count);
+  const segment = m.getSegment(0);
 
+  let buffer = segment.buffer;
   let reallocations = 0;
-  let buffer = m.getSegment(0).buffer;
-  for (let i = 0; i < 2000; i++) {
-    list.set(i, "x".repeat(1000));
-    if (m.getSegment(0).buffer !== buffer) {
-      buffer = m.getSegment(0).buffer;
+  for (let i = 0; i < count; i++) {
+    list.set(i, text);
+    if (segment.buffer !== buffer) {
+      buffer = segment.buffer;
       reallocations++;
     }
   }
 
-  // Growing by only the requested size reallocated (and copied) the whole buffer every few writes.
+  // Growing by the requested size only would reallocate ~500 times.
   t.isBelow(reallocations, 20);
-  t.isBelow(
-    buffer.byteLength,
-    m.getSegment(0).byteLength * 2 + C.MIN_SINGLE_SEGMENT_GROWTH,
-  );
+  t.isAtMost(segment.buffer.byteLength, segment.byteLength * 2);
+
+  // Unused capacity is not serialized.
+  const out = m.toArrayBuffer();
+  t.equal(out.byteLength, 8 + segment.byteLength);
+  const read = new Message(out, false).getRoot(ListMania).textList;
+  t.equal(read.length, count);
+  t.equal(read.get(count - 1), text);
 });
 
 test("Message.dump()", () => {
