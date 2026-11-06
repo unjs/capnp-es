@@ -38,17 +38,14 @@ export function allocate(
 ): ArenaAllocationResult {
   const srcBuffer = segments.length > 0 ? segments[0].buffer : s.buffer;
 
-  minSize =
-    minSize < MIN_SINGLE_SEGMENT_GROWTH
-      ? MIN_SINGLE_SEGMENT_GROWTH
-      : padToWord(minSize);
-
-  // Grow by at least the current size, so that building a message from many small writes copies the buffer a
-  // logarithmic number of times instead of once per write. The extra space is not part of the output:
-  // `toArrayBuffer()` only copies the used part of the segment.
-  s.buffer = new ArrayBuffer(
-    srcBuffer.byteLength + Math.max(minSize, srcBuffer.byteLength),
+  // At least double the buffer so that the total copy cost stays linear in the message size.
+  const growth = Math.max(
+    padToWord(minSize),
+    MIN_SINGLE_SEGMENT_GROWTH,
+    srcBuffer.byteLength,
   );
+
+  s.buffer = new ArrayBuffer(srcBuffer.byteLength + growth);
 
   // PERF: Assume that the source and destination buffers are word-aligned and use Float64Array to copy them one word
   // at a time.
