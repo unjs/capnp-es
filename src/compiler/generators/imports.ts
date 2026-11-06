@@ -1,6 +1,11 @@
 import type { CodeGeneratorFileContext } from ".";
 import { TS_FILE_ID } from "../constants";
-import { getFullClassName, hasNode, lookupNode } from "../node-util";
+import {
+  getFullClassName,
+  hasNode,
+  lookupNode,
+  tryLookupNode,
+} from "../node-util";
 import * as util from "../util";
 import type * as schema from "../../capnp/schema";
 
@@ -60,7 +65,11 @@ export function generateNestedImports(ctx: CodeGeneratorFileContext): void {
       }
     }
 
-    const importNode = lookupNode(ctx, imp);
+    const importNode = tryLookupNode(ctx, imp);
+    if (!importNode) {
+      // Skip imports for nodes that aren't available in the current context
+      continue;
+    }
 
     const imports = getImportNodes(ctx, importNode)
       .flatMap((node) => {
