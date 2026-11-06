@@ -87,6 +87,8 @@ export class Message {
   /**
    * Copies the contents of this message into an identical message with its own ArrayBuffers.
    *
+   * The used length of each segment is preserved, so the copy serializes to the same bytes as this message.
+   *
    * @returns A copy of this message.
    */
   copy(): Message {
@@ -525,6 +527,28 @@ export function getStreamFrame(m: Message): ArrayBuffer {
 
   return out.buffer;
 }
+
+/**
+ * Copies the contents of a message into an identical message with its own ArrayBuffers.
+ *
+ * The copy keeps the capacity of the source buffers and the used length of each segment, so only the used bytes are
+ * serialized and further writes can use the spare capacity. Segments that have not been created yet in the source
+ * are not created in the copy.
+ *
+ * @param m The message to copy.
+ * @returns A copy of the message.
+ */
 export function copy(m: Message): Message {
-  return new Message(Arena.copy(m._capnp.arena));
+  const c = new Message(Arena.copy(m._capnp.arena));
+  const { segments } = m._capnp;
+
+  if (segments.length === 0) {
+    c._capnp.segments = [];
+  }
+
+  for (const [i, s] of segments.entries()) {
+    c._capnp.segments[i].byteLength = s.byteLength;
+  }
+
+  return c;
 }
