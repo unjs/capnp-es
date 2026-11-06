@@ -182,6 +182,81 @@ test("single segment arena grows geometrically", () => {
   t.equal(read.get(count - 1), text);
 });
 
+test("Message.copy()", () => {
+  const text = "x".repeat(800);
+  const m = new Message();
+  const list = m.initRoot(ListMania)._initTextList(10);
+  for (let i = 0; i < 10; i++) {
+    list.set(i, text);
+  }
+  const segment = m.getSegment(0);
+  t.isAbove(
+    segment.buffer.byteLength,
+    segment.byteLength,
+    "the source should have unused capacity",
+  );
+
+  const c = m.copy();
+  const copied = c.getSegment(0);
+
+  t.equal(copied.byteLength, segment.byteLength, "should preserve used length");
+  t.notEqual(copied.buffer, segment.buffer, "should own its buffer");
+  compareBuffers(
+    c.toArrayBuffer(),
+    m.toArrayBuffer(),
+    "should serialize only the used bytes",
+  );
+  compareBuffers(
+    c.toPackedArrayBuffer(),
+    m.toPackedArrayBuffer(),
+    "should pack only the used bytes",
+  );
+
+  // Writing to the copy uses the spare capacity and does not touch the source.
+  const buffer = copied.buffer;
+  c.getRoot(ListMania).textList.set(0, "copy");
+  t.equal(copied.buffer, buffer, "should reuse the spare capacity");
+  t.equal(m.getRoot(ListMania).textList.get(0), text);
+  t.equal(c.getRoot(ListMania).textList.get(0), "copy");
+  t.equal(
+    new Message(c.toArrayBuffer(), false).getRoot(ListMania).textList.get(0),
+    "copy",
+  );
+});
+
+test("Message.copy() of an empty message", () => {
+  const c = new Message().copy();
+
+  t.equal(c._capnp.segments.length, 0, "should not allocate segments");
+  t.equal(
+    c.toArrayBuffer().byteLength,
+    new Message().toArrayBuffer().byteLength,
+  );
+});
+
+test("Message.copy() of a multi segment message", () => {
+  const m = new Message(new MultiSegmentArena([]));
+  m.initRoot(ListMania)._initTextList(1).set(0, "abc");
+  m.allocateSegment(C.DEFAULT_BUFFER_SIZE).allocate(16);
+  t.equal(m._capnp.segments.length, 2);
+
+  const c = m.copy();
+
+  t.deepEqual(
+    c._capnp.segments.map((s) => s.byteLength),
+    m._capnp.segments.map((s) => s.byteLength),
+    "should preserve used lengths",
+  );
+  compareBuffers(c.toArrayBuffer(), m.toArrayBuffer());
+  t.equal(c.getRoot(ListMania).textList.get(0), "abc");
+});
+
+test("Message.copy() of a message read from a buffer", () => {
+  const m = new Message(SEGMENTED_UNPACKED, false);
+
+  compareBuffers(m.copy().toArrayBuffer(), SEGMENTED_UNPACKED);
+});
+
 test("Message.dump()", () => {
   const m1 = new Message(new MultiSegmentArena([]));
 
