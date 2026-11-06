@@ -38,12 +38,14 @@ export function allocate(
 ): ArenaAllocationResult {
   const srcBuffer = segments.length > 0 ? segments[0].buffer : s.buffer;
 
-  minSize =
-    minSize < MIN_SINGLE_SEGMENT_GROWTH
-      ? MIN_SINGLE_SEGMENT_GROWTH
-      : padToWord(minSize);
+  // At least double the buffer so that the total copy cost stays linear in the message size.
+  const growth = Math.max(
+    padToWord(minSize),
+    MIN_SINGLE_SEGMENT_GROWTH,
+    srcBuffer.byteLength,
+  );
 
-  s.buffer = new ArrayBuffer(srcBuffer.byteLength + minSize);
+  s.buffer = new ArrayBuffer(srcBuffer.byteLength + growth);
 
   // PERF: Assume that the source and destination buffers are word-aligned and use Float64Array to copy them one word
   // at a time.
