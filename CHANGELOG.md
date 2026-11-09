@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.0.17
+
+[compare changes](https://github.com/unjs/capnp-es/compare/4ae67dc...v0.0.17)
+
+### 🩹 Fixes
+
+- Grow single segment arena geometrically ([#92](https://github.com/unjs/capnp-es/pull/92))
+- Preserve used segment lengths in Message.copy() ([#93](https://github.com/unjs/capnp-es/pull/93))
+- Include segment 0 in the frame header of empty messages ([#94](https://github.com/unjs/capnp-es/pull/94))
+
+### ❤️ Contributors
+
+- Victor Berchet ([@vicb](https://github.com/vicb))
+- Sarthak Saini <sarthaksaini208@gmail.com>
+
 ## v0.0.16
 
 [compare changes](https://github.com/unjs/capnp-es/compare/bd9d6866...v0.0.16)
