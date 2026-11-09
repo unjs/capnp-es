@@ -445,14 +445,13 @@ export function setRoot(src: Pointer, m: Message): void {
 }
 
 export function toArrayBuffer(m: Message): ArrayBuffer {
-  const streamFrame = getStreamFrame(m);
-
-  // Make sure the first segment is allocated.
+  // Make sure the first segment is allocated before computing the frame so that the header includes it.
 
   if (m._capnp.segments.length === 0) {
     getSegment(0, m);
   }
 
+  const streamFrame = getStreamFrame(m);
   const { segments } = m._capnp;
 
   // Add space for the stream framing.
@@ -476,13 +475,13 @@ export function toArrayBuffer(m: Message): ArrayBuffer {
 }
 
 export function toPackedArrayBuffer(m: Message): ArrayBuffer {
-  const streamFrame = pack(getStreamFrame(m));
-
-  // Make sure the first segment is allocated.
+  // Make sure the first segment is allocated before computing the frame so that the header includes it.
 
   if (m._capnp.segments.length === 0) {
     m.getSegment(0);
   }
+
+  const streamFrame = pack(getStreamFrame(m));
 
   // NOTE: A copy operation can be avoided here if we capture the intermediate array and use that directly in the copy
   // loop below, rather than have `pack()` copy it to an ArrayBuffer just to have to copy it again later. If the

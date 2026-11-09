@@ -18,6 +18,12 @@ const SEGMENTED_PACKED = readFileBuffer(
 );
 const SEGMENTED_UNPACKED = readFileBuffer("test/fixtures/data/segmented.bin");
 
+// Frame header (1 segment of 1 word) followed by the null root pointer.
+const EMPTY_MESSAGE = new Uint8Array([
+  0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+]).buffer;
+const EMPTY_MESSAGE_PACKED = new Uint8Array([0x10, 0x01, 0x00, 0x00]).buffer;
+
 test("new Message(ArrayBuffer, false)", () => {
   const message = new Message(SEGMENTED_UNPACKED, false);
 
@@ -228,9 +234,10 @@ test("Message.copy() of an empty message", () => {
   const c = new Message().copy();
 
   t.equal(c._capnp.segments.length, 0, "should not allocate segments");
-  t.equal(
-    c.toArrayBuffer().byteLength,
-    new Message().toArrayBuffer().byteLength,
+  compareBuffers(c.toArrayBuffer(), EMPTY_MESSAGE);
+  compareBuffers(
+    new Message().copy().toPackedArrayBuffer(),
+    EMPTY_MESSAGE_PACKED,
   );
 });
 
@@ -320,10 +327,37 @@ test("Message.onCreatePointer()", () => {
 });
 
 test("Message.toArrayBuffer()", () => {
-  t.equal(
-    new Message().toArrayBuffer().byteLength,
-    16,
+  const out = new Message().toArrayBuffer();
+
+  compareBuffers(
+    out,
+    EMPTY_MESSAGE,
     "should allocate segment 0 before converting",
+  );
+  t.deepEqual(
+    getFramedSegments(out).map((s) => s.byteLength),
+    [8],
+    "should match the frame header",
+  );
+  t.equal(
+    new Message(out, false).getRoot(Person).name,
+    "",
+    "should read back a null root",
+  );
+});
+
+test("Message.toPackedArrayBuffer() of an empty message", () => {
+  const out = new Message().toPackedArrayBuffer();
+
+  compareBuffers(
+    out,
+    EMPTY_MESSAGE_PACKED,
+    "should allocate segment 0 before converting",
+  );
+  t.equal(
+    new Message(out).getRoot(Person).name,
+    "",
+    "should read back a null root",
   );
 });
 
