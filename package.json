@@ -49,7 +49,7 @@
     "play": "pnpm capnp-es -ots,js,dts playground/*.capnp",
     "profile:bun": "bun run ./test/bench/profile.ts",
     "profile:node": "node --cpu-prof --import jiti/register ./test/bench/profile.ts",
-    "release": "pnpm test && changelogen --release && npm publish && git push --follow-tags",
+    "release": "pnpm test && changelogen --release --push && npm publish",
     "test": "pnpm lint && vitest run --coverage && pnpm test:types",
     "test:types": "tsc --noEmit --skipLibCheck"
   },

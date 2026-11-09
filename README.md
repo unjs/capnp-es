@@ -100,6 +100,8 @@ This project is a rework of [jdiaz5513/capnp-ts](https://github.com/jdiaz5513/ca
 
 Feedback and PRs are more than welcome. 🙏
 
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the development and release procedures.
+
 <details>
 
 <summary>Local development</summary>
